@@ -1,1 +1,1 @@
-# Weather-Go-Go
+# Weather Go an iOS weather app
