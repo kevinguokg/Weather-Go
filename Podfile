@@ -8,4 +8,5 @@ target 'Weather Go' do
   # Pods for Weather Go
 
   pod 'Alamofire', '~> 4.3'
+  pod 'SwiftyJSON', '~> 3.1'
 end
