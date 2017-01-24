@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		5A3C8AB2F4B88BA1A80280ED /* Pods_Weather_Go.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F2FAB76CB1DFB1E71CD615F /* Pods_Weather_Go.framework */; };
+		9D8B994C1E36D5C200BDE4CC /* CityWeatherDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D8B994B1E36D5C200BDE4CC /* CityWeatherDetailViewController.swift */; };
 		9DDD48081E2EEF4100D0A83D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DDD48071E2EEF4100D0A83D /* AppDelegate.swift */; };
 		9DDD480A1E2EEF4100D0A83D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DDD48091E2EEF4100D0A83D /* ViewController.swift */; };
 		9DDD480D1E2EEF4100D0A83D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9DDD480B1E2EEF4100D0A83D /* Main.storyboard */; };
@@ -25,6 +26,7 @@
 		4876054F58901FD832EC1345 /* Pods-Weather Go.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Weather Go.release.xcconfig"; path = "Pods/Target Support Files/Pods-Weather Go/Pods-Weather Go.release.xcconfig"; sourceTree = "<group>"; };
 		4AA6A0A484A54CC71C8EDAE3 /* Pods-Weather Go.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Weather Go.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Weather Go/Pods-Weather Go.debug.xcconfig"; sourceTree = "<group>"; };
 		6F2FAB76CB1DFB1E71CD615F /* Pods_Weather_Go.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Weather_Go.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9D8B994B1E36D5C200BDE4CC /* CityWeatherDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CityWeatherDetailViewController.swift; sourceTree = "<group>"; };
 		9DDD48041E2EEF4100D0A83D /* Weather Go.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Weather Go.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DDD48071E2EEF4100D0A83D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9DDD48091E2EEF4100D0A83D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -87,6 +89,7 @@
 				9DDD48251E301AA700D0A83D /* AddCityViewController.swift */,
 				9DDD481E1E3015A900D0A83D /* WeatherListViewController.swift */,
 				9DDD48191E2EF2A900D0A83D /* WeatherAPI.swift */,
+				9D8B994B1E36D5C200BDE4CC /* CityWeatherDetailViewController.swift */,
 				9DDD480B1E2EEF4100D0A83D /* Main.storyboard */,
 				9DDD480E1E2EEF4100D0A83D /* Assets.xcassets */,
 				9DDD48101E2EEF4100D0A83D /* LaunchScreen.storyboard */,
@@ -250,6 +253,7 @@
 				9DDD481A1E2EF2A900D0A83D /* WeatherAPI.swift in Sources */,
 				9DDD48261E301AA700D0A83D /* AddCityViewController.swift in Sources */,
 				9DDD48221E30181E00D0A83D /* City.swift in Sources */,
+				9D8B994C1E36D5C200BDE4CC /* CityWeatherDetailViewController.swift in Sources */,
 				9DDD481F1E3015A900D0A83D /* WeatherListViewController.swift in Sources */,
 				9DDD480A1E2EEF4100D0A83D /* ViewController.swift in Sources */,
 				9DDD48241E30188E00D0A83D /* Weather.swift in Sources */,

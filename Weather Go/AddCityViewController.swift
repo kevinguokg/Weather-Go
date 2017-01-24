@@ -52,15 +52,15 @@ class AddCityViewController : UIViewController, UISearchBarDelegate, UITableView
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        print(searchBar.text ?? "")
-        filterContentForSearchText(searchText: searchBar.text ?? "")
+//        print(searchBar.text ?? "")
+//        filterContentForSearchText(searchText: searchBar.text ?? "")
 
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         // ask for city
         
-        WeatherAPI.queryWeatherWithCityName(searchBar.text!, countryCode: "") { (json, err) in
+        WeatherAPI.queryWeatherWithCityName(searchBar.text!, units: "metric", countryCode: "") { (json, err) in
             if err == nil {
                 if let json = json {
                     let cityJson = JSON(json)

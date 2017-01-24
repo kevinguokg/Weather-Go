@@ -8,7 +8,7 @@
 
 import Foundation
 
-class City {
+class City: NSObject, NSCoding {
     var id: String
     var name: String
     var latitude: Double
@@ -20,6 +20,23 @@ class City {
         self.name = name
         self.latitude = latitude
         self.longitude = longitude
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        self.id = aDecoder.decodeObject(forKey: "id") as! String
+        self.name = aDecoder.decodeObject(forKey: "name") as! String
+        self.latitude = aDecoder.decodeDouble(forKey: "latitude")
+        self.longitude = aDecoder.decodeDouble(forKey: "longitude")
+        self.weather = aDecoder.decodeObject(forKey: "weather") as? Weather
+        
+    }
+    
+    func encode(with aCoder: NSCoder) {
+        aCoder.encode(id, forKey: "id")
+        aCoder.encode(name, forKey: "name")
+        aCoder.encode(latitude, forKey: "latitude")
+        aCoder.encode(longitude, forKey: "longitude")
+        aCoder.encode(weather, forKey: "weather")
     }
     
     
