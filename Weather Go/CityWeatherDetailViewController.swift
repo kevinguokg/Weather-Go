@@ -11,6 +11,10 @@ import UIKit
 import SwiftyJSON
 
 class CityWeatherDetailViewController: UIViewController {
+    @IBOutlet weak var currTempView: UILabel!
+    @IBOutlet weak var currWeatherView: UILabel!
+    @IBOutlet weak var currDegreeUnitView: UILabel!
+    
     var currentCity: City!
     
     
@@ -26,6 +30,23 @@ class CityWeatherDetailViewController: UIViewController {
         if let city = self.currentCity {
             self.title = city.name
             
+            if let weather = city.weather {
+                
+                if #available(iOS 10.0, *) {
+                    let curTempCel = Measurement(value: city.weather!.currentTemp!, unit: UnitTemperature.celsius)
+                    self.currTempView.text = "\(Int(curTempCel.value))"
+                    self.currDegreeUnitView.text = "\(curTempCel.unit.symbol)"
+                    
+                } else {
+                    // Fallback on earlier versions
+                    self.currTempView.text = "\(Int(round(weather.currentTemp!)))"
+                }
+                
+                self.currWeatherView.text = city.weather?.weatherDesc
+                
+            }
+            
+            
             WeatherAPI.queryForecastWithCityId(city.id, units: "metric", completion: { (jsonData, error) in
                 if let err = error {
                     print("ERR: \(err)")
@@ -34,6 +55,7 @@ class CityWeatherDetailViewController: UIViewController {
                         let forecastJson = JSON(json)
                         let countryCode = forecastJson["city"]["country"]
                         print(countryCode)
+                        
                     }
                 }
             })

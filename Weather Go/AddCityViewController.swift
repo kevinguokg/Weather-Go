@@ -27,39 +27,24 @@ class AddCityViewController : UIViewController, UISearchBarDelegate, UITableView
         self.tableView.dataSource = self
         self.tableView.delegate = self
         
-        //searchController.searchResultsUpdater = self
-        //searchController.dimsBackgroundDuringPresentation = false
-        //definesPresentationContext = true
-        
         //cityList = ["Shanghai", "Vancouver"]
         cityList = Array()
         
-        
+        searchBar.becomeFirstResponder()
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
     
-    func filterContentForSearchText(searchText: String, scope: String = "All") {
-        self.tableView.reloadData()
-    }
-    
-    func updateSearchResults(for searchController: UISearchController) {
-        filterContentForSearchText(searchText: "we")
-    }
-    
+    // MARK: Searchbar Delegates
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
 //        print(searchBar.text ?? "")
-//        filterContentForSearchText(searchText: searchBar.text ?? "")
-
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         // ask for city
-        
         WeatherAPI.queryWeatherWithCityName(searchBar.text!, units: "metric", countryCode: "") { (json, err) in
             if err == nil {
                 if let json = json {
@@ -90,6 +75,11 @@ class AddCityViewController : UIViewController, UISearchBarDelegate, UITableView
         }
     }
     
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    // MARK: UITableView Delegates
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }

@@ -82,13 +82,7 @@ class WeatherListViewController : UITableViewController {
                 self.tableView.reloadData()
                 
                 // add city to user defaults
-                let defaults = UserDefaults.standard
-                let archivedArray: NSMutableArray = NSMutableArray()
-                for city in citiList! {
-                    let data = NSKeyedArchiver.archivedData(withRootObject: city)
-                    archivedArray.add(data)
-                }
-                defaults.set(archivedArray, forKey: "cityList")
+                UserDefaultManager.addCityToUserDefault(self.citiList!, withKey: "cityList")
             }
         }
     }
@@ -102,9 +96,10 @@ class WeatherListViewController : UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cityWeatherCell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cityWeatherCell", for: indexPath) as! CityWeatherCell
         
-        cell.textLabel?.text = citiList?[indexPath.row].name
+        cell.cityNameLabel.text = citiList?[indexPath.row].name
+        
         if let city = citiList?[indexPath.row]{
             if #available(iOS 10.0, *) {
                 //let curTempKalvin = Measurement(value: city.weather!.currentTemp!, unit: UnitTemperature.kelvin)
@@ -115,10 +110,11 @@ class WeatherListViewController : UITableViewController {
                 //let string = formatter.string(from: curTempCel)
                 //let string2 = formatter.string(from: UnitTemperature.celsius)
                 //print(string2)
-                cell.detailTextLabel?.text = "\(curTempCel.value)\(curTempCel.unit.symbol)"
+
+                cell.cityTempLabel.text = "\(Int(curTempCel.value))\(curTempCel.unit.symbol)"
             } else {
                 // Fallback on earlier versions
-                cell.detailTextLabel?.text = "\((city.weather?.currentTemp!)!)"
+                 cell.cityTempLabel.text = "\(Int((city.weather?.currentTemp!)!))"
             }
         }
         return cell
@@ -129,6 +125,20 @@ class WeatherListViewController : UITableViewController {
         performSegue(withIdentifier: "showCityDetail", sender: nil)
     }
     
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            tableView.beginUpdates()
+            let city = self.citiList?[indexPath.row]
+            citiList?.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.automatic)
+            tableView.endUpdates()
+            
+            // add city to user defaults
+            UserDefaultManager.addCityToUserDefault(self.citiList!, withKey: "cityList")
+            print("The city \(city!.name) is deleted.")
+            
+        }
+    }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let id = segue.identifier, id == "showCityDetail" {
