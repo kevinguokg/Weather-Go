@@ -13,13 +13,15 @@ class City: NSObject, NSCoding {
     var name: String
     var latitude: Double
     var longitude: Double
+    var countryCode: String
     var weather: Weather?
     
-    init(id: String, name: String, latitude: Double, longitude: Double) {
+    init(id: String, name: String, latitude: Double, longitude: Double, countryCode: String) {
         self.id = id
         self.name = name
         self.latitude = latitude
         self.longitude = longitude
+        self.countryCode = countryCode
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -27,6 +29,7 @@ class City: NSObject, NSCoding {
         self.name = aDecoder.decodeObject(forKey: "name") as! String
         self.latitude = aDecoder.decodeDouble(forKey: "latitude")
         self.longitude = aDecoder.decodeDouble(forKey: "longitude")
+        self.countryCode = aDecoder.decodeObject(forKey: "countryCode") as! String
         self.weather = aDecoder.decodeObject(forKey: "weather") as? Weather
         
     }
@@ -36,6 +39,7 @@ class City: NSObject, NSCoding {
         aCoder.encode(name, forKey: "name")
         aCoder.encode(latitude, forKey: "latitude")
         aCoder.encode(longitude, forKey: "longitude")
+        aCoder.encode(countryCode, forKey: "countryCode")
         aCoder.encode(weather, forKey: "weather")
     }
     

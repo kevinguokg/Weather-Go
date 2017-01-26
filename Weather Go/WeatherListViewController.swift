@@ -9,15 +9,35 @@
 import Foundation
 import UIKit
 import SwiftyJSON
+import CoreLocation
+import TimeZoneLocate
 
 class WeatherListViewController : UITableViewController {
     
     var citiList : Array<City>?
     var selectedCity: City?
     
+    var timer: Timer = Timer()
+    
+    struct Cell {
+        static var snapShot: UIView? = nil
+    }
+    
+    struct Path {
+        static var initialIndexPath: IndexPath? = nil
+    }
+    
+    struct CityList {
+        static var cityList: Array<City>? = nil
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTime) , userInfo: nil, repeats: true)
+        let longPress = UILongPressGestureRecognizer(target: self, action: #selector(longPressGestureRecognized))
+        self.tableView.addGestureRecognizer(longPress)
         
         let defaults = UserDefaults.standard
         citiList = Array()
@@ -37,7 +57,7 @@ class WeatherListViewController : UITableViewController {
                         if let json = jsonData {
                             
                             let cityJson = JSON(json)
-                            let city = City(id: "\(cityJson["id"].intValue)", name: cityJson["name"].stringValue, latitude: cityJson["coord"]["lat"].doubleValue, longitude: cityJson["coord"]["lon"].doubleValue)
+                            let city = City(id: "\(cityJson["id"].intValue)", name: cityJson["name"].stringValue, latitude: cityJson["coord"]["lat"].doubleValue, longitude: cityJson["coord"]["lon"].doubleValue, countryCode: cityJson["sys"]["country"].stringValue)
                             
                             let weather = Weather()
                             weather.weatherDesc = cityJson["weather"][0]["description"].stringValue
@@ -87,6 +107,112 @@ class WeatherListViewController : UITableViewController {
         }
     }
     
+    func updateTime() {
+        for cell in self.tableView.visibleCells as! [CityWeatherCell]{
+                cell.updateCell()
+        }
+    }
+    
+    func longPressGestureRecognized(gestureRecognizer: UIGestureRecognizer) {
+        let longPress = gestureRecognizer as! UILongPressGestureRecognizer
+        let state = longPress.state
+        
+        // finds the according index path based on gestrue performed on tableView
+        let locationInView = longPress.location(in: self.tableView)
+        let indexPath = self.tableView.indexPathForRow(at: locationInView)
+        
+        switch state {
+            case .began:
+                if let indexPath = indexPath {
+                    CityList.cityList = self.citiList!
+                    Path.initialIndexPath = indexPath
+                    let cell = self.tableView.cellForRow(at: indexPath) as! CityWeatherCell
+                    Cell.snapShot = snapshotOfCell(cell)
+                    var center = cell.center
+                    Cell.snapShot?.center = center
+                    Cell.snapShot?.alpha = 0.0
+                    self.tableView.addSubview(Cell.snapShot!)
+                    
+                    
+                    UIView.animate(withDuration: 0.25, animations: { 
+                        center.y = locationInView.y
+                        Cell.snapShot?.center = center
+                        Cell.snapShot?.transform = CGAffineTransform(scaleX: 1.05, y: 1.05)
+                        Cell.snapShot?.alpha = 0.98
+                        cell.alpha = 0.0
+                    }, completion: { (completed) in
+                        if completed {
+                            cell.isHidden = true
+                        }
+                    })
+
+                }
+                break
+                
+            case .changed:
+                if let cachedCellCenter = Cell.snapShot?.center {
+                    
+                    var center = cachedCellCenter
+                    center.y = locationInView.y
+                    Cell.snapShot?.center = center
+                    
+                    if let indexPath = indexPath, indexPath != Path.initialIndexPath {
+                        swap(&self.citiList![indexPath.row], &self.citiList![(Path.initialIndexPath?.row)!])
+                        self.tableView.moveRow(at: Path.initialIndexPath!, to: indexPath)
+                        Path.initialIndexPath = indexPath
+                    }
+                }
+                
+                break
+
+            default:
+                if let indexPath = indexPath {
+                    let cell = self.tableView.cellForRow(at: indexPath) as! CityWeatherCell
+                    cell.isHidden = false
+                    cell.alpha = 0.0
+                    UIView.animate(withDuration: 0.25, animations: { 
+                        Cell.snapShot?.center = cell.center
+                        Cell.snapShot?.transform = CGAffineTransform.identity
+                        Cell.snapShot?.alpha = 0.0
+                        
+                        cell.alpha = 1.0
+                    }, completion: { (completed) in
+                        if completed {
+                            Path.initialIndexPath = nil
+                            Cell.snapShot?.removeFromSuperview()
+                            Cell.snapShot = nil
+                            
+                            if CityList.cityList! != self.citiList! {
+                                UserDefaultManager.addCityToUserDefault(self.citiList!, withKey: "cityList")
+                            }
+                            
+                            CityList.cityList = nil
+                        }
+                    })
+                    
+                }
+                
+                break
+        }
+        
+    }
+    
+    private func snapshotOfCell(_ view: UIView) -> UIView {
+        UIGraphicsBeginImageContextWithOptions(view.bounds.size, false, 0.0)
+        view.layer.render(in: UIGraphicsGetCurrentContext()!)
+        let image = UIGraphicsGetImageFromCurrentImageContext()! as UIImage
+        UIGraphicsEndImageContext()
+        
+        let cellSnapshot: UIView = UIImageView(image: image)
+        cellSnapshot.layer.masksToBounds = false
+        cellSnapshot.layer.cornerRadius = 0.0
+        cellSnapshot.layer.shadowOffset = CGSize(width: -5.0, height: 5.0)
+        cellSnapshot.layer.shadowRadius = 5.0
+        cellSnapshot.layer.shadowOpacity = 0.4
+        
+        return cellSnapshot
+    }
+    
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -98,24 +224,8 @@ class WeatherListViewController : UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cityWeatherCell", for: indexPath) as! CityWeatherCell
         
-        cell.cityNameLabel.text = citiList?[indexPath.row].name
-        
         if let city = citiList?[indexPath.row]{
-            if #available(iOS 10.0, *) {
-                //let curTempKalvin = Measurement(value: city.weather!.currentTemp!, unit: UnitTemperature.kelvin)
-                //let curTempCel = curTempKalvin.converted(to: UnitTemperature.celsius)
-                
-                let curTempCel = Measurement(value: city.weather!.currentTemp!, unit: UnitTemperature.celsius)
-                //let formatter = MeasurementFormatter()
-                //let string = formatter.string(from: curTempCel)
-                //let string2 = formatter.string(from: UnitTemperature.celsius)
-                //print(string2)
-
-                cell.cityTempLabel.text = "\(Int(curTempCel.value))\(curTempCel.unit.symbol)"
-            } else {
-                // Fallback on earlier versions
-                 cell.cityTempLabel.text = "\(Int((city.weather?.currentTemp!)!))"
-            }
+            cell.updateCell(city)
         }
         return cell
     }

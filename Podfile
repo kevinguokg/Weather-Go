@@ -9,4 +9,5 @@ target 'Weather Go' do
 
   pod 'Alamofire', '~> 4.3'
   pod 'SwiftyJSON', '~> 3.1'
+  pod 'TimeZoneLocate'
 end

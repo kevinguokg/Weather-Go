@@ -9,8 +9,9 @@
 import Foundation
 import UIKit
 import SwiftyJSON
+import CoreLocation
 
-class AddCityViewController : UIViewController, UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate {
+class AddCityViewController : UIViewController, UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate, CLLocationManagerDelegate {
     
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var tableView: UITableView!
@@ -18,6 +19,8 @@ class AddCityViewController : UIViewController, UISearchBarDelegate, UITableView
     //let searchController = UISearchController(searchResultsController: nil)
     var cityList: Array<City>?
     var selectedCity: City?
+    
+    lazy var locationManager: CLLocationManager = CLLocationManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,12 +33,38 @@ class AddCityViewController : UIViewController, UISearchBarDelegate, UITableView
         //cityList = ["Shanghai", "Vancouver"]
         cityList = Array()
         
+        locationManager.delegate = self
+        
         searchBar.becomeFirstResponder()
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func getQuickLocationUpdate() {
+        // Request location authorization
+        self.locationManager.requestWhenInUseAuthorization()
+        
+        // Request a location update
+        self.locationManager.requestLocation()
+        // Note: requestLocation may timeout and produce an error if authorization has not yet been granted by the user
+    }
+    
+    // MARK: Location Manager Delegates
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        // Process the received location update
+        
+        print(locations)
+        
+        // Stop location updates
+        self.locationManager.stopUpdatingLocation()
+        
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print(error)
     }
     
     // MARK: Searchbar Delegates
@@ -49,7 +78,7 @@ class AddCityViewController : UIViewController, UISearchBarDelegate, UITableView
             if err == nil {
                 if let json = json {
                     let cityJson = JSON(json)
-                    let city = City(id: "\(cityJson["id"].intValue)", name: cityJson["name"].stringValue, latitude: cityJson["coord"]["lat"].doubleValue, longitude: cityJson["coord"]["lon"].doubleValue)
+                    let city = City(id: "\(cityJson["id"].intValue)", name: cityJson["name"].stringValue, latitude: cityJson["coord"]["lat"].doubleValue, longitude: cityJson["coord"]["lon"].doubleValue, countryCode: cityJson["sys"]["country"].stringValue)
                     
                     let weather = Weather()
                     weather.weatherDesc = cityJson["weather"][0]["description"].stringValue
@@ -81,8 +110,9 @@ class AddCityViewController : UIViewController, UISearchBarDelegate, UITableView
     
     // MARK: UITableView Delegates
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return 2
     }
+    
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return cityList?.count ?? 0
@@ -90,16 +120,41 @@ class AddCityViewController : UIViewController, UISearchBarDelegate, UITableView
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CityCell", for: indexPath)
-        cell.textLabel?.text = (cityList?[indexPath.row])?.name
-        cell.detailTextLabel?.text = (cityList?[indexPath.row])?.weather?.weatherDesc ?? ""
+        switch indexPath.section {
+        case 0:
+            cell.textLabel?.text = "Add Current Location"
+            cell.textLabel?.textColor = UIColor.blue
+            break
+            
+        case 1:
+            cell.textLabel?.text = (cityList?[indexPath.row])?.name
+            cell.detailTextLabel?.text = (cityList?[indexPath.row])?.weather?.weatherDesc ?? ""
+            break
+        default:
+            break
+        }
+        
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let city = self.cityList?[indexPath.row] {
-            self.selectedCity = city
-            self.performSegue(withIdentifier: "CitySelectedSegue", sender: self)
+        switch indexPath.section {
+        case 0:
+            // detect current location..
+            self.getQuickLocationUpdate()
+            break
+        case 1:
+            if let city = self.cityList?[indexPath.row] {
+                self.selectedCity = city
+                self.performSegue(withIdentifier: "CitySelectedSegue", sender: self)
+            }
+            break
+        default:
+            break;
         }
+        
+        
+        
     }
     
     
