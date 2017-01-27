@@ -30,7 +30,6 @@ class AddCityViewController : UIViewController, UISearchBarDelegate, UITableView
         self.tableView.dataSource = self
         self.tableView.delegate = self
         
-        //cityList = ["Shanghai", "Vancouver"]
         cityList = Array()
         
         locationManager.delegate = self
@@ -58,6 +57,18 @@ class AddCityViewController : UIViewController, UISearchBarDelegate, UITableView
         
         print(locations)
         
+        WeatherAPI.queryWeatherWithLocation(locations[0], units: "metric") { (json, error) in
+            if error == nil {
+                if let json = json {
+                    if let city = self.parseCityJson(json) {
+                        self.addCityToList(city)
+                    }
+                }
+            } else {
+                print("ERR: \(error)")
+            }
+        }
+        
         // Stop location updates
         self.locationManager.stopUpdatingLocation()
         
@@ -69,7 +80,6 @@ class AddCityViewController : UIViewController, UISearchBarDelegate, UITableView
     
     // MARK: Searchbar Delegates
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-//        print(searchBar.text ?? "")
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
@@ -77,28 +87,11 @@ class AddCityViewController : UIViewController, UISearchBarDelegate, UITableView
         WeatherAPI.queryWeatherWithCityName(searchBar.text!, units: "metric", countryCode: "") { (json, err) in
             if err == nil {
                 if let json = json {
-                    let cityJson = JSON(json)
-                    let city = City(id: "\(cityJson["id"].intValue)", name: cityJson["name"].stringValue, latitude: cityJson["coord"]["lat"].doubleValue, longitude: cityJson["coord"]["lon"].doubleValue, countryCode: cityJson["sys"]["country"].stringValue)
-                    
-                    let weather = Weather()
-                    weather.weatherDesc = cityJson["weather"][0]["description"].stringValue
-                    weather.currentTemp = cityJson["main"]["temp"].doubleValue
-                    weather.highTemp = cityJson["main"]["temp_max"].doubleValue
-                    weather.lowTemp = cityJson["main"]["temp_min"].doubleValue
-                    weather.humidity = cityJson["main"]["humidity"].doubleValue
-                    weather.pressure = cityJson["main"]["pressure"].doubleValue
-                    weather.windSpeed = cityJson["wind"]["speed"].doubleValue
-                    weather.windDegree = cityJson["wind"]["deg"].doubleValue
-                    weather.sunrize =  Date(timeIntervalSince1970: TimeInterval(cityJson["sys"]["sunrise"].intValue))
-                    weather.sunset =  Date(timeIntervalSince1970: TimeInterval(cityJson["sys"]["sunset"].intValue))
-                    city.weather = weather
-                        
-                    print(city)
-                    self.cityList?.append(city)
-                    self.tableView.reloadData()
+                    if let city = self.parseCityJson(json) {
+                        self.addCityToList(city)
+                    }
                 }
             } else {
-                
                 print("ERR: \(err)")
             }
         }
@@ -108,6 +101,37 @@ class AddCityViewController : UIViewController, UISearchBarDelegate, UITableView
         self.dismiss(animated: true, completion: nil)
     }
     
+    private func parseCityJson(_ json: Any) -> City? {
+        let cityJson = JSON(json)
+        let city = City(id: "\(cityJson["id"].intValue)", name: cityJson["name"].stringValue, latitude: cityJson["coord"]["lat"].doubleValue, longitude: cityJson["coord"]["lon"].doubleValue, countryCode: cityJson["sys"]["country"].stringValue)
+        
+        let weather = Weather()
+        weather.weatherDesc = cityJson["weather"][0]["description"].stringValue
+        weather.currentTemp = cityJson["main"]["temp"].doubleValue
+        weather.highTemp = cityJson["main"]["temp_max"].doubleValue
+        weather.lowTemp = cityJson["main"]["temp_min"].doubleValue
+        weather.humidity = cityJson["main"]["humidity"].doubleValue
+        weather.pressure = cityJson["main"]["pressure"].doubleValue
+        weather.windSpeed = cityJson["wind"]["speed"].doubleValue
+        weather.windDegree = cityJson["wind"]["deg"].doubleValue
+        weather.sunrize =  Date(timeIntervalSince1970: TimeInterval(cityJson["sys"]["sunrise"].intValue))
+        weather.sunset =  Date(timeIntervalSince1970: TimeInterval(cityJson["sys"]["sunset"].intValue))
+        city.weather = weather
+        
+        #if DEBUG
+            print(city)
+        #endif
+        
+        return city
+    }
+    
+    private func addCityToList(_ city: City) {
+        if let contains = self.cityList?.contains(where: { $0.id == city.id }), !contains {
+            self.cityList?.append(city)
+            self.tableView.reloadData()
+        }
+    }
+    
     // MARK: UITableView Delegates
     func numberOfSections(in tableView: UITableView) -> Int {
         return 2
@@ -115,7 +139,11 @@ class AddCityViewController : UIViewController, UISearchBarDelegate, UITableView
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return cityList?.count ?? 0
+        if section == 0 {
+            return 1
+        } else {
+            return cityList?.count ?? 0
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

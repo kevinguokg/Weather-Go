@@ -98,12 +98,17 @@ class WeatherListViewController : UITableViewController {
         if sender.identifier == "CitySelectedSegue" {
             let sourceViewController = (sender.source) as! AddCityViewController
             if let selectedCity = sourceViewController.selectedCity {
-                citiList?.append(selectedCity)
-                self.tableView.reloadData()
-                
+                self.addCityToList(selectedCity)
                 // add city to user defaults
                 UserDefaultManager.addCityToUserDefault(self.citiList!, withKey: "cityList")
             }
+        }
+    }
+    
+    private func addCityToList(_ city: City) {
+        if let contains = self.citiList?.contains(where: { $0.id == city.id }), !contains {
+            citiList?.append(city)
+            self.tableView.reloadData()
         }
     }
     
