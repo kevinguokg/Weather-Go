@@ -53,7 +53,10 @@ class WeatherAPI {
     }
     
     private static func requestBy(_ escapedUrl: String?, defaultUrl: String, completion: @escaping (Any?, Error?) -> Void) {
-        Alamofire.request(escapedUrl ?? defaultUrl).responseJSON { (response) in
+        Alamofire.request(escapedUrl ?? defaultUrl)
+            .validate(statusCode: 200..<300)
+            .validate(contentType: ["application/json"])
+            .responseJSON { (response) in
             if let err = response.error {
                 completion(nil, err)
             } else {

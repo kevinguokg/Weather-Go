@@ -60,6 +60,7 @@ class WeatherListViewController : UITableViewController {
                             let city = City(id: "\(cityJson["id"].intValue)", name: cityJson["name"].stringValue, latitude: cityJson["coord"]["lat"].doubleValue, longitude: cityJson["coord"]["lon"].doubleValue, countryCode: cityJson["sys"]["country"].stringValue)
                             
                             let weather = Weather()
+                            weather.weatherMain = cityJson["weather"][0]["main"].stringValue
                             weather.weatherDesc = cityJson["weather"][0]["description"].stringValue
                             weather.currentTemp = cityJson["main"]["temp"].doubleValue
                             weather.highTemp = cityJson["main"]["temp_max"].doubleValue
@@ -233,6 +234,16 @@ class WeatherListViewController : UITableViewController {
             cell.updateCell(city)
         }
         return cell
+    }
+    
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if let visibleCells = self.tableView.visibleCells as? [CityWeatherCell] {
+            for cell in visibleCells {
+                //let yOffset = ((self.tableView.contentOffset.y - cell.frame.origin.y) / cell.imageHeight) * cell.offsetSpeed
+                let yOffset = ((self.tableView.contentOffset.y) / cell.imageHeight) * cell.offsetSpeed
+                cell.offset(offset: CGPoint(x: 0.0, y: yOffset))
+            }
+        }
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

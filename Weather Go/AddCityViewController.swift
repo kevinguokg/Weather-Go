@@ -54,10 +54,10 @@ class AddCityViewController : UIViewController, UISearchBarDelegate, UITableView
     // MARK: Location Manager Delegates
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         // Process the received location update
-        
         print(locations)
-        
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
         WeatherAPI.queryWeatherWithLocation(locations[0], units: "metric") { (json, error) in
+            UIApplication.shared.isNetworkActivityIndicatorVisible = false
             if error == nil {
                 if let json = json {
                     if let city = self.parseCityJson(json) {
@@ -84,7 +84,9 @@ class AddCityViewController : UIViewController, UISearchBarDelegate, UITableView
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         // ask for city
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
         WeatherAPI.queryWeatherWithCityName(searchBar.text!, units: "metric", countryCode: "") { (json, err) in
+            UIApplication.shared.isNetworkActivityIndicatorVisible = false
             if err == nil {
                 if let json = json {
                     if let city = self.parseCityJson(json) {
@@ -98,6 +100,7 @@ class AddCityViewController : UIViewController, UISearchBarDelegate, UITableView
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        self.searchBar.resignFirstResponder()
         self.dismiss(animated: true, completion: nil)
     }
     
@@ -106,6 +109,7 @@ class AddCityViewController : UIViewController, UISearchBarDelegate, UITableView
         let city = City(id: "\(cityJson["id"].intValue)", name: cityJson["name"].stringValue, latitude: cityJson["coord"]["lat"].doubleValue, longitude: cityJson["coord"]["lon"].doubleValue, countryCode: cityJson["sys"]["country"].stringValue)
         
         let weather = Weather()
+        weather.weatherMain = cityJson["weather"][0]["main"].stringValue
         weather.weatherDesc = cityJson["weather"][0]["description"].stringValue
         weather.currentTemp = cityJson["main"]["temp"].doubleValue
         weather.highTemp = cityJson["main"]["temp_max"].doubleValue
@@ -114,6 +118,7 @@ class AddCityViewController : UIViewController, UISearchBarDelegate, UITableView
         weather.pressure = cityJson["main"]["pressure"].doubleValue
         weather.windSpeed = cityJson["wind"]["speed"].doubleValue
         weather.windDegree = cityJson["wind"]["deg"].doubleValue
+        weather.clouds = cityJson["clouds"]["all"].doubleValue
         weather.sunrize =  Date(timeIntervalSince1970: TimeInterval(cityJson["sys"]["sunrise"].intValue))
         weather.sunset =  Date(timeIntervalSince1970: TimeInterval(cityJson["sys"]["sunset"].intValue))
         city.weather = weather
@@ -174,6 +179,7 @@ class AddCityViewController : UIViewController, UISearchBarDelegate, UITableView
         case 1:
             if let city = self.cityList?[indexPath.row] {
                 self.selectedCity = city
+                self.searchBar.resignFirstResponder()
                 self.performSegue(withIdentifier: "CitySelectedSegue", sender: self)
             }
             break
