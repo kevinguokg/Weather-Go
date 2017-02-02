@@ -37,9 +37,15 @@ class CityWeatherDetailViewController: UIViewController {
                 self.setBackgroundImageForCity(city: city)
                 
                 if #available(iOS 10.0, *) {
-                    let curTempCel = Measurement(value: city.weather!.currentTemp!, unit: UnitTemperature.celsius)
-                    self.currTempView.text = "\(Int(curTempCel.value))"
-                    self.currDegreeUnitView.text = "\(curTempCel.unit.symbol)"
+                    let isMetric = UserDefaults.standard.bool(forKey: "isMetric")
+                    
+                    var curTempUnit = Measurement(value: city.weather!.currentTemp!, unit: UnitTemperature.celsius)
+                    
+                    if !isMetric {
+                        curTempUnit = curTempUnit.converted(to: UnitTemperature.fahrenheit)
+                    }
+                    self.currTempView.text = "\(Int(curTempUnit.value))"
+                    self.currDegreeUnitView.text = "\(curTempUnit.unit.symbol)"
                     
                 } else {
                     // Fallback on earlier versions

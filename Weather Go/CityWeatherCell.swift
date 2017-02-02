@@ -18,10 +18,13 @@ class CityWeatherCell: UITableViewCell {
     @IBOutlet weak var cityTempLabel: UILabel!
     
     @IBOutlet weak var cityLocalTimeLabel: UILabel!
+    @IBOutlet weak var imgBackTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var imgBackBottomConstraint: NSLayoutConstraint!
     
     var city: City? = nil
     var imageHeight: CGFloat {
         get {
+            
             return self.backgroundWeatherView!.bounds.height
         }
     }
@@ -35,10 +38,19 @@ class CityWeatherCell: UITableViewCell {
         if self.currentOffset == nil {
             UIView.animate(withDuration: 0.1) {
                 self.backgroundWeatherView?.frame = (self.backgroundWeatherView?.bounds)!.offsetBy(dx: offset.x, dy: offset.y)
+                
+                //(self.backgroundWeatherView?.bounds)!.
+                
+                //self.imgBackTopConstraint.constant -= offset.y
+                //self.imgBackBottomConstraint.constant += offset.y
+                
             }
             
         } else {
             self.backgroundWeatherView?.frame = (self.backgroundWeatherView?.bounds)!.offsetBy(dx: offset.x, dy: offset.y)
+            
+            //self.imgBackTopConstraint.constant -= offset.y
+            //self.imgBackBottomConstraint.constant += offset.y
         }
         
         
@@ -63,9 +75,14 @@ class CityWeatherCell: UITableViewCell {
         }
         
         if #available(iOS 10.0, *) {
-            let curTempCel = Measurement(value: city.weather!.currentTemp!, unit: UnitTemperature.celsius)
+            let isMetric = UserDefaults.standard.bool(forKey: "isMetric")
+            var curTempUnit = Measurement(value: city.weather!.currentTemp!, unit: UnitTemperature.celsius)
 
-            cityTempLabel.text = "\(Int(curTempCel.value))\(curTempCel.unit.symbol)"
+            if !isMetric {
+                curTempUnit = curTempUnit.converted(to: UnitTemperature.fahrenheit)
+            }
+            
+            cityTempLabel.text = "\(Int(curTempUnit.value))\(curTempUnit.unit.symbol)"
         } else {
             // Fallback on earlier versions
             cityTempLabel.text = "\(Int((city.weather?.currentTemp!)!))"
@@ -149,7 +166,12 @@ class CityWeatherCell: UITableViewCell {
 //        self.backgroundView = imageView
         
         self.backgroundWeatherView.image = UIImage(named: named)
-        //self.offset(offset: self.currentOffset)
+        
+        
+        //if let offset = self.currentOffset {
+        //    self.offset(offset: offset)
+        //}
+        
         
     }
     

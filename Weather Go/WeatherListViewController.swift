@@ -204,10 +204,7 @@ class WeatherListViewController : UITableViewController {
     }
     
     private func snapshotOfCell(_ view: UIView) -> UIView {
-        UIGraphicsBeginImageContextWithOptions(view.bounds.size, false, 0.0)
-        view.layer.render(in: UIGraphicsGetCurrentContext()!)
-        let image = UIGraphicsGetImageFromCurrentImageContext()! as UIImage
-        UIGraphicsEndImageContext()
+        let image = self.snapshotImgOfCell(view)
         
         let cellSnapshot: UIView = UIImageView(image: image)
         cellSnapshot.layer.masksToBounds = false
@@ -217,6 +214,15 @@ class WeatherListViewController : UITableViewController {
         cellSnapshot.layer.shadowOpacity = 0.4
         
         return cellSnapshot
+    }
+    
+    private func snapshotImgOfCell(_ view: UIView) -> UIImage? {
+        UIGraphicsBeginImageContextWithOptions(view.bounds.size, false, 0.0)
+        view.layer.render(in: UIGraphicsGetCurrentContext()!)
+        let image = UIGraphicsGetImageFromCurrentImageContext()! as UIImage
+        UIGraphicsEndImageContext()
+        
+        return image
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -239,6 +245,7 @@ class WeatherListViewController : UITableViewController {
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if let visibleCells = self.tableView.visibleCells as? [CityWeatherCell] {
             for cell in visibleCells {
+                cell.backgroundWeatherView.clipsToBounds = false
                 //let yOffset = ((self.tableView.contentOffset.y - cell.frame.origin.y) / cell.imageHeight) * cell.offsetSpeed
                 let yOffset = ((self.tableView.contentOffset.y) / cell.imageHeight) * cell.offsetSpeed
                 cell.offset(offset: CGPoint(x: 0.0, y: yOffset))
@@ -266,6 +273,24 @@ class WeatherListViewController : UITableViewController {
         }
     }
     
+    override func tableView(_ tableView: UITableView, willBeginEditingRowAt indexPath: IndexPath) {
+        let cell = tableView.cellForRow(at: indexPath) as! CityWeatherCell
+        
+        let snapShotImageCell = self.snapshotImgOfCell(cell)
+        cell.backgroundWeatherView.image = snapShotImageCell
+        
+        cell.backgroundWeatherView.clipsToBounds = true
+    }
+    
+    override func tableView(_ tableView: UITableView, didEndEditingRowAt indexPath: IndexPath?) {
+        if let indexPath = indexPath {
+            let cell = tableView.cellForRow(at: indexPath) as! CityWeatherCell
+            //cell.backgroundWeatherView.clipsToBounds = false
+        }
+    }
+    
+
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let id = segue.identifier, id == "showCityDetail" {
             let weatherDetailVc = segue.destination as! CityWeatherDetailViewController
@@ -276,7 +301,9 @@ class WeatherListViewController : UITableViewController {
         }
     }
     
-    
+    @IBAction func unwindFromSettingViewConroller(segue: UIStoryboardSegue) {
+        
+    }
     
 }
 
