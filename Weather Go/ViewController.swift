@@ -11,49 +11,55 @@ import SwiftyJSON
 
 class ViewController: UIViewController {
     
-    var cities : AnyObject?
+    @IBAction func byebye(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    var interactor:Interactor? = nil
+    
+    func handlePanGesture(_ sender: UIPanGestureRecognizer) {
+        let percentThreshold:CGFloat = 0.3
+        
+        // convert y-position to downward pull progress (percentage)
+        let translation = sender.translation(in: view)
+        let verticalMovement = translation.y / view.bounds.height
+        let downwardMovement = fmaxf(Float(verticalMovement), 0.0)
+        let downwardMovementPercent = fminf(downwardMovement, 1.0)
+        let progress = CGFloat(downwardMovementPercent)
+        
+        guard let interactor = interactor else { return }
+        
+        switch sender.state {
+        case .began:
+            interactor.hasStarted = true
+            dismiss(animated: true, completion: nil)
+        case .changed:
+            interactor.shouldFinish = progress > percentThreshold
+            interactor.update(progress)
+        case .cancelled:
+            interactor.hasStarted = false
+            interactor.cancel()
+        case .ended:
+            interactor.hasStarted = false
+            interactor.shouldFinish ? interactor.finish() : interactor.cancel()
+        default:
+            break
+        }
+    }
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
+        let ges = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
+        self.view.addGestureRecognizer(ges)
         
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
-    }
-    
-    func getAllCities() {
-        
-        if let path = Bundle.main.path(forResource: "city.list", ofType: "json") {
-            
-            do {
-                let data = try Data(contentsOf: URL(fileURLWithPath: path), options: .alwaysMapped)
-                let dataString = String(data: data, encoding: .utf8)
-                let obj = convertToDictionary(text: dataString!)
-                let jsonObj = JSON(data: data)
-                if jsonObj != JSON.null {
-                    print("jsonData:\(jsonObj)")
-                } else {
-                    print("Could not get json from file, make sure that file contains valid json.")
-                }
-            } catch let error {
-                print(error.localizedDescription)
-            }
-        }
-    }
-    
-    func convertToDictionary(text: String) -> [String: Any]? {
-        if let data = text.data(using: .utf8) {
-            do {
-                return try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
-            } catch {
-                print(error.localizedDescription)
-            }
-        }
-        return nil
     }
 
 

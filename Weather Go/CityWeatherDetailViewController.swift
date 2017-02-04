@@ -29,6 +29,10 @@ class CityWeatherDetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let panEdgeGesture = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(screenEdgeSwiped))
+        panEdgeGesture.edges = .left
+        self.view.addGestureRecognizer(panEdgeGesture)
+        
         if let city = self.currentCity {
             self.title = city.name
             
@@ -76,6 +80,12 @@ class CityWeatherDetailViewController: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func screenEdgeSwiped(_ recognizer: UIScreenEdgePanGestureRecognizer) {
+        if recognizer.state == .recognized {
+             print("Screen edge swiped!")
+        }
     }
 
     private func setBackgroundImageForCity(city: City) {

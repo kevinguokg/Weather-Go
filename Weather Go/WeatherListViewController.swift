@@ -31,6 +31,8 @@ class WeatherListViewController : UITableViewController {
         static var cityList: Array<City>? = nil
     }
     
+    let panGestureInteractor: Interactor = Interactor()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -255,7 +257,8 @@ class WeatherListViewController : UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.selectedCity = self.citiList?[indexPath.row]
-        performSegue(withIdentifier: "showCityDetail", sender: nil)
+//        performSegue(withIdentifier: "showCityDetail", sender: nil)
+        performSegue(withIdentifier: "showViewController", sender: nil)
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
@@ -297,13 +300,34 @@ class WeatherListViewController : UITableViewController {
             if let city = self.selectedCity {
                 weatherDetailVc.currentCity = city
             }
-            
+        } else if let id = segue.identifier, id == "showSettings" {
+            let settingsVc = segue.destination as! SettingsViewController
+            settingsVc.transitioningDelegate = self
+            settingsVc.interactor = panGestureInteractor
+        } else if let id = segue.identifier, id == "showViewController" {
+            let settingsVc = segue.destination as! ViewController
+            settingsVc.transitioningDelegate = self
+            settingsVc.interactor = panGestureInteractor
         }
     }
     
     @IBAction func unwindFromSettingViewConroller(segue: UIStoryboardSegue) {
         
     }
+    
+}
+
+extension WeatherListViewController: UIViewControllerTransitioningDelegate {
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return ModalDismissAnimator()
+    }
+    
+    func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+        return self.panGestureInteractor.hasStarted ? self.panGestureInteractor : nil
+    }
+}
+
+extension WeatherListViewController: UINavigationControllerDelegate {
     
 }
 

@@ -8,10 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		5A3C8AB2F4B88BA1A80280ED /* Pods_Weather_Go.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F2FAB76CB1DFB1E71CD615F /* Pods_Weather_Go.framework */; };
+		9D1BE5461E44F86600F28085 /* ModalDismissAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D1BE5451E44F86600F28085 /* ModalDismissAnimator.swift */; };
 		9D8B994C1E36D5C200BDE4CC /* CityWeatherDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D8B994B1E36D5C200BDE4CC /* CityWeatherDetailViewController.swift */; };
 		9D8B994F1E38346500BDE4CC /* UserDefaultManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D8B994E1E38346500BDE4CC /* UserDefaultManager.swift */; };
 		9D8B99531E383A2F00BDE4CC /* CityWeatherCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D8B99521E383A2F00BDE4CC /* CityWeatherCell.swift */; };
 		9D9C5C701E42BF4B00B5CD36 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9C5C6F1E42BF4B00B5CD36 /* SettingsViewController.swift */; };
+		9DCFB6D11E451DB100EE06B5 /* Interactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DCFB6D01E451DB100EE06B5 /* Interactor.swift */; };
 		9DDD48081E2EEF4100D0A83D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DDD48071E2EEF4100D0A83D /* AppDelegate.swift */; };
 		9DDD480A1E2EEF4100D0A83D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DDD48091E2EEF4100D0A83D /* ViewController.swift */; };
 		9DDD480D1E2EEF4100D0A83D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9DDD480B1E2EEF4100D0A83D /* Main.storyboard */; };
@@ -29,10 +31,12 @@
 		4876054F58901FD832EC1345 /* Pods-Weather Go.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Weather Go.release.xcconfig"; path = "Pods/Target Support Files/Pods-Weather Go/Pods-Weather Go.release.xcconfig"; sourceTree = "<group>"; };
 		4AA6A0A484A54CC71C8EDAE3 /* Pods-Weather Go.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Weather Go.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Weather Go/Pods-Weather Go.debug.xcconfig"; sourceTree = "<group>"; };
 		6F2FAB76CB1DFB1E71CD615F /* Pods_Weather_Go.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Weather_Go.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9D1BE5451E44F86600F28085 /* ModalDismissAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModalDismissAnimator.swift; sourceTree = "<group>"; };
 		9D8B994B1E36D5C200BDE4CC /* CityWeatherDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CityWeatherDetailViewController.swift; sourceTree = "<group>"; };
 		9D8B994E1E38346500BDE4CC /* UserDefaultManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultManager.swift; sourceTree = "<group>"; };
 		9D8B99521E383A2F00BDE4CC /* CityWeatherCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CityWeatherCell.swift; sourceTree = "<group>"; };
 		9D9C5C6F1E42BF4B00B5CD36 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		9DCFB6D01E451DB100EE06B5 /* Interactor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Interactor.swift; sourceTree = "<group>"; };
 		9DDD48041E2EEF4100D0A83D /* Weather Go.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Weather Go.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DDD48071E2EEF4100D0A83D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9DDD48091E2EEF4100D0A83D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -66,6 +70,15 @@
 				6F2FAB76CB1DFB1E71CD615F /* Pods_Weather_Go.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		9D1BE5441E44F82300F28085 /* Animators */ = {
+			isa = PBXGroup;
+			children = (
+				9D1BE5451E44F86600F28085 /* ModalDismissAnimator.swift */,
+				9DCFB6D01E451DB100EE06B5 /* Interactor.swift */,
+			);
+			name = Animators;
 			sourceTree = "<group>";
 		};
 		9D8B994D1E38345000BDE4CC /* Utils */ = {
@@ -122,6 +135,7 @@
 		9DDD48061E2EEF4100D0A83D /* Weather Go */ = {
 			isa = PBXGroup;
 			children = (
+				9D1BE5441E44F82300F28085 /* Animators */,
 				9D8B99541E383A6B00BDE4CC /* API */,
 				9D8B994D1E38345000BDE4CC /* Utils */,
 				9DDD48201E3017C300D0A83D /* Models */,
@@ -292,12 +306,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				9DDD481A1E2EF2A900D0A83D /* WeatherAPI.swift in Sources */,
+				9D1BE5461E44F86600F28085 /* ModalDismissAnimator.swift in Sources */,
 				9DDD48261E301AA700D0A83D /* AddCityViewController.swift in Sources */,
 				9D9C5C701E42BF4B00B5CD36 /* SettingsViewController.swift in Sources */,
 				9DDD48221E30181E00D0A83D /* City.swift in Sources */,
 				9D8B994C1E36D5C200BDE4CC /* CityWeatherDetailViewController.swift in Sources */,
 				9DDD481F1E3015A900D0A83D /* WeatherListViewController.swift in Sources */,
 				9D8B99531E383A2F00BDE4CC /* CityWeatherCell.swift in Sources */,
+				9DCFB6D11E451DB100EE06B5 /* Interactor.swift in Sources */,
 				9DDD480A1E2EEF4100D0A83D /* ViewController.swift in Sources */,
 				9D8B994F1E38346500BDE4CC /* UserDefaultManager.swift in Sources */,
 				9DDD48241E30188E00D0A83D /* Weather.swift in Sources */,
