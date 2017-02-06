@@ -257,8 +257,8 @@ class WeatherListViewController : UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.selectedCity = self.citiList?[indexPath.row]
-//        performSegue(withIdentifier: "showCityDetail", sender: nil)
-        performSegue(withIdentifier: "showViewController", sender: nil)
+        performSegue(withIdentifier: "showCityDetail", sender: nil)
+//        performSegue(withIdentifier: "showViewController", sender: nil)
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {

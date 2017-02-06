@@ -422,7 +422,7 @@
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <segue destination="J4W-mM-Epn" kind="show" identifier="showCityDetail" id="Paz-bE-Uu7"/>
-                        <segue destination="opB-t6-SN8" kind="presentation" identifier="showViewController" id="fhJ-aW-OFu"/>
+                        <segue destination="opB-t6-SN8" kind="presentation" identifier="showViewController" modalPresentationStyle="overFullScreen" id="fhJ-aW-OFu"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="O6v-wF-V81" userLabel="First Responder" sceneMemberID="firstResponder"/>

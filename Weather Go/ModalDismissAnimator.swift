@@ -35,7 +35,7 @@ class ModalDismissAnimator: NSObject, UIViewControllerAnimatedTransitioning {
             fromVc.view.frame = belowRectFrame
             
         }) { (completed) in
-            transitionContext.completeTransition(completed)
+            transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
         }
     }
 }
