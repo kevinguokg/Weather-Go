@@ -16,6 +16,7 @@ class CityWeatherDetailViewController: UIViewController {
     @IBOutlet weak var currTempView: UILabel!
     @IBOutlet weak var currWeatherView: UILabel!
     @IBOutlet weak var currDegreeUnitView: UILabel!
+    @IBOutlet weak var forecastCollectionView: UICollectionView!
     
     var currentCity: City!
     
