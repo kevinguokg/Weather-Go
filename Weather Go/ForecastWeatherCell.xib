@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16C68" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="ForecastWeatherCell" customModule="Weather_Go" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ipf-X8-VYZ" userLabel="Container View">
+                    <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
+                    <subviews>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="mNM-mc-mpE">
+                            <rect key="frame" x="8" y="8" width="184" height="184"/>
+                            <subviews>
+                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ppN-3V-Zxo">
+                                    <rect key="frame" x="27" y="0.0" width="130" height="130"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" secondItem="ppN-3V-Zxo" secondAttribute="height" multiplier="1:1" id="Wg1-e2-OPS"/>
+                                    </constraints>
+                                </imageView>
+                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="EGn-yK-DXh">
+                                    <rect key="frame" x="65" y="134" width="54" height="50"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Cloudy" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OSg-GT-d7h">
+                                            <rect key="frame" x="0.0" y="0.0" width="54" height="29.5"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="20" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4QI-Ih-26F">
+                                            <rect key="frame" x="17" y="29.5" width="20.5" height="20.5"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </stackView>
+                            </subviews>
+                        </stackView>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstItem="mNM-mc-mpE" firstAttribute="leading" secondItem="ipf-X8-VYZ" secondAttribute="leading" constant="8" id="1HK-Kc-Pla"/>
+                        <constraint firstItem="mNM-mc-mpE" firstAttribute="top" secondItem="ipf-X8-VYZ" secondAttribute="top" constant="8" id="8SX-ws-JuG"/>
+                        <constraint firstItem="mNM-mc-mpE" firstAttribute="centerX" secondItem="ipf-X8-VYZ" secondAttribute="centerX" id="FXJ-RC-aDn"/>
+                        <constraint firstItem="mNM-mc-mpE" firstAttribute="centerY" secondItem="ipf-X8-VYZ" secondAttribute="centerY" id="d9q-dE-NmU"/>
+                        <constraint firstAttribute="bottom" secondItem="mNM-mc-mpE" secondAttribute="bottom" constant="8" id="fkW-kf-8Rf"/>
+                        <constraint firstItem="mNM-mc-mpE" firstAttribute="trailing" secondItem="ipf-X8-VYZ" secondAttribute="trailing" constant="-8" id="l3N-6q-ip2"/>
+                        <constraint firstItem="ppN-3V-Zxo" firstAttribute="width" secondItem="ipf-X8-VYZ" secondAttribute="width" multiplier="0.65" id="zAX-bG-QLj"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="ipf-X8-VYZ" secondAttribute="trailing" id="1VE-zW-11q"/>
+                <constraint firstItem="ipf-X8-VYZ" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="7Sw-t4-OHl"/>
+                <constraint firstAttribute="bottom" secondItem="ipf-X8-VYZ" secondAttribute="bottom" id="cnP-ba-JpA"/>
+                <constraint firstItem="ipf-X8-VYZ" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="z5f-zy-CPp"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="tempLabel" destination="4QI-Ih-26F" id="rd3-uM-ZRU"/>
+                <outlet property="weatherImageView" destination="ppN-3V-Zxo" id="E1H-pO-B2j"/>
+                <outlet property="weatherLabel" destination="OSg-GT-d7h" id="EZa-8h-pRc"/>
+            </connections>
+            <point key="canvasLocation" x="-177" y="-179"/>
+        </view>
+    </objects>
+</document>
