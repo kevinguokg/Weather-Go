@@ -21,6 +21,9 @@ class CityWeatherCell: UITableViewCell {
     @IBOutlet weak var imgBackTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var imgBackBottomConstraint: NSLayoutConstraint!
     
+    let emitterLayer = CAEmitterLayer()
+    let emitterCell = CAEmitterCell()
+    
     var city: City? = nil
     var imageHeight: CGFloat {
         get {
@@ -88,6 +91,7 @@ class CityWeatherCell: UITableViewCell {
             cityTempLabel.text = "\(Int((city.weather?.currentTemp!)!))"
         }
         
+        
         // determine sunrise
         if let sunrise = city.weather?.sunrize, let sunset = city.weather?.sunset {
             if sunrise < date && date < sunset {
@@ -100,6 +104,11 @@ class CityWeatherCell: UITableViewCell {
                       
                     case "Rain", "Drizzle":
                         self.updateCellBackgoundImage(named: "rainy_day")
+                        
+                        setUpEmitterLayer()
+                        setUpEmitterCell()
+                        emitterLayer.emitterCells = [emitterCell]
+                        self.backgroundWeatherView?.layer.addSublayer(emitterLayer)
                         break
                     
                     case "Snow":
@@ -132,6 +141,12 @@ class CityWeatherCell: UITableViewCell {
                         
                     case "Rain", "Drizzle":
                         self.updateCellBackgoundImage(named: "rainy_day")
+                        
+                        setUpEmitterLayer()
+                        setUpEmitterCell()
+                        emitterLayer.emitterCells = [emitterCell]
+                        self.backgroundWeatherView?.layer.addSublayer(emitterLayer)
+                        
                         break
                         
                     case "Snow":
@@ -158,6 +173,8 @@ class CityWeatherCell: UITableViewCell {
 
         }
         
+        
+        
     }
     
     private func updateCellBackgoundImage(named: String) {
@@ -179,5 +196,62 @@ class CityWeatherCell: UITableViewCell {
         if let city = self.city {
             updateCell(city)
         }
+    }
+    
+    func setUpEmitterLayer() {
+        emitterLayer.frame = self.backgroundWeatherView.bounds
+        emitterLayer.seed = UInt32(NSDate().timeIntervalSince1970)
+        emitterLayer.renderMode = kCAEmitterLayerAdditive
+        emitterLayer.drawsAsynchronously = true
+        //emitterLayer.backgroundColor = UIColor.gray.cgColor
+        setEmitterPosition()
+    }
+    
+    // 3
+    func setUpEmitterCell() {
+        emitterCell.contents = UIImage(named: "particle_rain")?.cgImage
+        
+        emitterCell.lifetime = 3.0
+        emitterCell.birthRate = 150.0
+        
+        emitterCell.velocity = 1600.0
+        emitterCell.velocityRange = 100.0
+        
+        emitterCell.emissionLatitude = degreesToRadians(271)
+        emitterCell.emissionLongitude = degreesToRadians(300)
+        emitterCell.emissionRange = degreesToRadians(0)
+        
+        emitterCell.xAcceleration = -50
+        emitterCell.yAcceleration = 1000
+        emitterCell.zAcceleration = 0
+        
+        emitterCell.alphaRange = 0.2
+        emitterCell.scale = 0.18
+        
+        emitterCell.color = UIColor.gray.cgColor
+        emitterCell.redRange = 0.0
+        emitterCell.greenRange = 0.0
+        emitterCell.blueRange = 0.0
+        emitterCell.alphaRange = 0.0
+        emitterCell.redSpeed = 0.0
+        emitterCell.greenSpeed = 0.0
+        emitterCell.blueSpeed = 0.0
+        emitterCell.alphaSpeed = 0
+        
+        //        let zeroDegreesInRadians = degreesToRadians(0.0)
+        //        emitterCell.spin = degreesToRadians(130.0)
+        //        emitterCell.spinRange = zeroDegreesInRadians
+        //        emitterCell.emissionRange = degreesToRadians(360.0)
+        
+    }
+    
+    func degreesToRadians(_ degrees: Double) -> CGFloat {
+        return CGFloat(degrees * M_PI / 180.0)
+    }
+    
+    func setEmitterPosition() {
+        emitterLayer.emitterPosition = CGPoint(x: self.backgroundWeatherView.bounds.midX, y: self.backgroundWeatherView.bounds.minY - 50)
+        emitterLayer.emitterSize = CGSize(width: self.backgroundWeatherView.bounds.width * 1.2, height: 5)
+        emitterLayer.emitterShape = kCAEmitterLayerLine;
     }
 }

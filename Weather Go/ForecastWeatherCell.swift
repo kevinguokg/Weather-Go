@@ -10,8 +10,15 @@ import Foundation
 import UIKit
 
 class ForecastWeatherCell: UICollectionViewCell {
+    
+    @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var weatherImageView: UIImageView!
     @IBOutlet weak var weatherLabel: UILabel!
     @IBOutlet weak var tempLabel: UILabel!
+    @IBOutlet weak var precipImageView: UIImageView!
+    @IBOutlet weak var precipLabel: UILabel!
     
+    override func awakeFromNib() {
+        super.awakeFromNib()
+    }
 }

@@ -10,57 +10,88 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ForecastWeatherCell" customModule="Weather_Go" customModuleProvider="target"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="ForecastWeatherCell" customModule="Weather_Go" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
+            <rect key="frame" x="0.0" y="0.0" width="125" height="180"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ipf-X8-VYZ" userLabel="Container View">
-                    <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
+                    <rect key="frame" x="0.0" y="0.0" width="125" height="180"/>
                     <subviews>
-                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="mNM-mc-mpE">
-                            <rect key="frame" x="8" y="8" width="184" height="184"/>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="mNM-mc-mpE">
+                            <rect key="frame" x="0.0" y="0.0" width="125" height="180"/>
                             <subviews>
-                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ppN-3V-Zxo">
-                                    <rect key="frame" x="27" y="0.0" width="130" height="130"/>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="9am" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bgO-5V-64H" userLabel="Time Label">
+                                    <rect key="frame" x="46" y="0.0" width="34" height="15"/>
+                                    <fontDescription key="fontDescription" type="system" weight="thin" pointSize="17"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="752" translatesAutoresizingMaskIntoConstraints="NO" id="ppN-3V-Zxo">
+                                    <rect key="frame" x="22" y="19" width="81" height="81"/>
+                                    <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <constraints>
                                         <constraint firstAttribute="width" secondItem="ppN-3V-Zxo" secondAttribute="height" multiplier="1:1" id="Wg1-e2-OPS"/>
                                     </constraints>
                                 </imageView>
-                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="EGn-yK-DXh">
-                                    <rect key="frame" x="65" y="134" width="54" height="50"/>
+                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="EGn-yK-DXh">
+                                    <rect key="frame" x="0.0" y="104" width="125" height="52"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Cloudy" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OSg-GT-d7h">
-                                            <rect key="frame" x="0.0" y="0.0" width="54" height="29.5"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <nil key="textColor"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Cloudy" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OSg-GT-d7h">
+                                            <rect key="frame" x="36" y="0.0" width="54" height="26"/>
+                                            <fontDescription key="fontDescription" type="system" weight="thin" pointSize="17"/>
+                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="20" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4QI-Ih-26F">
-                                            <rect key="frame" x="17" y="29.5" width="20.5" height="20.5"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <nil key="textColor"/>
+                                            <rect key="frame" x="50" y="26" width="25" height="26"/>
+                                            <fontDescription key="fontDescription" type="system" weight="thin" pointSize="21"/>
+                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </stackView>
+                                <stackView opaque="NO" contentMode="scaleToFill" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="ZRI-q3-idS">
+                                    <rect key="frame" x="42" y="160" width="41" height="20"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon_precip_rainy" translatesAutoresizingMaskIntoConstraints="NO" id="2yH-t0-q0J" userLabel="Precipitation Image View">
+                                            <rect key="frame" x="0.0" y="0.0" width="20" height="20"/>
+                                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="20" id="3jh-Uy-Xuz"/>
+                                                <constraint firstAttribute="width" constant="20" id="w2t-ly-1UH"/>
+                                            </constraints>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0%" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gU6-xD-FZ4" userLabel="Precipitation Label">
+                                            <rect key="frame" x="20" y="1" width="21" height="18"/>
+                                            <fontDescription key="fontDescription" type="system" weight="thin" pointSize="15"/>
+                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
                                 </stackView>
                             </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstAttribute="trailing" secondItem="EGn-yK-DXh" secondAttribute="trailing" id="1qN-g7-wN6"/>
+                                <constraint firstItem="EGn-yK-DXh" firstAttribute="leading" secondItem="mNM-mc-mpE" secondAttribute="leading" id="tSL-Ef-xcU"/>
+                            </constraints>
                         </stackView>
                     </subviews>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstItem="mNM-mc-mpE" firstAttribute="leading" secondItem="ipf-X8-VYZ" secondAttribute="leading" constant="8" id="1HK-Kc-Pla"/>
-                        <constraint firstItem="mNM-mc-mpE" firstAttribute="top" secondItem="ipf-X8-VYZ" secondAttribute="top" constant="8" id="8SX-ws-JuG"/>
+                        <constraint firstItem="mNM-mc-mpE" firstAttribute="leading" secondItem="ipf-X8-VYZ" secondAttribute="leading" id="1HK-Kc-Pla"/>
+                        <constraint firstItem="mNM-mc-mpE" firstAttribute="top" secondItem="ipf-X8-VYZ" secondAttribute="top" id="8SX-ws-JuG"/>
                         <constraint firstItem="mNM-mc-mpE" firstAttribute="centerX" secondItem="ipf-X8-VYZ" secondAttribute="centerX" id="FXJ-RC-aDn"/>
                         <constraint firstItem="mNM-mc-mpE" firstAttribute="centerY" secondItem="ipf-X8-VYZ" secondAttribute="centerY" id="d9q-dE-NmU"/>
-                        <constraint firstAttribute="bottom" secondItem="mNM-mc-mpE" secondAttribute="bottom" constant="8" id="fkW-kf-8Rf"/>
-                        <constraint firstItem="mNM-mc-mpE" firstAttribute="trailing" secondItem="ipf-X8-VYZ" secondAttribute="trailing" constant="-8" id="l3N-6q-ip2"/>
+                        <constraint firstAttribute="bottom" secondItem="mNM-mc-mpE" secondAttribute="bottom" id="fkW-kf-8Rf"/>
+                        <constraint firstItem="mNM-mc-mpE" firstAttribute="trailing" secondItem="ipf-X8-VYZ" secondAttribute="trailing" id="l3N-6q-ip2"/>
                         <constraint firstItem="ppN-3V-Zxo" firstAttribute="width" secondItem="ipf-X8-VYZ" secondAttribute="width" multiplier="0.65" id="zAX-bG-QLj"/>
                     </constraints>
                 </view>
             </subviews>
-            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="ipf-X8-VYZ" secondAttribute="trailing" id="1VE-zW-11q"/>
                 <constraint firstItem="ipf-X8-VYZ" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="7Sw-t4-OHl"/>
@@ -69,11 +100,17 @@
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
+                <outlet property="precipImageView" destination="2yH-t0-q0J" id="U9A-Y9-9hU"/>
+                <outlet property="precipLabel" destination="gU6-xD-FZ4" id="vzi-Pd-5s9"/>
                 <outlet property="tempLabel" destination="4QI-Ih-26F" id="rd3-uM-ZRU"/>
+                <outlet property="timeLabel" destination="bgO-5V-64H" id="1k1-SK-Lpb"/>
                 <outlet property="weatherImageView" destination="ppN-3V-Zxo" id="E1H-pO-B2j"/>
                 <outlet property="weatherLabel" destination="OSg-GT-d7h" id="EZa-8h-pRc"/>
             </connections>
-            <point key="canvasLocation" x="-177" y="-179"/>
+            <point key="canvasLocation" x="-208.5" y="-170"/>
         </view>
     </objects>
+    <resources>
+        <image name="icon_precip_rainy" width="128" height="128"/>
+    </resources>
 </document>

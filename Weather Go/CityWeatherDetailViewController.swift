@@ -21,6 +21,7 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
     @IBOutlet weak var currDegreeUnitView: UILabel!
     @IBOutlet weak var forecastCollectionView: UICollectionView!
     
+    @IBOutlet weak var basicWeatherSectionView: UIView!
     @IBOutlet weak var basicWeatherViewHeight: NSLayoutConstraint!
     
     // Detail weather UIs
@@ -33,9 +34,17 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
     @IBOutlet weak var windLabel: UILabel!
     @IBOutlet weak var cloudLabel: UILabel!
     
+    @IBOutlet weak var detailWeatherSectionView: UIView!
+    
     @IBOutlet weak var forecastWeatherCollectionView: UICollectionView!
     
     var currentCity: City!
+    var forecastWeatherList: Array<ForecastWeather>?
+    
+    var prevContentOffset: CGFloat = 0.0
+    
+    let emitterLayer = CAEmitterLayer()
+    let emitterCell = CAEmitterCell()
     
     // need to understand how constructor works
 //    convenience init(city: City) {
@@ -107,10 +116,33 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
                         let countryCode = forecastJson["city"]["country"]
                         print(countryCode)
                         
+                        
+                        self.forecastWeatherList = Array()
+                        
+                        guard let forecastArray = forecastJson["list"].array else {return}
+                        
+                        for aForecastItem in forecastArray {
+                            let forecastWeather = ForecastWeather()
+                            forecastWeather.time = Date(timeIntervalSince1970: TimeInterval(aForecastItem["dt"].intValue))
+                            forecastWeather.currentTemp = aForecastItem["main"]["temp"].doubleValue
+                            forecastWeather.weatherMain = aForecastItem["weather"][0]["main"].stringValue
+                            
+                            self.forecastWeatherList?.append(forecastWeather)
+                        }
+                        
+                        self.forecastCollectionView.reloadData()
+                        
                     }
                 }
             })
         }
+        
+        setUpEmitterLayer()
+        setUpEmitterCell()
+        emitterLayer.emitterCells = [emitterCell]
+        self.backgroundView.layer.addSublayer(emitterLayer)
+        
+        self.forecastCollectionView.register(UINib(nibName: "ForecastWeatherCell", bundle: nil), forCellWithReuseIdentifier: "forecastWeatherCell")
         
     }
     
@@ -126,7 +158,28 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        //basicWeatherViewHeight.constant = CGFloat.maximum(200.0, basicWeatherViewHeight.constant - scrollView.contentOffset.y / 2.0)
+        
+        if scrollView == self.forecastCollectionView {
+            return
+        }
+        
+        print("content off set y is: \(scrollView.contentOffset.y)")
+        
+        let diffOffset = scrollView.contentOffset.y - prevContentOffset
+        let yOffset = diffOffset
+        
+        // parallax on basic section
+        basicWeatherSectionView.frame = basicWeatherSectionView.frame.offsetBy(dx: 0, dy: scrollView.contentOffset.y < 120 ? yOffset * 0.6 : yOffset)
+        
+        detailWeatherSectionView.frame = detailWeatherSectionView.frame.offsetBy(dx: 0, dy: scrollView.contentOffset.y < 130 ? 0 : yOffset)
+        
+        
+        // opacity of 
+        self.currWeatherView.alpha = 1 - (scrollView.contentOffset.y / (basicWeatherSectionView.frame.height / 5))
+        
+        prevContentOffset = scrollView.contentOffset.y
+        
+        
     }
 
     private func setBackgroundImageForCity(city: City) {
@@ -203,7 +256,64 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
     }
     
     private func updateCellBackgoundImage(named: String) {
-        self.backgroundView.image = UIImage(named: named)
+        //self.backgroundView.image = UIImage(named: named)
+    }
+    
+    func setUpEmitterLayer() {
+        emitterLayer.frame = self.backgroundView.bounds
+        emitterLayer.seed = UInt32(NSDate().timeIntervalSince1970)
+        emitterLayer.renderMode = kCAEmitterLayerAdditive
+        emitterLayer.drawsAsynchronously = true
+        emitterLayer.backgroundColor = UIColor.init(colorLiteralRed: 117/255, green: 117/255, blue: 163/255, alpha: 0.8).cgColor
+        setEmitterPosition()
+    }
+    
+    // 3
+    func setUpEmitterCell() {
+        emitterCell.contents = UIImage(named: "particle_rain")?.cgImage
+        
+        emitterCell.lifetime = 3.0
+        emitterCell.birthRate = 100.0
+        
+        emitterCell.velocity = 1600.0
+        emitterCell.velocityRange = 100.0
+        
+        emitterCell.emissionLatitude = degreesToRadians(271)
+        emitterCell.emissionLongitude = degreesToRadians(300)
+        emitterCell.emissionRange = degreesToRadians(0)
+        
+        emitterCell.xAcceleration = -50
+        emitterCell.yAcceleration = 1000
+        emitterCell.zAcceleration = 0
+        
+        emitterCell.alphaRange = 0.2
+        emitterCell.scale = 0.15
+        
+        emitterCell.color = UIColor.gray.cgColor
+        emitterCell.redRange = 0.0
+        emitterCell.greenRange = 0.0
+        emitterCell.blueRange = 0.0
+        emitterCell.alphaRange = 0.0
+        emitterCell.redSpeed = 0.0
+        emitterCell.greenSpeed = 0.0
+        emitterCell.blueSpeed = 0.0
+        emitterCell.alphaSpeed = 0
+        
+//        let zeroDegreesInRadians = degreesToRadians(0.0)
+//        emitterCell.spin = degreesToRadians(130.0)
+//        emitterCell.spinRange = zeroDegreesInRadians
+//        emitterCell.emissionRange = degreesToRadians(360.0)
+
+    }
+    
+    func degreesToRadians(_ degrees: Double) -> CGFloat {
+        return CGFloat(degrees * M_PI / 180.0)
+    }
+    
+    func setEmitterPosition() {
+        emitterLayer.emitterPosition = CGPoint(x: self.view.bounds.midX, y: self.view.bounds.minY - 50)
+        emitterLayer.emitterSize = CGSize(width: self.backgroundView.bounds.width * 1.2, height: 5)
+        emitterLayer.emitterShape = kCAEmitterLayerLine;
     }
     
 }
@@ -215,13 +325,54 @@ extension CityWeatherDetailViewController: UICollectionViewDataSource, UICollect
     
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        return self.forecastWeatherList?.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "forecastWeatherCell", for: indexPath) as! ForecastWeatherCell
-        cell.weatherLabel.text = "OK"
-        cell.tempLabel.text = "25"
+        
+        //let cell = Bundle.main.loadNibNamed("ForecastWeatherCell", owner: self, options: nil)?.first as! ForecastWeatherCell
+        
+        guard let forecastList = self.forecastWeatherList else {
+            return cell
+        }
+        
+        let timeFormatter = DateFormatter()
+        timeFormatter.dateFormat = "h a"
+        cell.timeLabel.text = timeFormatter.string(from: forecastList[indexPath.row].time!)
+        cell.weatherLabel.text = forecastList[indexPath.row].weatherMain ?? "unavailable"
+        cell.weatherImageView.image = UIImage(named: "icon_partly_cloudy")
+        cell.tempLabel.text = "\(forecastList[indexPath.row].currentTemp!)"
+        
+        cell.weatherImageView.image = cell.weatherImageView.image?.maskWithColor(color: UIColor.white)
+        cell.precipImageView.image = cell.precipImageView.image?.maskWithColor(color: UIColor.white)
         return cell
     }
+}
+
+extension UIImage {
+    
+    func maskWithColor(color: UIColor) -> UIImage? {
+        let maskImage = cgImage!
+        
+        let width = size.width
+        let height = size.height
+        let bounds = CGRect(x: 0, y: 0, width: width, height: height)
+        
+        let colorSpace = CGColorSpaceCreateDeviceRGB()
+        let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue)
+        let context = CGContext(data: nil, width: Int(width), height: Int(height), bitsPerComponent: 8, bytesPerRow: 0, space: colorSpace, bitmapInfo: bitmapInfo.rawValue)!
+        
+        context.clip(to: bounds, mask: maskImage)
+        context.setFillColor(color.cgColor)
+        context.fill(bounds)
+        
+        if let cgImage = context.makeImage() {
+            let coloredImage = UIImage(cgImage: cgImage)
+            return coloredImage
+        } else {
+            return nil
+        }
+    }
+    
 }
