@@ -178,8 +178,6 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
         self.currWeatherView.alpha = 1 - (scrollView.contentOffset.y / (basicWeatherSectionView.frame.height / 5))
         
         prevContentOffset = scrollView.contentOffset.y
-        
-        
     }
 
     private func setBackgroundImageForCity(city: City) {
@@ -260,7 +258,7 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
     }
     
     func setUpEmitterLayer() {
-        emitterLayer.frame = self.backgroundView.bounds
+        emitterLayer.frame = self.view.bounds
         emitterLayer.seed = UInt32(NSDate().timeIntervalSince1970)
         emitterLayer.renderMode = kCAEmitterLayerAdditive
         emitterLayer.drawsAsynchronously = true
@@ -298,11 +296,6 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
         emitterCell.greenSpeed = 0.0
         emitterCell.blueSpeed = 0.0
         emitterCell.alphaSpeed = 0
-        
-//        let zeroDegreesInRadians = degreesToRadians(0.0)
-//        emitterCell.spin = degreesToRadians(130.0)
-//        emitterCell.spinRange = zeroDegreesInRadians
-//        emitterCell.emissionRange = degreesToRadians(360.0)
 
     }
     
@@ -348,31 +341,4 @@ extension CityWeatherDetailViewController: UICollectionViewDataSource, UICollect
         cell.precipImageView.image = cell.precipImageView.image?.maskWithColor(color: UIColor.white)
         return cell
     }
-}
-
-extension UIImage {
-    
-    func maskWithColor(color: UIColor) -> UIImage? {
-        let maskImage = cgImage!
-        
-        let width = size.width
-        let height = size.height
-        let bounds = CGRect(x: 0, y: 0, width: width, height: height)
-        
-        let colorSpace = CGColorSpaceCreateDeviceRGB()
-        let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue)
-        let context = CGContext(data: nil, width: Int(width), height: Int(height), bitsPerComponent: 8, bytesPerRow: 0, space: colorSpace, bitmapInfo: bitmapInfo.rawValue)!
-        
-        context.clip(to: bounds, mask: maskImage)
-        context.setFillColor(color.cgColor)
-        context.fill(bounds)
-        
-        if let cgImage = context.makeImage() {
-            let coloredImage = UIImage(cgImage: cgImage)
-            return coloredImage
-        } else {
-            return nil
-        }
-    }
-    
 }
