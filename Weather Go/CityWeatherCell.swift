@@ -9,7 +9,6 @@
 import Foundation
 import UIKit
 import CoreLocation
-import TimeZoneLocate
 
 class CityWeatherCell: UITableViewCell {
     
@@ -67,8 +66,7 @@ class CityWeatherCell: UITableViewCell {
         
         let date = Date()
         
-        if let timezone = TimeZoneLocate.timeZoneWithLocation(CLLocation(latitude: city.latitude, longitude: city.longitude), countryCode: city.countryCode) {
-//            print(timezone)
+        if let timezone = self.city?.timezone {
             let formatter = DateFormatter()
             formatter.timeZone = timezone
             formatter.dateFormat = "hh:mm a"

@@ -36,6 +36,7 @@ class WeatherListViewController : UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        self.tableView.backgroundColor = kColorBackgroundNight
         
         timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTime) , userInfo: nil, repeats: true)
         let longPress = UILongPressGestureRecognizer(target: self, action: #selector(longPressGestureRecognized))
@@ -71,6 +72,7 @@ class WeatherListViewController : UITableViewController {
                             weather.pressure = cityJson["main"]["pressure"].doubleValue
                             weather.windSpeed = cityJson["wind"]["speed"].doubleValue
                             weather.windDegree = cityJson["wind"]["deg"].doubleValue
+                            // TODO: should consider timezone
                             weather.sunrize =  Date(timeIntervalSince1970: TimeInterval(cityJson["sys"]["sunrise"].intValue))
                             weather.sunset =  Date(timeIntervalSince1970: TimeInterval(cityJson["sys"]["sunset"].intValue))
                             city.weather = weather
@@ -88,6 +90,16 @@ class WeatherListViewController : UITableViewController {
             }
             
         }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        //self.navigationController?.setNavigationBarHidden(true, animated: true)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        //self.navigationController?.setNavigationBarHidden(false, animated: true)
     }
     
     override func didReceiveMemoryWarning() {
@@ -258,7 +270,6 @@ class WeatherListViewController : UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.selectedCity = self.citiList?[indexPath.row]
         performSegue(withIdentifier: "showCityDetail", sender: nil)
-//        performSegue(withIdentifier: "showViewController", sender: nil)
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
@@ -286,10 +297,10 @@ class WeatherListViewController : UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didEndEditingRowAt indexPath: IndexPath?) {
-        if let indexPath = indexPath {
-            let cell = tableView.cellForRow(at: indexPath) as! CityWeatherCell
-            //cell.backgroundWeatherView.clipsToBounds = false
-        }
+//        if let indexPath = indexPath {
+//            let cell = tableView.cellForRow(at: indexPath) as! CityWeatherCell
+//            //cell.backgroundWeatherView.clipsToBounds = false
+//        }
     }
     
 

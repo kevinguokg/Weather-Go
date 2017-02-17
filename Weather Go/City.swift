@@ -15,6 +15,7 @@ class City: NSObject, NSCoding {
     var longitude: Double
     var countryCode: String
     var weather: Weather?
+    var timezone: TimeZone?
     
     init(id: String, name: String, latitude: Double, longitude: Double, countryCode: String) {
         self.id = id
@@ -31,7 +32,7 @@ class City: NSObject, NSCoding {
         self.longitude = aDecoder.decodeDouble(forKey: "longitude")
         self.countryCode = aDecoder.decodeObject(forKey: "countryCode") as! String
         self.weather = aDecoder.decodeObject(forKey: "weather") as? Weather
-        
+        self.timezone = aDecoder.decodeObject(forKey: "timezone") as? TimeZone
     }
     
     func encode(with aCoder: NSCoder) {
@@ -41,6 +42,7 @@ class City: NSObject, NSCoding {
         aCoder.encode(longitude, forKey: "longitude")
         aCoder.encode(countryCode, forKey: "countryCode")
         aCoder.encode(weather, forKey: "weather")
+        aCoder.encode(timezone, forKey: "timezone")
     }
     
     

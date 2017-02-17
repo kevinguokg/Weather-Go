@@ -96,6 +96,9 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
                 
                 let timeFormatter = DateFormatter()
                 timeFormatter.dateFormat = "h:mm a"
+                if let timezone = self.currentCity.timezone {
+                    timeFormatter.timeZone = timezone
+                }
                 
                 self.sunriseLabel.text = (weather.sunrize != nil) ? timeFormatter.string(from: weather.sunrize!) : "Not Available"
                 self.sunsetLabel.text = (weather.sunset != nil) ? timeFormatter.string(from: weather.sunset!) : "Not Available"
@@ -126,6 +129,7 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
                             forecastWeather.time = Date(timeIntervalSince1970: TimeInterval(aForecastItem["dt"].intValue))
                             forecastWeather.currentTemp = aForecastItem["main"]["temp"].doubleValue
                             forecastWeather.weatherMain = aForecastItem["weather"][0]["main"].stringValue
+                            forecastWeather.precipRain = aForecastItem["rain"]["3h"].double
                             
                             self.forecastWeatherList?.append(forecastWeather)
                         }
@@ -138,8 +142,13 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
         }
         
         setUpEmitterLayer()
-        setUpEmitterCell()
-        emitterLayer.emitterCells = [emitterCell]
+        if self.currentCity.weather?.weatherMain == "Rain" || self.currentCity.weather?.weatherMain == "Drizzle" {
+            emitterLayer.backgroundColor = kColorBackgroundRainy.cgColor
+            setUpEmitterCell()
+            
+            emitterLayer.emitterCells = [emitterCell]
+        }
+        
         self.backgroundView.layer.addSublayer(emitterLayer)
         
         self.forecastCollectionView.register(UINib(nibName: "ForecastWeatherCell", bundle: nil), forCellWithReuseIdentifier: "forecastWeatherCell")
@@ -154,6 +163,7 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
     func screenEdgeSwiped(_ recognizer: UIScreenEdgePanGestureRecognizer) {
         if recognizer.state == .recognized {
              print("Screen edge swiped!")
+            _ = self.navigationController?.popViewController(animated: true)
         }
     }
     
@@ -169,10 +179,8 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
         let yOffset = diffOffset
         
         // parallax on basic section
-        basicWeatherSectionView.frame = basicWeatherSectionView.frame.offsetBy(dx: 0, dy: scrollView.contentOffset.y < 120 ? yOffset * 0.6 : yOffset)
-        
+        basicWeatherSectionView.frame = basicWeatherSectionView.frame.offsetBy(dx: 0, dy: scrollView.contentOffset.y < 120 ? yOffset * 0.5 : yOffset)
         detailWeatherSectionView.frame = detailWeatherSectionView.frame.offsetBy(dx: 0, dy: scrollView.contentOffset.y < 130 ? 0 : yOffset)
-        
         
         // opacity of 
         self.currWeatherView.alpha = 1 - (scrollView.contentOffset.y / (basicWeatherSectionView.frame.height / 5))
@@ -262,7 +270,13 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
         emitterLayer.seed = UInt32(NSDate().timeIntervalSince1970)
         emitterLayer.renderMode = kCAEmitterLayerAdditive
         emitterLayer.drawsAsynchronously = true
-        emitterLayer.backgroundColor = UIColor.init(colorLiteralRed: 117/255, green: 117/255, blue: 163/255, alpha: 0.8).cgColor
+        
+        if isDayTime(date: Date()) {
+            emitterLayer.backgroundColor = kColorBackgroundDay.cgColor
+        } else {
+            emitterLayer.backgroundColor = kColorBackgroundNight.cgColor
+        }
+        
         setEmitterPosition()
     }
     
@@ -309,6 +323,16 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
         emitterLayer.emitterShape = kCAEmitterLayerLine;
     }
     
+    func isDayTime(date: Date) -> Bool {
+        let timeFormatter = DateFormatter()
+        timeFormatter.dateFormat = "H"
+        if let timezone = self.currentCity.timezone {
+            timeFormatter.timeZone = timezone
+        }
+        let hourString = timeFormatter.string(from: date)
+        
+        return Int(hourString)! >= 6 && Int(hourString)! < 18
+    }
 }
 
 extension CityWeatherDetailViewController: UICollectionViewDataSource, UICollectionViewDelegate {
@@ -324,18 +348,52 @@ extension CityWeatherDetailViewController: UICollectionViewDataSource, UICollect
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "forecastWeatherCell", for: indexPath) as! ForecastWeatherCell
         
-        //let cell = Bundle.main.loadNibNamed("ForecastWeatherCell", owner: self, options: nil)?.first as! ForecastWeatherCell
-        
         guard let forecastList = self.forecastWeatherList else {
             return cell
         }
+        cell.city = self.currentCity
+        cell.forecastWeather = forecastList[indexPath.row]
+        
+        cell.updateCell()
         
         let timeFormatter = DateFormatter()
         timeFormatter.dateFormat = "h a"
+        if let timezone = self.currentCity.timezone {
+            timeFormatter.timeZone = timezone
+        }
+        
+        if isDayTime(date: forecastList[indexPath.row].time!) {
+            cell.containerView.backgroundColor = kColorForecastDay
+        } else {
+            cell.containerView.backgroundColor = kColorForecastNight
+        }
+        
         cell.timeLabel.text = timeFormatter.string(from: forecastList[indexPath.row].time!)
         cell.weatherLabel.text = forecastList[indexPath.row].weatherMain ?? "unavailable"
-        cell.weatherImageView.image = UIImage(named: "icon_partly_cloudy")
         cell.tempLabel.text = "\(forecastList[indexPath.row].currentTemp!)"
+        
+        if let rainPrecip = forecastList[indexPath.row].precipRain {
+            cell.precipLabel.text = rainPrecip > 1 ? "\(round(rainPrecip))mm" : "<1mm"
+        } else {
+            cell.precipLabel.text = "0mm"
+        }
+        
+        if #available(iOS 10.0, *) {
+            let isMetric = UserDefaults.standard.bool(forKey: "isMetric")
+            
+            var curTempUnit = Measurement(value: forecastList[indexPath.row].currentTemp!, unit: UnitTemperature.celsius)
+
+            if !isMetric {
+                curTempUnit = curTempUnit.converted(to: UnitTemperature.fahrenheit)
+            }
+            
+             cell.tempLabel.text = "\(Int(curTempUnit.value))\(curTempUnit.unit.symbol)"
+            
+        } else {
+            // Fallback on earlier versions
+            cell.tempLabel.text = "\(forecastList[indexPath.row].currentTemp!)"
+        }
+
         
         cell.weatherImageView.image = cell.weatherImageView.image?.maskWithColor(color: UIColor.white)
         cell.precipImageView.image = cell.precipImageView.image?.maskWithColor(color: UIColor.white)

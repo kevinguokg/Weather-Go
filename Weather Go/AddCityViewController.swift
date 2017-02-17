@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import SwiftyJSON
 import CoreLocation
+import TimeZoneLocate
 
 class AddCityViewController : UIViewController, UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate, CLLocationManagerDelegate {
     
@@ -108,6 +109,11 @@ class AddCityViewController : UIViewController, UISearchBarDelegate, UITableView
         let cityJson = JSON(json)
         let city = City(id: "\(cityJson["id"].intValue)", name: cityJson["name"].stringValue, latitude: cityJson["coord"]["lat"].doubleValue, longitude: cityJson["coord"]["lon"].doubleValue, countryCode: cityJson["sys"]["country"].stringValue)
         
+        if let timezone = TimeZoneLocate.timeZoneWithLocation(CLLocation(latitude: city.latitude, longitude: city.longitude), countryCode: city.countryCode) {
+            //            print(timezone)
+            city.timezone = timezone
+        }
+        
         let weather = Weather()
         weather.weatherMain = cityJson["weather"][0]["main"].stringValue
         weather.weatherDesc = cityJson["weather"][0]["description"].stringValue
@@ -121,6 +127,7 @@ class AddCityViewController : UIViewController, UISearchBarDelegate, UITableView
         weather.clouds = cityJson["clouds"]["all"].doubleValue
         weather.sunrize =  Date(timeIntervalSince1970: TimeInterval(cityJson["sys"]["sunrise"].intValue))
         weather.sunset =  Date(timeIntervalSince1970: TimeInterval(cityJson["sys"]["sunset"].intValue))
+        weather.precipRain = cityJson["rain"]["3h"].double
         city.weather = weather
         
         #if DEBUG

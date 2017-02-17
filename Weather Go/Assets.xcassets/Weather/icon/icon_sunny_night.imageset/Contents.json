@@ -2,12 +2,12 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "weather-shower.png",
+      "filename" : "weather-moon.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "weather-shower@2x.png",
+      "filename" : "weather-moon@2x.png",
       "scale" : "2x"
     },
     {
