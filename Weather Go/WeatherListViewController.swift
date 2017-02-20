@@ -62,6 +62,10 @@ class WeatherListViewController : UITableViewController {
                             let cityJson = JSON(json)
                             let city = City(id: "\(cityJson["id"].intValue)", name: cityJson["name"].stringValue, latitude: cityJson["coord"]["lat"].doubleValue, longitude: cityJson["coord"]["lon"].doubleValue, countryCode: cityJson["sys"]["country"].stringValue)
                             
+                            if let timezone = TimeZoneLocate.timeZoneWithLocation(CLLocation(latitude: city.latitude, longitude: city.longitude), countryCode: city.countryCode) {
+                                city.timezone = timezone
+                            }
+                            
                             let weather = Weather()
                             weather.weatherMain = cityJson["weather"][0]["main"].stringValue
                             weather.weatherDesc = cityJson["weather"][0]["description"].stringValue
