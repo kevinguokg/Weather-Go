@@ -141,15 +141,15 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
             })
         }
         
-        setUpEmitterLayer()
-        if self.currentCity.weather?.weatherMain == "Rain" || self.currentCity.weather?.weatherMain == "Drizzle" {
-            emitterLayer.backgroundColor = kColorBackgroundRainy.cgColor
-            setUpEmitterCell()
-            
-            emitterLayer.emitterCells = [emitterCell]
-        }
-        
-        self.backgroundView.layer.addSublayer(emitterLayer)
+//        setUpEmitterLayer()
+//        if self.currentCity.weather?.weatherMain == "Rain" || self.currentCity.weather?.weatherMain == "Drizzle" {
+//            emitterLayer.backgroundColor = kColorBackgroundRainy.cgColor
+//            setUpEmitterCell()
+//            
+//            emitterLayer.emitterCells = [emitterCell]
+//        }
+//        
+//        self.backgroundView.layer.addSublayer(emitterLayer)
         
         self.forecastCollectionView.register(UINib(nibName: "ForecastWeatherCell", bundle: nil), forCellWithReuseIdentifier: "forecastWeatherCell")
         
@@ -197,19 +197,28 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
                 if let weatherType = city.weather?.weatherMain {
                     switch weatherType {
                     case "Clear":
-                        self.updateCellBackgoundImage(named: "sunny_day")
+//                        self.updateCellBackgoundImage(named: "sunny_day")
+                        let weatherLayer = ClearSkyEffectLayer(frame: self.backgroundView.frame, dayNight: .day)
+                        self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer]
                         break
                         
                     case "Rain", "Drizzle":
-                        self.updateCellBackgoundImage(named: "rainy_day")
+                        //self.updateCellBackgoundImage(named: "rainy_day")
+                        let weatherLayer = RainEffectLayer(frame: self.backgroundView.frame, dayNight: .day)
+                        self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer]
+                        addRainyClouds()
                         break
+
                         
                     case "Snow":
                         self.updateCellBackgoundImage(named: "snowy_day")
                         break
                         
                     case "Clouds":
-                        self.updateCellBackgoundImage(named: "cloudy_day")
+                        //self.updateCellBackgoundImage(named: "cloudy_day")
+                        let weatherLayer = CloudEffectLayer(frame: self.backgroundView.frame, dayNight: .day)
+                        self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer]
+                        addOvercastClouds()
                         break
                         
                     case "Mist", "Haze":
@@ -229,11 +238,16 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
                 if let weatherType = city.weather?.weatherMain {
                     switch weatherType {
                     case "Clear":
-                        self.updateCellBackgoundImage(named: "sunny_night")
+                        //self.updateCellBackgoundImage(named: "sunny_night")
+                        let weatherLayer = ClearSkyEffectLayer(frame: self.backgroundView.frame, dayNight: .night)
+                        self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer]
                         break
                         
                     case "Rain", "Drizzle":
-                        self.updateCellBackgoundImage(named: "rainy_day")
+                        //self.updateCellBackgoundImage(named: "rainy_day")
+                        let weatherLayer = RainEffectLayer(frame: self.backgroundView.frame, dayNight: .night)
+                        self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer]
+                        addRainyClouds()
                         break
                         
                     case "Snow":
@@ -241,7 +255,10 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
                         break
                         
                     case "Clouds":
-                        self.updateCellBackgoundImage(named: "cloudy_day")
+                        //self.updateCellBackgoundImage(named: "cloudy_day")
+                        let weatherLayer = CloudEffectLayer(frame: self.backgroundView.frame, dayNight: .night)
+                        self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer]
+                        addOvercastClouds()
                         break
                         
                     case "Mist", "Haze":
@@ -259,6 +276,53 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
             }
             
         }
+    }
+    
+    private func addRainyClouds() {
+        let cloudImage = UIImageView(frame: CGRect(x: 10, y: 10, width: 300, height: 200))
+        cloudImage.alpha = 0.3
+        cloudImage.image = UIImage(named: "cloud_rain_2")
+        self.basicWeatherSectionView.addSubview(cloudImage)
+        self.basicWeatherSectionView.sendSubview(toBack: cloudImage)
+        
+        UIView.animate(withDuration: 45, delay: 0, options: [UIViewAnimationOptions.autoreverse, UIViewAnimationOptions.repeat, .curveEaseInOut], animations: {
+            cloudImage.center.x += 200
+        }, completion: nil)
+        
+        
+        let cloudImage2 = UIImageView(frame: CGRect(x: 150, y: 10, width: 220, height: 160))
+        cloudImage2.alpha = 0.2
+        cloudImage2.image = UIImage(named: "cloud_rain_1")
+        self.basicWeatherSectionView.addSubview(cloudImage2)
+        self.basicWeatherSectionView.sendSubview(toBack: cloudImage2)
+        
+        UIView.animate(withDuration: 50, delay: 0, options: [UIViewAnimationOptions.autoreverse, UIViewAnimationOptions.repeat, .curveLinear], animations: {
+            cloudImage2.center.x -= 200
+        }, completion: nil)
+        
+    }
+    
+    private func addOvercastClouds() {
+        let cloudImage = UIImageView(frame: CGRect(x: 10, y: 10, width: 300, height: 200))
+        cloudImage.alpha = 0.3
+        cloudImage.image = UIImage(named: "cloud_clear_1")
+        self.basicWeatherSectionView.addSubview(cloudImage)
+        self.basicWeatherSectionView.sendSubview(toBack: cloudImage)
+        
+        UIView.animate(withDuration: 45, delay: 0, options: [UIViewAnimationOptions.autoreverse, UIViewAnimationOptions.repeat, .curveEaseInOut], animations: {
+            cloudImage.center.x += 200
+        }, completion: nil)
+        
+        
+        let cloudImage2 = UIImageView(frame: CGRect(x: 150, y: 10, width: 220, height: 160))
+        cloudImage2.alpha = 0.2
+        cloudImage2.image = UIImage(named: "cloud_clear_1")
+        self.basicWeatherSectionView.addSubview(cloudImage2)
+        self.basicWeatherSectionView.sendSubview(toBack: cloudImage2)
+        
+        UIView.animate(withDuration: 50, delay: 0, options: [UIViewAnimationOptions.autoreverse, UIViewAnimationOptions.repeat, .curveLinear], animations: {
+            cloudImage2.center.x -= 200
+        }, completion: nil)
     }
     
     private func updateCellBackgoundImage(named: String) {

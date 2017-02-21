@@ -10,6 +10,11 @@
 		5A3C8AB2F4B88BA1A80280ED /* Pods_Weather_Go.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F2FAB76CB1DFB1E71CD615F /* Pods_Weather_Go.framework */; };
 		9D1BE5461E44F86600F28085 /* ModalDismissAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D1BE5451E44F86600F28085 /* ModalDismissAnimator.swift */; };
 		9D488C781E4E86EC00D97E8B /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D488C771E4E86EC00D97E8B /* Extensions.swift */; };
+		9D4E8C401E5B763C00D8ABD1 /* WeatherEffectLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D4E8C3F1E5B763C00D8ABD1 /* WeatherEffectLayer.swift */; };
+		9D4E8C431E5B7A6F00D8ABD1 /* RainEffectLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D4E8C421E5B7A6F00D8ABD1 /* RainEffectLayer.swift */; };
+		9D4E8C471E5B897900D8ABD1 /* ClearSkyEffectLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D4E8C461E5B897900D8ABD1 /* ClearSkyEffectLayer.swift */; };
+		9D4E8C511E5B8B0100D8ABD1 /* Snow.sks in Resources */ = {isa = PBXBuildFile; fileRef = 9D4E8C501E5B8B0100D8ABD1 /* Snow.sks */; };
+		9D4E8C531E5B8D5000D8ABD1 /* CloudEffectLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D4E8C521E5B8D5000D8ABD1 /* CloudEffectLayer.swift */; };
 		9D8068D21E57808100082F15 /* Contants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D8068D11E57808100082F15 /* Contants.swift */; };
 		9D8B994C1E36D5C200BDE4CC /* CityWeatherDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D8B994B1E36D5C200BDE4CC /* CityWeatherDetailViewController.swift */; };
 		9D8B994F1E38346500BDE4CC /* UserDefaultManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D8B994E1E38346500BDE4CC /* UserDefaultManager.swift */; };
@@ -40,6 +45,11 @@
 		6F2FAB76CB1DFB1E71CD615F /* Pods_Weather_Go.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Weather_Go.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D1BE5451E44F86600F28085 /* ModalDismissAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModalDismissAnimator.swift; sourceTree = "<group>"; };
 		9D488C771E4E86EC00D97E8B /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		9D4E8C3F1E5B763C00D8ABD1 /* WeatherEffectLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeatherEffectLayer.swift; sourceTree = "<group>"; };
+		9D4E8C421E5B7A6F00D8ABD1 /* RainEffectLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RainEffectLayer.swift; sourceTree = "<group>"; };
+		9D4E8C461E5B897900D8ABD1 /* ClearSkyEffectLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClearSkyEffectLayer.swift; sourceTree = "<group>"; };
+		9D4E8C501E5B8B0100D8ABD1 /* Snow.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Snow.sks; sourceTree = "<group>"; };
+		9D4E8C521E5B8D5000D8ABD1 /* CloudEffectLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudEffectLayer.swift; sourceTree = "<group>"; };
 		9D8068D11E57808100082F15 /* Contants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Contants.swift; sourceTree = "<group>"; };
 		9D8B994B1E36D5C200BDE4CC /* CityWeatherDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CityWeatherDetailViewController.swift; sourceTree = "<group>"; };
 		9D8B994E1E38346500BDE4CC /* UserDefaultManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultManager.swift; sourceTree = "<group>"; };
@@ -101,6 +111,17 @@
 				9D488C771E4E86EC00D97E8B /* Extensions.swift */,
 			);
 			name = Extensions;
+			sourceTree = "<group>";
+		};
+		9D4E8C411E5B7A5200D8ABD1 /* Weather Effect Layers */ = {
+			isa = PBXGroup;
+			children = (
+				9D4E8C3F1E5B763C00D8ABD1 /* WeatherEffectLayer.swift */,
+				9D4E8C421E5B7A6F00D8ABD1 /* RainEffectLayer.swift */,
+				9D4E8C461E5B897900D8ABD1 /* ClearSkyEffectLayer.swift */,
+				9D4E8C521E5B8D5000D8ABD1 /* CloudEffectLayer.swift */,
+			);
+			name = "Weather Effect Layers";
 			sourceTree = "<group>";
 		};
 		9D8B994D1E38345000BDE4CC /* Utils */ = {
@@ -203,6 +224,7 @@
 			isa = PBXGroup;
 			children = (
 				9DF7F2381E4D2C6E00619D3E /* Rain.sks */,
+				9D4E8C501E5B8B0100D8ABD1 /* Snow.sks */,
 			);
 			name = Particles;
 			sourceTree = "<group>";
@@ -210,6 +232,7 @@
 		9DF7F23A1E4D2E9500619D3E /* Weather Animations */ = {
 			isa = PBXGroup;
 			children = (
+				9D4E8C411E5B7A5200D8ABD1 /* Weather Effect Layers */,
 				9DF7F23B1E4D2EA200619D3E /* Background Views */,
 				9DF7F2371E4D2C4800619D3E /* Particles */,
 			);
@@ -301,6 +324,7 @@
 				9DDD480F1E2EEF4100D0A83D /* Assets.xcassets in Resources */,
 				9DF7F2391E4D2C6E00619D3E /* Rain.sks in Resources */,
 				9DDD480D1E2EEF4100D0A83D /* Main.storyboard in Resources */,
+				9D4E8C511E5B8B0100D8ABD1 /* Snow.sks in Resources */,
 				9DA08B2D1E4AAA74001D1868 /* ForecastWeatherCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -360,9 +384,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9D4E8C401E5B763C00D8ABD1 /* WeatherEffectLayer.swift in Sources */,
 				9DF7F2361E4D1E9200619D3E /* ForecastWeather.swift in Sources */,
 				9DDD481A1E2EF2A900D0A83D /* WeatherAPI.swift in Sources */,
 				9D1BE5461E44F86600F28085 /* ModalDismissAnimator.swift in Sources */,
+				9D4E8C531E5B8D5000D8ABD1 /* CloudEffectLayer.swift in Sources */,
 				9DDD48261E301AA700D0A83D /* AddCityViewController.swift in Sources */,
 				9D9C5C701E42BF4B00B5CD36 /* SettingsViewController.swift in Sources */,
 				9D8068D21E57808100082F15 /* Contants.swift in Sources */,
@@ -375,7 +401,9 @@
 				9DDD480A1E2EEF4100D0A83D /* ViewController.swift in Sources */,
 				9D8B994F1E38346500BDE4CC /* UserDefaultManager.swift in Sources */,
 				9DDD48241E30188E00D0A83D /* Weather.swift in Sources */,
+				9D4E8C431E5B7A6F00D8ABD1 /* RainEffectLayer.swift in Sources */,
 				9D488C781E4E86EC00D97E8B /* Extensions.swift in Sources */,
+				9D4E8C471E5B897900D8ABD1 /* ClearSkyEffectLayer.swift in Sources */,
 				9DF7F23F1E4D2F0600619D3E /* BackgroundScene.swift in Sources */,
 				9DDD48081E2EEF4100D0A83D /* AppDelegate.swift in Sources */,
 			);

@@ -76,7 +76,6 @@ class WeatherListViewController : UITableViewController {
                             weather.pressure = cityJson["main"]["pressure"].doubleValue
                             weather.windSpeed = cityJson["wind"]["speed"].doubleValue
                             weather.windDegree = cityJson["wind"]["deg"].doubleValue
-                            // TODO: should consider timezone
                             weather.sunrize =  Date(timeIntervalSince1970: TimeInterval(cityJson["sys"]["sunrise"].intValue))
                             weather.sunset =  Date(timeIntervalSince1970: TimeInterval(cityJson["sys"]["sunset"].intValue))
                             city.weather = weather
@@ -133,7 +132,7 @@ class WeatherListViewController : UITableViewController {
     
     func updateTime() {
         for cell in self.tableView.visibleCells as! [CityWeatherCell]{
-                cell.updateCell()
+            cell.updateCellTime()
         }
     }
     
@@ -243,6 +242,8 @@ class WeatherListViewController : UITableViewController {
         return image
     }
     
+    
+    // MARK: tableview Delegates
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -261,15 +262,16 @@ class WeatherListViewController : UITableViewController {
     }
     
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if let visibleCells = self.tableView.visibleCells as? [CityWeatherCell] {
-            for cell in visibleCells {
-                cell.backgroundWeatherView.clipsToBounds = false
-                //let yOffset = ((self.tableView.contentOffset.y - cell.frame.origin.y) / cell.imageHeight) * cell.offsetSpeed
-                let yOffset = ((self.tableView.contentOffset.y) / cell.imageHeight) * cell.offsetSpeed
-                cell.offset(offset: CGPoint(x: 0.0, y: yOffset))
-            }
-        }
+//        if let visibleCells = self.tableView.visibleCells as? [CityWeatherCell] {
+//            for cell in visibleCells {
+//                //cell.backgroundWeatherView.clipsToBounds = false
+//                //let yOffset = ((self.tableView.contentOffset.y - cell.frame.origin.y) / cell.imageHeight) * cell.offsetSpeed
+//                let yOffset = ((self.tableView.contentOffset.y) / cell.imageHeight) * cell.offsetSpeed
+//                cell.offset(offset: CGPoint(x: 0.0, y: yOffset))
+//            }
+//        }
     }
+    
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.selectedCity = self.citiList?[indexPath.row]
@@ -294,8 +296,8 @@ class WeatherListViewController : UITableViewController {
     override func tableView(_ tableView: UITableView, willBeginEditingRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath) as! CityWeatherCell
         
-        let snapShotImageCell = self.snapshotImgOfCell(cell)
-        cell.backgroundWeatherView.image = snapShotImageCell
+        //let snapShotImageCell = self.snapshotImgOfCell(cell)
+        //cell.backgroundWeatherView.image = snapShotImageCell
         
         cell.backgroundWeatherView.clipsToBounds = true
     }

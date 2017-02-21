@@ -59,21 +59,28 @@ class CityWeatherCell: UITableViewCell {
         currentOffset = offset
     }
     
+    func updateCellTime() {
+        if let city = self.city {
+            let date = Date()
+            
+            if let timezone = self.city?.timezone {
+                let formatter = DateFormatter()
+                formatter.timeZone = timezone
+                formatter.dateFormat = "hh:mm a"
+                cityLocalTimeLabel.text = formatter.string(from: date)
+            } else {
+                cityLocalTimeLabel.text = ""
+            }
+        }
+    }
     
     func updateCell(_ city: City) {
         self.city = city
         cityNameLabel.text = city.name
         
-        let date = Date()
+        updateCellTime()
         
-        if let timezone = self.city?.timezone {
-            let formatter = DateFormatter()
-            formatter.timeZone = timezone
-            formatter.dateFormat = "hh:mm a"
-            cityLocalTimeLabel.text = formatter.string(from: date)
-        } else {
-            cityLocalTimeLabel.text = ""
-        }
+        let date = Date()
         
         if #available(iOS 10.0, *) {
             let isMetric = UserDefaults.standard.bool(forKey: "isMetric")
@@ -97,16 +104,20 @@ class CityWeatherCell: UITableViewCell {
                 if let weatherType = city.weather?.weatherMain {
                     switch weatherType {
                     case "Clear":
-                        self.updateCellBackgoundImage(named: "sunny_day")
+                        //self.updateCellBackgoundImage(named: "sunny_day")
+                        let weatherLayer = ClearSkyEffectLayer(frame: self.backgroundWeatherView.frame, dayNight: .day)
+                        self.backgroundWeatherView?.layer.sublayers = [weatherLayer.emitterLayer]
                         break
                       
                     case "Rain", "Drizzle":
-                        self.updateCellBackgoundImage(named: "rainy_day")
+                        //self.updateCellBackgoundImage(named: "rainy_day")
                         
-                        setUpEmitterLayer()
-                        setUpEmitterCell()
-                        emitterLayer.emitterCells = [emitterCell]
-                        self.backgroundWeatherView?.layer.addSublayer(emitterLayer)
+//                        setUpEmitterLayer()
+//                        setUpEmitterCell()
+//                        emitterLayer.emitterCells = [emitterCell]
+                        
+                        let weatherLayer = RainEffectLayer(frame: self.backgroundWeatherView.frame, dayNight: .day)
+                        self.backgroundWeatherView?.layer.sublayers = [weatherLayer.emitterLayer]
                         break
                     
                     case "Snow":
@@ -114,7 +125,10 @@ class CityWeatherCell: UITableViewCell {
                         break
                         
                     case "Clouds":
-                        self.updateCellBackgoundImage(named: "cloudy_day")
+                        //self.updateCellBackgoundImage(named: "cloudy_day")
+                        
+                        let weatherLayer = CloudEffectLayer(frame: self.backgroundWeatherView.frame, dayNight: .day)
+                        self.backgroundWeatherView?.layer.sublayers = [weatherLayer.emitterLayer]
                         break
                         
                     case "Mist", "Haze":
@@ -134,16 +148,16 @@ class CityWeatherCell: UITableViewCell {
                 if let weatherType = city.weather?.weatherMain {
                     switch weatherType {
                     case "Clear":
-                        self.updateCellBackgoundImage(named: "sunny_night")
+                        //self.updateCellBackgoundImage(named: "sunny_night")
+                        let weatherLayer = ClearSkyEffectLayer(frame: self.backgroundWeatherView.frame, dayNight: .night)
+                        self.backgroundWeatherView?.layer.sublayers = [weatherLayer.emitterLayer]
                         break
                         
                     case "Rain", "Drizzle":
-                        self.updateCellBackgoundImage(named: "rainy_day")
+                        //self.updateCellBackgoundImage(named: "rainy_day")
                         
-                        setUpEmitterLayer()
-                        setUpEmitterCell()
-                        emitterLayer.emitterCells = [emitterCell]
-                        self.backgroundWeatherView?.layer.addSublayer(emitterLayer)
+                        let weatherLayer = RainEffectLayer(frame: self.backgroundWeatherView.frame, dayNight: .night)
+                        self.backgroundWeatherView?.layer.sublayers = [weatherLayer.emitterLayer]
                         
                         break
                         
@@ -152,7 +166,10 @@ class CityWeatherCell: UITableViewCell {
                         break
                         
                     case "Clouds":
-                        self.updateCellBackgoundImage(named: "cloudy_day")
+                        //self.updateCellBackgoundImage(named: "cloudy_day")
+                        
+                        let weatherLayer = CloudEffectLayer(frame: self.backgroundWeatherView.frame, dayNight: .night)
+                        self.backgroundWeatherView?.layer.sublayers = [weatherLayer.emitterLayer]
                         break
                         
                     case "Mist", "Haze":
@@ -171,29 +188,10 @@ class CityWeatherCell: UITableViewCell {
 
         }
         
-        
-        
     }
     
     private func updateCellBackgoundImage(named: String) {
-//        let imageView = UIImageView(image: UIImage(named: named))
-//        imageView.contentMode = .scaleAspectFill
-//        self.backgroundView = imageView
-        
-        self.backgroundWeatherView.image = UIImage(named: named)
-        
-        
-        //if let offset = self.currentOffset {
-        //    self.offset(offset: offset)
-        //}
-        
-        
-    }
-    
-    func updateCell(){
-        if let city = self.city {
-            updateCell(city)
-        }
+        //self.backgroundWeatherView.image = UIImage(named: named)
     }
     
     func setUpEmitterLayer() {
