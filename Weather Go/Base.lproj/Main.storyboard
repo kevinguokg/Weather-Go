@@ -92,7 +92,7 @@
                     <tableView key="view" clipsSubviews="YES" alpha="0.95999999999999996" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="70" sectionHeaderHeight="18" sectionFooterHeight="18" id="ao2-DC-uu1">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" red="0.32210204425861411" green="0.32529117340968949" blue="0.32529117340968949" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" red="0.076982609927654266" green="0.098585449159145355" blue="0.20645767450332642" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <gestureRecognizers/>
                         <sections>
                             <tableViewSection headerTitle="Units" id="ibW-9e-Tkk">
@@ -120,7 +120,7 @@
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" red="0.57436329139706344" green="0.58005005665842047" blue="0.58005005665842047" alpha="0.84999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="backgroundColor" red="0.32468163967132568" green="0.34440559148788452" blue="0.37755683064460754" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="settingCell" textLabel="4lT-4u-4Ba" detailTextLabel="yxk-QG-xeQ" style="IBUITableViewCellStyleSubtitle" id="RN9-mS-6ql">
                                         <rect key="frame" x="0.0" y="126" width="375" height="70"/>
@@ -145,7 +145,7 @@
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" red="0.57436329139706344" green="0.58005005665842047" blue="0.58005005665842047" alpha="0.84999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="backgroundColor" red="0.32468163970000002" green="0.3444055915" blue="0.3775568306" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
@@ -178,15 +178,15 @@
                         <viewControllerLayoutGuide type="top" id="Yqd-PM-HsD"/>
                         <viewControllerLayoutGuide type="bottom" id="C4h-PS-mv6"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" misplaced="YES" id="uXn-ax-gsd">
+                    <view key="view" contentMode="scaleToFill" id="uXn-ax-gsd">
                         <rect key="frame" x="0.0" y="64" width="375" height="936"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="wdf-sr-9OX">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="956"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="892"/>
                             </imageView>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xMT-XX-yd4">
-                                <rect key="frame" x="-0.5" y="0.0" width="375" height="1000"/>
+                                <rect key="frame" x="-0.5" y="0.0" width="375" height="936"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XPj-gD-4VZ" userLabel="Content View">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="566"/>

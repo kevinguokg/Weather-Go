@@ -55,6 +55,7 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+//        self.view.layoutIfNeeded()
         let panEdgeGesture = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(screenEdgeSwiped))
         panEdgeGesture.edges = .left
         self.view.addGestureRecognizer(panEdgeGesture)
@@ -198,13 +199,13 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
                     switch weatherType {
                     case "Clear":
 //                        self.updateCellBackgoundImage(named: "sunny_day")
-                        let weatherLayer = ClearSkyEffectLayer(frame: self.backgroundView.frame, dayNight: .day)
+                        let weatherLayer = ClearSkyEffectLayer(frame: self.view.frame, dayNight: .day)
                         self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer]
                         break
                         
                     case "Rain", "Drizzle":
                         //self.updateCellBackgoundImage(named: "rainy_day")
-                        let weatherLayer = RainEffectLayer(frame: self.backgroundView.frame, dayNight: .day)
+                        let weatherLayer = RainEffectLayer(frame: self.view.frame, dayNight: .day)
                         self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer]
                         addRainyClouds()
                         break
@@ -216,13 +217,16 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
                         
                     case "Clouds":
                         //self.updateCellBackgoundImage(named: "cloudy_day")
-                        let weatherLayer = CloudEffectLayer(frame: self.backgroundView.frame, dayNight: .day)
+                        let weatherLayer = CloudEffectLayer(frame: self.view.frame, dayNight: .day)
                         self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer]
                         addOvercastClouds()
                         break
                         
                     case "Mist", "Haze":
-                        self.updateCellBackgoundImage(named: "fog_day")
+                        //self.updateCellBackgoundImage(named: "fog_day")
+                        let weatherLayer = FogEffectLayer(frame: self.view.frame, dayNight: .day)
+                        self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer]
+                        addFogClouds()
                         break
                         
                     case "Extreme":
@@ -239,13 +243,13 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
                     switch weatherType {
                     case "Clear":
                         //self.updateCellBackgoundImage(named: "sunny_night")
-                        let weatherLayer = ClearSkyEffectLayer(frame: self.backgroundView.frame, dayNight: .night)
+                        let weatherLayer = ClearSkyEffectLayer(frame: self.view.frame, dayNight: .night)
                         self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer]
                         break
                         
                     case "Rain", "Drizzle":
                         //self.updateCellBackgoundImage(named: "rainy_day")
-                        let weatherLayer = RainEffectLayer(frame: self.backgroundView.frame, dayNight: .night)
+                        let weatherLayer = RainEffectLayer(frame: self.view.frame, dayNight: .night)
                         self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer]
                         addRainyClouds()
                         break
@@ -256,13 +260,16 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
                         
                     case "Clouds":
                         //self.updateCellBackgoundImage(named: "cloudy_day")
-                        let weatherLayer = CloudEffectLayer(frame: self.backgroundView.frame, dayNight: .night)
+                        let weatherLayer = CloudEffectLayer(frame: self.view.frame, dayNight: .night)
                         self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer]
                         addOvercastClouds()
                         break
                         
                     case "Mist", "Haze":
-                        self.updateCellBackgoundImage(named: "fog_day")
+                        //self.updateCellBackgoundImage(named: "fog_day")
+                        let weatherLayer = FogEffectLayer(frame: self.view.frame, dayNight: .night)
+                        self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer]
+                        addFogClouds()
                         break
                         
                     case "Extreme":
@@ -299,7 +306,6 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
         UIView.animate(withDuration: 50, delay: 0, options: [UIViewAnimationOptions.autoreverse, UIViewAnimationOptions.repeat, .curveLinear], animations: {
             cloudImage2.center.x -= 200
         }, completion: nil)
-        
     }
     
     private func addOvercastClouds() {
@@ -317,6 +323,29 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
         let cloudImage2 = UIImageView(frame: CGRect(x: 150, y: 10, width: 220, height: 160))
         cloudImage2.alpha = 0.2
         cloudImage2.image = UIImage(named: "cloud_clear_1")
+        self.basicWeatherSectionView.addSubview(cloudImage2)
+        self.basicWeatherSectionView.sendSubview(toBack: cloudImage2)
+        
+        UIView.animate(withDuration: 50, delay: 0, options: [UIViewAnimationOptions.autoreverse, UIViewAnimationOptions.repeat, .curveLinear], animations: {
+            cloudImage2.center.x -= 200
+        }, completion: nil)
+    }
+    
+    private func addFogClouds() {
+        let cloudImage = UIImageView(frame: CGRect(x: 10, y: 10, width: 300, height: 200))
+        cloudImage.alpha = 0.8
+        cloudImage.image = UIImage(named: "cloud_fog")
+        self.basicWeatherSectionView.addSubview(cloudImage)
+        self.basicWeatherSectionView.sendSubview(toBack: cloudImage)
+        
+        UIView.animate(withDuration: 45, delay: 0, options: [UIViewAnimationOptions.autoreverse, UIViewAnimationOptions.repeat, .curveEaseInOut], animations: {
+            cloudImage.center.x += 200
+        }, completion: nil)
+        
+        
+        let cloudImage2 = UIImageView(frame: CGRect(x: 200, y: 10, width: 220, height: 160))
+        cloudImage2.alpha = 0.6
+        cloudImage2.image = UIImage(named: "cloud_fog")
         self.basicWeatherSectionView.addSubview(cloudImage2)
         self.basicWeatherSectionView.sendSubview(toBack: cloudImage2)
         

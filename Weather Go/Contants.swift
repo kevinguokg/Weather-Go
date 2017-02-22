@@ -18,10 +18,14 @@ let kColorBackgroundRainy = UIColor.init(red: 117/255, green: 117/255, blue: 163
 let kColorBackgroundRainyNight = UIColor.init(red: 40/255, green: 46/255, blue: 56/255, alpha: 0.8)
 
 // clear
-let kColorBackgroundDay = UIColor.init(red: 78/255, green: 190/255, blue: 224/255, alpha: 0.8)
+let kColorBackgroundDay = UIColor.init(red: 69/255, green: 151/255, blue: 194/255, alpha: 0.8)
 let kColorBackgroundNight = UIColor.init(red: 25/255, green: 31/255, blue: 66/255, alpha: 0.8)
 
 // cloudy
 let kColorBackgroundCloudDay = UIColor.init(red: 164/255, green: 164/255, blue: 198/255, alpha: 0.8)
 let kColorBackgroundCloudNight = UIColor.init(red: 47/255, green: 69/255, blue: 91/255, alpha: 0.8)
 
+// rain drop grey 151, 154, 160
+let kColorRainFropGrey = UIColor.init(red: 151/255, green: 154/255, blue: 160/255, alpha: 0.5)
+
+let kColorRainFropGreyFaint = UIColor.init(red: 185/255, green: 185/255, blue: 181/255, alpha: 0.1)

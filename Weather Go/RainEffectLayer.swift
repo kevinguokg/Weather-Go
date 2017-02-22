@@ -17,11 +17,11 @@ class RainEffectLayer: WeatherEffectLayer {
     let kForgroundParticleLifetime:Float = 2.0
     let kBackgroundParticleLifetime:Float = 4.0
     
-    let kForgroundParticleVelocity:CGFloat = 600.0
-    let kBackgroundParticleVelocity:CGFloat = 900.0
+    let kForgroundParticleVelocity:CGFloat = 900.0
+    let kBackgroundParticleVelocity:CGFloat = 1200.0
     
-    let kForgroundParticleScale:CGFloat = 0.18
-    let kBackgroundParticleScale:CGFloat = 0.12
+    let kForgroundParticleScale:CGFloat = 0.2
+    let kBackgroundParticleScale:CGFloat = 0.15
     
     override init(frame: CGRect, dayNight: DayNight) {
         super.init(frame: frame, dayNight: dayNight)
@@ -40,7 +40,7 @@ class RainEffectLayer: WeatherEffectLayer {
     
     func setUpEmitterCell(depthOfField: DepthOfField) -> CAEmitterCell{
         let emitterCell = CAEmitterCell()
-        emitterCell.contents = UIImage(named: "particle_rain")?.cgImage
+        emitterCell.contents = UIImage(named: "particle_rain2")?.cgImage
         
         switch depthOfField {
             case .foreground:
@@ -73,7 +73,7 @@ class RainEffectLayer: WeatherEffectLayer {
         
         emitterCell.alphaRange = 0.2
         
-        emitterCell.color = UIColor.gray.cgColor
+        emitterCell.color = UIColor.white.cgColor
         emitterCell.redRange = 0.0
         emitterCell.greenRange = 0.0
         emitterCell.blueRange = 0.0

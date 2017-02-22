@@ -87,6 +87,8 @@ class WeatherListViewController : UITableViewController {
                             }
                             print("City: \(city.name) has been updated.")
                             self.tableView.reloadData()
+                            // add city to user defaults
+                            UserDefaultManager.addCityToUserDefault(self.citiList!, withKey: "cityList")
                         }
                     }
                 })
@@ -102,6 +104,7 @@ class WeatherListViewController : UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.tableView.reloadData()
         //self.navigationController?.setNavigationBarHidden(false, animated: true)
     }
     
@@ -253,12 +256,29 @@ class WeatherListViewController : UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cityWeatherCell", for: indexPath) as! CityWeatherCell
+        var cell = tableView.dequeueReusableCell(withIdentifier: "cityWeatherCell", for: indexPath) as? CityWeatherCell
+        
+        if cell == nil {
+            cell = CityWeatherCell(style: .default, reuseIdentifier: "cityWeatherCell")
+        }
         
         if let city = citiList?[indexPath.row]{
-            cell.updateCell(city)
+            cell?.layoutIfNeeded()
+            cell?.updateCell(city)
         }
-        return cell
+        return cell!
+    }
+    
+    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if let theCell = cell as? CityWeatherCell {
+            theCell.animateEffects()
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if let theCell = cell as? CityWeatherCell {
+            theCell.stopAnimatingEffects()
+        }
     }
     
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -271,7 +291,6 @@ class WeatherListViewController : UITableViewController {
 //            }
 //        }
     }
-    
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.selectedCity = self.citiList?[indexPath.row]

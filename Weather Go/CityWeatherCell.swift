@@ -23,6 +23,9 @@ class CityWeatherCell: UITableViewCell {
     let emitterLayer = CAEmitterLayer()
     let emitterCell = CAEmitterCell()
     
+    var cloudImage1: UIImageView!
+    var cloudImage2: UIImageView!
+    
     var city: City? = nil
     var imageHeight: CGFloat {
         get {
@@ -66,7 +69,7 @@ class CityWeatherCell: UITableViewCell {
             if let timezone = self.city?.timezone {
                 let formatter = DateFormatter()
                 formatter.timeZone = timezone
-                formatter.dateFormat = "hh:mm a"
+                formatter.dateFormat = "h:mm a"
                 cityLocalTimeLabel.text = formatter.string(from: date)
             } else {
                 cityLocalTimeLabel.text = ""
@@ -111,11 +114,6 @@ class CityWeatherCell: UITableViewCell {
                       
                     case "Rain", "Drizzle":
                         //self.updateCellBackgoundImage(named: "rainy_day")
-                        
-//                        setUpEmitterLayer()
-//                        setUpEmitterCell()
-//                        emitterLayer.emitterCells = [emitterCell]
-                        
                         let weatherLayer = RainEffectLayer(frame: self.backgroundWeatherView.frame, dayNight: .day)
                         self.backgroundWeatherView?.layer.sublayers = [weatherLayer.emitterLayer]
                         break
@@ -132,7 +130,9 @@ class CityWeatherCell: UITableViewCell {
                         break
                         
                     case "Mist", "Haze":
-                        self.updateCellBackgoundImage(named: "fog_day")
+                        //self.updateCellBackgoundImage(named: "fog_day")
+                        let weatherLayer = FogEffectLayer(frame: self.backgroundWeatherView.frame, dayNight: .day)
+                        self.backgroundWeatherView?.layer.sublayers = [weatherLayer.emitterLayer]
                         break
                         
                     case "Extreme":
@@ -173,7 +173,9 @@ class CityWeatherCell: UITableViewCell {
                         break
                         
                     case "Mist", "Haze":
-                        self.updateCellBackgoundImage(named: "fog_day")
+                        //self.updateCellBackgoundImage(named: "fog_day")
+                        let weatherLayer = FogEffectLayer(frame: self.backgroundWeatherView.frame, dayNight: .night)
+                        self.backgroundWeatherView?.layer.sublayers = [weatherLayer.emitterLayer]
                         break
                         
                     case "Extreme":
@@ -194,60 +196,149 @@ class CityWeatherCell: UITableViewCell {
         //self.backgroundWeatherView.image = UIImage(named: named)
     }
     
-    func setUpEmitterLayer() {
-        emitterLayer.frame = self.backgroundWeatherView.bounds
-        emitterLayer.seed = UInt32(NSDate().timeIntervalSince1970)
-        emitterLayer.renderMode = kCAEmitterLayerAdditive
-        emitterLayer.drawsAsynchronously = true
-        //emitterLayer.backgroundColor = UIColor.gray.cgColor
-        setEmitterPosition()
+    func stopAnimatingEffects() {
+        if cloudImage1 != nil {
+            cloudImage1.removeFromSuperview()
+            cloudImage1 = nil
+        }
+        
+        if cloudImage2 != nil {
+            cloudImage2.removeFromSuperview()
+            cloudImage2 = nil
+        }
     }
     
-    // 3
-    func setUpEmitterCell() {
-        emitterCell.contents = UIImage(named: "particle_rain")?.cgImage
+    func animateEffects() {
+        guard let city = self.city else {
+            return
+        }
         
-        emitterCell.lifetime = 3.0
-        emitterCell.birthRate = 150.0
-        
-        emitterCell.velocity = 1600.0
-        emitterCell.velocityRange = 100.0
-        
-        emitterCell.emissionLatitude = degreesToRadians(271)
-        emitterCell.emissionLongitude = degreesToRadians(300)
-        emitterCell.emissionRange = degreesToRadians(0)
-        
-        emitterCell.xAcceleration = -50
-        emitterCell.yAcceleration = 1000
-        emitterCell.zAcceleration = 0
-        
-        emitterCell.alphaRange = 0.2
-        emitterCell.scale = 0.18
-        
-        emitterCell.color = UIColor.gray.cgColor
-        emitterCell.redRange = 0.0
-        emitterCell.greenRange = 0.0
-        emitterCell.blueRange = 0.0
-        emitterCell.alphaRange = 0.0
-        emitterCell.redSpeed = 0.0
-        emitterCell.greenSpeed = 0.0
-        emitterCell.blueSpeed = 0.0
-        emitterCell.alphaSpeed = 0
-        
-        //        let zeroDegreesInRadians = degreesToRadians(0.0)
-        //        emitterCell.spin = degreesToRadians(130.0)
-        //        emitterCell.spinRange = zeroDegreesInRadians
-        //        emitterCell.emissionRange = degreesToRadians(360.0)
-        
+        let date = Date()
+        // determine sunrise
+        if let sunrise = city.weather?.sunrize, let sunset = city.weather?.sunset {
+            if sunrise < date && date < sunset {
+                // sunrise...
+                if let weatherType = city.weather?.weatherMain {
+                    switch weatherType {
+                    case "Clear":
+                        break
+                        
+                    case "Rain", "Drizzle":
+
+                        break
+                        
+                    case "Snow":
+                        break
+                        
+                    case "Clouds":
+                        addOvercastClouds()
+                        break
+                        
+                    case "Mist", "Haze":
+                        addFogClouds()
+                        break
+                        
+                    case "Extreme":
+                        break
+                    default:
+                        break
+                    }
+                }
+                
+                
+            } else {
+                // sunset...
+                if let weatherType = city.weather?.weatherMain {
+                    switch weatherType {
+                    case "Clear":
+                        break
+                        
+                    case "Rain", "Drizzle":
+                        break
+                        
+                    case "Snow":
+                        break
+                        
+                    case "Clouds":
+                        addOvercastClouds()
+                        break
+                        
+                    case "Mist", "Haze":
+                        addFogClouds()
+                        break
+                        
+                    case "Extreme":
+                        break
+                    default:
+                        break
+                    }
+                }
+                
+                
+            }
+            
+        }
     }
     
-    func degreesToRadians(_ degrees: Double) -> CGFloat {
-        return CGFloat(degrees * M_PI / 180.0)
+    private func addOvercastClouds() {
+        if self.cloudImage1 != nil && self.cloudImage2 != nil {
+            return
+        }
+        let xCoord = CGFloat(arc4random_uniform(UInt32(self.frame.width / 2))) // generate a random number
+        cloudImage1 = UIImageView(frame: CGRect(x: xCoord, y: 0, width: self.frame.width, height: self.frame.height))
+        cloudImage1.clipsToBounds = true
+        cloudImage1.contentMode = .scaleAspectFill
+        
+        cloudImage1.alpha = 0.3
+        cloudImage1.image = UIImage(named: "cloud_clear_1")
+        self.addSubview(cloudImage1)
+        
+        UIView.animate(withDuration: 45, delay: 0, options: [UIViewAnimationOptions.autoreverse, UIViewAnimationOptions.repeat, .curveEaseInOut], animations: {
+            self.cloudImage1.center.x += 200
+        }, completion: nil)
+        
+        let xCoord2 = CGFloat(arc4random_uniform(UInt32(self.frame.width / 2))) * 2 // generate a random number
+        cloudImage2 = UIImageView(frame: CGRect(x: xCoord2, y: 0, width: self.frame.width * 0.8, height: self.frame.height))
+        cloudImage2.clipsToBounds = true
+        cloudImage2.alpha = 0.2
+        cloudImage2.image = UIImage(named: "cloud_clear_1")
+        cloudImage2.contentMode = .scaleAspectFill
+        self.addSubview(cloudImage2)
+        
+        UIView.animate(withDuration: 50, delay: 0, options: [UIViewAnimationOptions.autoreverse, UIViewAnimationOptions.repeat, .curveLinear], animations: {
+            self.cloudImage2.center.x -= 200
+        }, completion: nil)
     }
     
-    func setEmitterPosition() {
-        emitterLayer.emitterPosition = CGPoint(x: self.backgroundWeatherView.bounds.midX, y: self.backgroundWeatherView.bounds.minY - 50)
-        emitterLayer.emitterSize = CGSize(width: self.backgroundWeatherView.bounds.width * 1.2, height: 5)
-        emitterLayer.emitterShape = kCAEmitterLayerLine;
+    private func addFogClouds() {
+        if self.cloudImage1 != nil && self.cloudImage2 != nil {
+            return
+        }
+        
+        let xCoord = CGFloat(arc4random_uniform(UInt32(self.frame.width / 2))) // generate a random number
+        cloudImage1 = UIImageView(frame: CGRect(x: xCoord, y: 0, width: self.frame.width * 1.5, height: self.frame.height))
+        cloudImage1.clipsToBounds = true
+        cloudImage1.contentMode = .scaleAspectFill
+        
+        cloudImage1.alpha = 1
+        cloudImage1.image = UIImage(named: "cloud_fog")
+        self.addSubview(cloudImage1)
+        
+        UIView.animate(withDuration: 45, delay: 0, options: [UIViewAnimationOptions.autoreverse, UIViewAnimationOptions.repeat, .curveEaseInOut], animations: {
+            self.cloudImage1.center.x += 200
+        }, completion: nil)
+        
+        let xCoord2 = CGFloat(arc4random_uniform(UInt32(self.frame.width / 2))) * 2 // generate a random number
+        cloudImage2 = UIImageView(frame: CGRect(x: xCoord2, y: 0, width: self.frame.width, height: self.frame.height))
+        cloudImage2.clipsToBounds = true
+        cloudImage2.alpha = 0.8
+        cloudImage2.image = UIImage(named: "cloud_fog")
+        cloudImage2.contentMode = .scaleAspectFill
+        self.addSubview(cloudImage2)
+        
+        UIView.animate(withDuration: 50, delay: 0, options: [UIViewAnimationOptions.autoreverse, UIViewAnimationOptions.repeat, .curveLinear], animations: {
+            self.cloudImage2.center.x -= 200
+        }, completion: nil)
     }
+    
 }
