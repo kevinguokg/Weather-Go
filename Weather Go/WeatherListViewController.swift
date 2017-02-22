@@ -11,6 +11,7 @@ import UIKit
 import SwiftyJSON
 import CoreLocation
 import TimeZoneLocate
+import RainyRefreshControl
 
 class WeatherListViewController : UITableViewController {
     
@@ -33,6 +34,8 @@ class WeatherListViewController : UITableViewController {
     
     let panGestureInteractor: Interactor = Interactor()
     
+    let refresh = RainyRefreshControl()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -42,6 +45,10 @@ class WeatherListViewController : UITableViewController {
         let longPress = UILongPressGestureRecognizer(target: self, action: #selector(longPressGestureRecognized))
         self.tableView.addGestureRecognizer(longPress)
         
+        
+        refresh.addTarget(self, action: #selector(doRefresh), for: .valueChanged)
+        tableView.addSubview(refresh)
+        
         let defaults = UserDefaults.standard
         citiList = Array()
         if let citiArr = defaults.object(forKey: "cityList") as? NSMutableArray{
@@ -50,6 +57,39 @@ class WeatherListViewController : UITableViewController {
             }
         }
         
+        self.queryAllCityWeather()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        //self.navigationController?.setNavigationBarHidden(true, animated: true)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.tableView.reloadData()
+        //self.navigationController?.setNavigationBarHidden(false, animated: true)
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    @IBAction func unwindFromAddCityListPage(sender: UIStoryboardSegue)
+    {
+        
+        if sender.identifier == "CitySelectedSegue" {
+            let sourceViewController = (sender.source) as! AddCityViewController
+            if let selectedCity = sourceViewController.selectedCity {
+                self.addCityToList(selectedCity)
+                // add city to user defaults
+                UserDefaultManager.addCityToUserDefault(self.citiList!, withKey: "cityList")
+            }
+        }
+    }
+    
+    func queryAllCityWeather() {
         if let isEmpty = citiList?.isEmpty, isEmpty == false {
             // query cached city
             for city in citiList! {
@@ -89,6 +129,9 @@ class WeatherListViewController : UITableViewController {
                             self.tableView.reloadData()
                             // add city to user defaults
                             UserDefaultManager.addCityToUserDefault(self.citiList!, withKey: "cityList")
+                            
+                            
+                            self.refresh.endRefreshing()
                         }
                     }
                 })
@@ -97,33 +140,8 @@ class WeatherListViewController : UITableViewController {
         }
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        //self.navigationController?.setNavigationBarHidden(true, animated: true)
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        self.tableView.reloadData()
-        //self.navigationController?.setNavigationBarHidden(false, animated: true)
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-    @IBAction func unwindFromAddCityListPage(sender: UIStoryboardSegue)
-    {
-        
-        if sender.identifier == "CitySelectedSegue" {
-            let sourceViewController = (sender.source) as! AddCityViewController
-            if let selectedCity = sourceViewController.selectedCity {
-                self.addCityToList(selectedCity)
-                // add city to user defaults
-                UserDefaultManager.addCityToUserDefault(self.citiList!, withKey: "cityList")
-            }
-        }
+    func doRefresh() {
+        self.queryAllCityWeather()
     }
     
     private func addCityToList(_ city: City) {
