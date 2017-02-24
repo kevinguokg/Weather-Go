@@ -26,10 +26,12 @@ class CityWeatherCell: UITableViewCell {
     var cloudImage1: UIImageView!
     var cloudImage2: UIImageView!
     
+    var imgPos1: CGFloat?
+    var imgPos2: CGFloat?
+    
     var city: City? = nil
     var imageHeight: CGFloat {
         get {
-            
             return self.backgroundWeatherView!.bounds.height
         }
     }
@@ -43,9 +45,7 @@ class CityWeatherCell: UITableViewCell {
         if self.currentOffset == nil {
             UIView.animate(withDuration: 0.1) {
                 self.backgroundWeatherView?.frame = (self.backgroundWeatherView?.bounds)!.offsetBy(dx: offset.x, dy: offset.y)
-                
-                //(self.backgroundWeatherView?.bounds)!.
-                
+
                 //self.imgBackTopConstraint.constant -= offset.y
                 //self.imgBackBottomConstraint.constant += offset.y
                 
@@ -119,7 +119,9 @@ class CityWeatherCell: UITableViewCell {
                         break
                     
                     case "Snow":
-                        self.updateCellBackgoundImage(named: "snowy_day")
+                        //self.updateCellBackgoundImage(named: "snowy_day")
+                        let weatherLayer = SnowEffectLayer(frame: self.backgroundWeatherView.frame, dayNight: .day)
+                        self.backgroundWeatherView?.layer.sublayers = [weatherLayer.emitterLayer]
                         break
                         
                     case "Clouds":
@@ -162,7 +164,9 @@ class CityWeatherCell: UITableViewCell {
                         break
                         
                     case "Snow":
-                        self.updateCellBackgoundImage(named: "snowy_night")
+                        //self.updateCellBackgoundImage(named: "snowy_night")
+                        let weatherLayer = SnowEffectLayer(frame: self.backgroundWeatherView.frame, dayNight: .night)
+                        self.backgroundWeatherView?.layer.sublayers = [weatherLayer.emitterLayer]
                         break
                         
                     case "Clouds":
@@ -221,6 +225,7 @@ class CityWeatherCell: UITableViewCell {
                 if let weatherType = city.weather?.weatherMain {
                     switch weatherType {
                     case "Clear":
+                        addSumBeam()
                         break
                         
                     case "Rain", "Drizzle":
@@ -284,7 +289,8 @@ class CityWeatherCell: UITableViewCell {
         if self.cloudImage1 != nil && self.cloudImage2 != nil {
             return
         }
-        let xCoord = CGFloat(arc4random_uniform(UInt32(self.frame.width / 2))) // generate a random number
+        
+        let xCoord = self.imgPos1 ?? CGFloat(arc4random_uniform(UInt32(self.frame.width / 2))) // generate a random number
         cloudImage1 = UIImageView(frame: CGRect(x: xCoord, y: 0, width: self.frame.width, height: self.frame.height))
         cloudImage1.clipsToBounds = true
         cloudImage1.contentMode = .scaleAspectFill
@@ -297,7 +303,7 @@ class CityWeatherCell: UITableViewCell {
             self.cloudImage1.center.x += 200
         }, completion: nil)
         
-        let xCoord2 = CGFloat(arc4random_uniform(UInt32(self.frame.width / 2))) * 2 // generate a random number
+        let xCoord2 = self.imgPos2 ?? CGFloat(arc4random_uniform(UInt32(self.frame.width / 2))) * 2 // generate a random number
         cloudImage2 = UIImageView(frame: CGRect(x: xCoord2, y: 0, width: self.frame.width * 0.8, height: self.frame.height))
         cloudImage2.clipsToBounds = true
         cloudImage2.alpha = 0.2
@@ -315,7 +321,7 @@ class CityWeatherCell: UITableViewCell {
             return
         }
         
-        let xCoord = CGFloat(arc4random_uniform(UInt32(self.frame.width / 2))) // generate a random number
+        let xCoord = self.imgPos1 ?? CGFloat(arc4random_uniform(UInt32(self.frame.width / 2))) // generate a random number
         cloudImage1 = UIImageView(frame: CGRect(x: xCoord, y: 0, width: self.frame.width * 1.5, height: self.frame.height))
         cloudImage1.clipsToBounds = true
         cloudImage1.contentMode = .scaleAspectFill
@@ -328,7 +334,7 @@ class CityWeatherCell: UITableViewCell {
             self.cloudImage1.center.x += 200
         }, completion: nil)
         
-        let xCoord2 = CGFloat(arc4random_uniform(UInt32(self.frame.width / 2))) * 2 // generate a random number
+        let xCoord2 = self.imgPos2 ?? CGFloat(arc4random_uniform(UInt32(self.frame.width / 2))) * 2 // generate a random number
         cloudImage2 = UIImageView(frame: CGRect(x: xCoord2, y: 0, width: self.frame.width, height: self.frame.height))
         cloudImage2.clipsToBounds = true
         cloudImage2.alpha = 0.8
@@ -339,6 +345,26 @@ class CityWeatherCell: UITableViewCell {
         UIView.animate(withDuration: 50, delay: 0, options: [UIViewAnimationOptions.autoreverse, UIViewAnimationOptions.repeat, .curveLinear], animations: {
             self.cloudImage2.center.x -= 200
         }, completion: nil)
+    }
+    
+    private func addSumBeam() {
+        if self.cloudImage1 != nil {
+            return
+        }
+        
+        cloudImage1 = UIImageView(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: self.frame.height))
+        cloudImage1.clipsToBounds = true
+        cloudImage1.contentMode = .scaleAspectFit
+        
+        cloudImage1.alpha = 0
+        cloudImage1.image = UIImage(named: "sun_beam")
+        self.addSubview(cloudImage1)
+        
+        UIView.animate(withDuration: 20, delay: 0, options: [UIViewAnimationOptions.autoreverse, UIViewAnimationOptions.repeat, .curveEaseInOut], animations: {
+            self.cloudImage1.alpha = 0.9
+            self.cloudImage1.transform = CGAffineTransform(rotationAngle: CGFloat(M_PI))
+        }, completion: nil)
+        
     }
     
 }

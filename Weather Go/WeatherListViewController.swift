@@ -45,7 +45,6 @@ class WeatherListViewController : UITableViewController {
         let longPress = UILongPressGestureRecognizer(target: self, action: #selector(longPressGestureRecognized))
         self.tableView.addGestureRecognizer(longPress)
         
-        
         refresh.addTarget(self, action: #selector(doRefresh), for: .valueChanged)
         tableView.addSubview(refresh)
         
@@ -55,6 +54,10 @@ class WeatherListViewController : UITableViewController {
             for cityData in citiArr {
                 citiList?.append(NSKeyedUnarchiver.unarchiveObject(with: cityData as! Data) as! City)
             }
+        }
+        
+        if let lastUpdateDate = defaults.object(forKey: "lastUpdatedDate") as? Date {
+            self.refresh.updateLastUpdatedDate(date: lastUpdateDate)
         }
         
         self.queryAllCityWeather()
@@ -132,6 +135,9 @@ class WeatherListViewController : UITableViewController {
                             
                             
                             self.refresh.endRefreshing()
+                            let date = Date()
+                            self.refresh.updateLastUpdatedDate(date: date)
+                            UserDefaults.standard.set(date, forKey: "lastUpdatedDate")
                         }
                     }
                 })
@@ -155,6 +161,8 @@ class WeatherListViewController : UITableViewController {
         for cell in self.tableView.visibleCells as! [CityWeatherCell]{
             cell.updateCellTime()
         }
+        
+        self.refresh.updateLastUpdatedTime(date: Date())
     }
     
     func longPressGestureRecognized(gestureRecognizer: UIGestureRecognizer) {
@@ -189,7 +197,9 @@ class WeatherListViewController : UITableViewController {
                             cell.isHidden = true
                         }
                     })
-
+                    
+                    impactHapticFeedback(style: UIImpactFeedbackStyle.medium)
+                    
                 }
                 break
                 
@@ -204,6 +214,8 @@ class WeatherListViewController : UITableViewController {
                         swap(&self.citiList![indexPath.row], &self.citiList![(Path.initialIndexPath?.row)!])
                         self.tableView.moveRow(at: Path.initialIndexPath!, to: indexPath)
                         Path.initialIndexPath = indexPath
+                        
+                        selectionHapticFeedback()
                     }
                 }
                 
@@ -234,11 +246,28 @@ class WeatherListViewController : UITableViewController {
                         }
                     })
                     
+                    impactHapticFeedback(style: UIImpactFeedbackStyle.medium)
+                    
                 }
                 
                 break
         }
         
+    }
+    
+    private func impactHapticFeedback(style: UIImpactFeedbackStyle){
+        // haptic feedback (now only on iOS 10+)
+        if #available(iOS 10.0, *) {
+            let generator = UIImpactFeedbackGenerator(style: style)
+            generator.impactOccurred()
+        }
+    }
+    
+    private func selectionHapticFeedback() {
+        if #available(iOS 10.0, *) {
+            let generator = UISelectionFeedbackGenerator()
+            generator.selectionChanged()
+        }
     }
     
     private func snapshotOfCell(_ view: UIView) -> UIView {
@@ -366,11 +395,12 @@ class WeatherListViewController : UITableViewController {
     }
     
     @IBAction func unwindFromSettingViewConroller(segue: UIStoryboardSegue) {
-        
+        self.tableView.reloadData()
     }
     
 }
 
+// MARK: UIViewControllerTransitioningDelegate methods
 extension WeatherListViewController: UIViewControllerTransitioningDelegate {
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return ModalDismissAnimator()
@@ -379,9 +409,5 @@ extension WeatherListViewController: UIViewControllerTransitioningDelegate {
     func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
         return self.panGestureInteractor.hasStarted ? self.panGestureInteractor : nil
     }
-}
-
-extension WeatherListViewController: UINavigationControllerDelegate {
-    
 }
 

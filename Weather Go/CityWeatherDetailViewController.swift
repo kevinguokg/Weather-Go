@@ -135,22 +135,21 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
                             self.forecastWeatherList?.append(forecastWeather)
                         }
                         
+                        self.forecastCollectionView.alpha = 0.0
+                        self.forecastCollectionView.isHidden = false
+                        
                         self.forecastCollectionView.reloadData()
+                        
+                        UIView.animate(withDuration: 0.5, animations: { 
+                            self.forecastCollectionView.alpha = 1.0
+                        }, completion: { (finished) in
+                            self.forecastCollectionView.isHidden = false
+                        })
                         
                     }
                 }
             })
         }
-        
-//        setUpEmitterLayer()
-//        if self.currentCity.weather?.weatherMain == "Rain" || self.currentCity.weather?.weatherMain == "Drizzle" {
-//            emitterLayer.backgroundColor = kColorBackgroundRainy.cgColor
-//            setUpEmitterCell()
-//            
-//            emitterLayer.emitterCells = [emitterCell]
-//        }
-//        
-//        self.backgroundView.layer.addSublayer(emitterLayer)
         
         self.forecastCollectionView.register(UINib(nibName: "ForecastWeatherCell", bundle: nil), forCellWithReuseIdentifier: "forecastWeatherCell")
         
@@ -198,13 +197,12 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
                 if let weatherType = city.weather?.weatherMain {
                     switch weatherType {
                     case "Clear":
-//                        self.updateCellBackgoundImage(named: "sunny_day")
                         let weatherLayer = ClearSkyEffectLayer(frame: self.view.frame, dayNight: .day)
                         self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer]
+                        addSumBeam()
                         break
                         
                     case "Rain", "Drizzle":
-                        //self.updateCellBackgoundImage(named: "rainy_day")
                         let weatherLayer = RainEffectLayer(frame: self.view.frame, dayNight: .day)
                         self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer]
                         addRainyClouds()
@@ -212,18 +210,17 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
 
                         
                     case "Snow":
-                        self.updateCellBackgoundImage(named: "snowy_day")
+                        let weatherLayer = SnowEffectLayer(frame: self.view.frame, dayNight: .day)
+                        self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer]
                         break
                         
                     case "Clouds":
-                        //self.updateCellBackgoundImage(named: "cloudy_day")
                         let weatherLayer = CloudEffectLayer(frame: self.view.frame, dayNight: .day)
                         self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer]
                         addOvercastClouds()
                         break
                         
                     case "Mist", "Haze":
-                        //self.updateCellBackgoundImage(named: "fog_day")
                         let weatherLayer = FogEffectLayer(frame: self.view.frame, dayNight: .day)
                         self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer]
                         addFogClouds()
@@ -242,31 +239,28 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
                 if let weatherType = city.weather?.weatherMain {
                     switch weatherType {
                     case "Clear":
-                        //self.updateCellBackgoundImage(named: "sunny_night")
                         let weatherLayer = ClearSkyEffectLayer(frame: self.view.frame, dayNight: .night)
                         self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer]
                         break
                         
                     case "Rain", "Drizzle":
-                        //self.updateCellBackgoundImage(named: "rainy_day")
                         let weatherLayer = RainEffectLayer(frame: self.view.frame, dayNight: .night)
                         self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer]
                         addRainyClouds()
                         break
                         
                     case "Snow":
-                        self.updateCellBackgoundImage(named: "snowy_night")
+                        let weatherLayer = SnowEffectLayer(frame: self.view.frame, dayNight: .night)
+                        self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer]
                         break
                         
                     case "Clouds":
-                        //self.updateCellBackgoundImage(named: "cloudy_day")
                         let weatherLayer = CloudEffectLayer(frame: self.view.frame, dayNight: .night)
                         self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer]
                         addOvercastClouds()
                         break
                         
                     case "Mist", "Haze":
-                        //self.updateCellBackgoundImage(named: "fog_day")
                         let weatherLayer = FogEffectLayer(frame: self.view.frame, dayNight: .night)
                         self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer]
                         addFogClouds()
@@ -354,66 +348,21 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
         }, completion: nil)
     }
     
-    private func updateCellBackgoundImage(named: String) {
-        //self.backgroundView.image = UIImage(named: named)
-    }
-    
-    func setUpEmitterLayer() {
-        emitterLayer.frame = self.view.bounds
-        emitterLayer.seed = UInt32(NSDate().timeIntervalSince1970)
-        emitterLayer.renderMode = kCAEmitterLayerAdditive
-        emitterLayer.drawsAsynchronously = true
+    private func addSumBeam() {
+        let cloudImage = UIImageView(frame: CGRect(x: 0, y: 0, width: 300, height: 200))
+        cloudImage.clipsToBounds = true
+        cloudImage.contentMode = .scaleAspectFill
         
-        if isDayTime(date: Date()) {
-            emitterLayer.backgroundColor = kColorBackgroundDay.cgColor
-        } else {
-            emitterLayer.backgroundColor = kColorBackgroundNight.cgColor
-        }
+        cloudImage.alpha = 0
+        cloudImage.image = UIImage(named: "sun_beam")
+        self.basicWeatherSectionView.addSubview(cloudImage)
+        self.basicWeatherSectionView.sendSubview(toBack: cloudImage)
         
-        setEmitterPosition()
-    }
-    
-    // 3
-    func setUpEmitterCell() {
-        emitterCell.contents = UIImage(named: "particle_rain")?.cgImage
+        UIView.animate(withDuration: 20, delay: 0, options: [UIViewAnimationOptions.autoreverse, UIViewAnimationOptions.repeat, .curveEaseInOut], animations: {
+            cloudImage.alpha = 0.9
+            cloudImage.transform = CGAffineTransform(rotationAngle: CGFloat(M_PI))
+        }, completion: nil)
         
-        emitterCell.lifetime = 3.0
-        emitterCell.birthRate = 100.0
-        
-        emitterCell.velocity = 1600.0
-        emitterCell.velocityRange = 100.0
-        
-        emitterCell.emissionLatitude = degreesToRadians(271)
-        emitterCell.emissionLongitude = degreesToRadians(300)
-        emitterCell.emissionRange = degreesToRadians(0)
-        
-        emitterCell.xAcceleration = -50
-        emitterCell.yAcceleration = 1000
-        emitterCell.zAcceleration = 0
-        
-        emitterCell.alphaRange = 0.2
-        emitterCell.scale = 0.15
-        
-        emitterCell.color = UIColor.gray.cgColor
-        emitterCell.redRange = 0.0
-        emitterCell.greenRange = 0.0
-        emitterCell.blueRange = 0.0
-        emitterCell.alphaRange = 0.0
-        emitterCell.redSpeed = 0.0
-        emitterCell.greenSpeed = 0.0
-        emitterCell.blueSpeed = 0.0
-        emitterCell.alphaSpeed = 0
-
-    }
-    
-    func degreesToRadians(_ degrees: Double) -> CGFloat {
-        return CGFloat(degrees * M_PI / 180.0)
-    }
-    
-    func setEmitterPosition() {
-        emitterLayer.emitterPosition = CGPoint(x: self.view.bounds.midX, y: self.view.bounds.minY - 50)
-        emitterLayer.emitterSize = CGSize(width: self.backgroundView.bounds.width * 1.2, height: 5)
-        emitterLayer.emitterShape = kCAEmitterLayerLine;
     }
     
     func isDayTime(date: Date) -> Bool {
@@ -428,7 +377,7 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
     }
 }
 
-extension CityWeatherDetailViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+extension CityWeatherDetailViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
@@ -456,12 +405,14 @@ extension CityWeatherDetailViewController: UICollectionViewDataSource, UICollect
         }
         
         if isDayTime(date: forecastList[indexPath.row].time!) {
-            cell.containerView.backgroundColor = kColorForecastDay
+            //cell.containerView.backgroundColor = kColorForecastDay
         } else {
-            cell.containerView.backgroundColor = kColorForecastNight
+            //cell.containerView.backgroundColor = kColorForecastNight
         }
         
         cell.timeLabel.text = timeFormatter.string(from: forecastList[indexPath.row].time!)
+        timeFormatter.dateFormat = "E"
+        cell.dayLabel.text = timeFormatter.string(from: forecastList[indexPath.row].time!)
         cell.weatherLabel.text = forecastList[indexPath.row].weatherMain ?? "unavailable"
         cell.tempLabel.text = "\(forecastList[indexPath.row].currentTemp!)"
         
@@ -486,10 +437,13 @@ extension CityWeatherDetailViewController: UICollectionViewDataSource, UICollect
             // Fallback on earlier versions
             cell.tempLabel.text = "\(forecastList[indexPath.row].currentTemp!)"
         }
-
         
         cell.weatherImageView.image = cell.weatherImageView.image?.maskWithColor(color: UIColor.white)
         cell.precipImageView.image = cell.precipImageView.image?.maskWithColor(color: UIColor.white)
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 0.0
     }
 }

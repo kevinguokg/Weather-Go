@@ -12,6 +12,7 @@ import UIKit
 class ForecastWeatherCell: UICollectionViewCell {
     
     @IBOutlet weak var containerView: UIView!
+    @IBOutlet weak var dayLabel: UILabel!
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var weatherImageView: UIImageView!
     @IBOutlet weak var weatherLabel: UILabel!

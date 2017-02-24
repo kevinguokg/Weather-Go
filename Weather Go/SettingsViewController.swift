@@ -59,7 +59,8 @@ class SettingsViewController: UITableViewController {
         UserDefaults.standard.set(indexPath.row == 1, forKey: "isMetric")
         self.isMetric = UserDefaults.standard.bool(forKey: "isMetric")
         self.tableView.reloadData()
-        self.dismiss(animated: true, completion: nil)
+        //self.dismiss(animated: true, completion: nil)
+        self.performSegue(withIdentifier: "unwindFromSettingViewConroller", sender: nil)
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
