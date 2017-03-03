@@ -17,12 +17,17 @@ class WeatherListViewController : UITableViewController {
     
     
     @IBAction func degreeBtnTapped(_ sender: Any) {
+        UserDefaults.standard.set(true, forKey: "isMetric")
+        UserDefaults.standard.synchronize()
+        self.tableView.reloadData()
     }
     
     
     @IBAction func feirenheihtBtnTapped(_ sender: Any) {
+        UserDefaults.standard.set(false, forKey: "isMetric")
+        UserDefaults.standard.synchronize()
+        self.tableView.reloadData()
     }
-    
     
     var citiList : Array<City>?
     var selectedCity: City?

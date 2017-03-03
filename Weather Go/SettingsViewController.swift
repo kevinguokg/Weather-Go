@@ -57,6 +57,7 @@ class SettingsViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         UserDefaults.standard.set(indexPath.row == 1, forKey: "isMetric")
+        UserDefaults.standard.synchronize()
         self.isMetric = UserDefaults.standard.bool(forKey: "isMetric")
         self.tableView.reloadData()
         //self.dismiss(animated: true, completion: nil)

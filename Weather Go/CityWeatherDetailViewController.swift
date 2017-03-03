@@ -114,7 +114,7 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
                     self.windLabel.text = (weather.windSpeed != nil && weather.windDegree != nil) ? "\(weather.windSpeed!) \(windSpeedUnitSymbol) \(weather.degreeToString(degree: weather.windDegree)!)" : "Not Available"
                 }
                 
-                self.currWeatherView.text = city.weather?.weatherDesc
+                self.currWeatherView.text = city.weather?.weatherDesc?.capitalized
                 
                 let timeFormatter = DateFormatter()
                 timeFormatter.dateFormat = "h:mm a"
