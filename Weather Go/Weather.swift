@@ -64,6 +64,33 @@ class Weather: NSObject, NSCoding {
         
     }
 
-    
+    func degreeToString(degree: Double?) -> String? {
+        var degreeStr: String? = nil
+        guard let degree = degree, degree >= 0 else {
+            return degreeStr
+        }
+        
+        if degree >= 350 && degree <= 10 {
+            degreeStr = "N"
+        } else if degree > 10 && degree < 80 {
+            degreeStr = "NE"
+        } else if degree >= 80 && degree <= 100 {
+            degreeStr = "E"
+        } else if degree > 100 && degree < 170 {
+            degreeStr = "SE"
+        } else if degree >= 170 && degree <= 190 {
+            degreeStr = "S"
+        } else if degree > 190 && degree < 260 {
+            degreeStr = "SW"
+        } else if degree >= 260 && degree <= 280 {
+            degreeStr = "W"
+        } else if degree > 280 && degree < 350 {
+            degreeStr = "NW"
+        } else {
+            degreeStr = "N"
+        }
+        
+        return degreeStr
+    }
     
 }

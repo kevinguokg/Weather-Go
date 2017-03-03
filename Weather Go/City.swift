@@ -16,6 +16,7 @@ class City: NSObject, NSCoding {
     var countryCode: String
     var weather: Weather?
     var timezone: TimeZone?
+    var forecast: Array<ForecastWeather>?
     
     init(id: String, name: String, latitude: Double, longitude: Double, countryCode: String) {
         self.id = id
@@ -33,6 +34,7 @@ class City: NSObject, NSCoding {
         self.countryCode = aDecoder.decodeObject(forKey: "countryCode") as! String
         self.weather = aDecoder.decodeObject(forKey: "weather") as? Weather
         self.timezone = aDecoder.decodeObject(forKey: "timezone") as? TimeZone
+        self.forecast = aDecoder.decodeObject(forKey: "forecast") as? Array<ForecastWeather>
     }
     
     func encode(with aCoder: NSCoder) {
@@ -43,6 +45,7 @@ class City: NSObject, NSCoding {
         aCoder.encode(countryCode, forKey: "countryCode")
         aCoder.encode(weather, forKey: "weather")
         aCoder.encode(timezone, forKey: "timezone")
+        aCoder.encode(forecast, forKey: "forecast")
     }
     
     

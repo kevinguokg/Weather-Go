@@ -15,6 +15,15 @@ import RainyRefreshControl
 
 class WeatherListViewController : UITableViewController {
     
+    
+    @IBAction func degreeBtnTapped(_ sender: Any) {
+    }
+    
+    
+    @IBAction func feirenheihtBtnTapped(_ sender: Any) {
+    }
+    
+    
     var citiList : Array<City>?
     var selectedCity: City?
     
@@ -50,11 +59,16 @@ class WeatherListViewController : UITableViewController {
         
         let defaults = UserDefaults.standard
         citiList = Array()
-        if let citiArr = defaults.object(forKey: "cityList") as? NSMutableArray{
+        if let citiArr = defaults.object(forKey: "cityList") as? Array<Any>{
             for cityData in citiArr {
-                citiList?.append(NSKeyedUnarchiver.unarchiveObject(with: cityData as! Data) as! City)
+                if let theCity = NSKeyedUnarchiver.unarchiveObject(with:cityData as! Data) as? City {
+                    citiList?.append(theCity)
+                }
+                //citiList?.append(NSKeyedUnarchiver.unarchiveObject(with: cityData as! Data)! as! City)
             }
         }
+        
+        self.tableView.reloadData()
         
         if let lastUpdateDate = defaults.object(forKey: "lastUpdatedDate") as? Date {
             self.refresh.updateLastUpdatedDate(date: lastUpdateDate)
@@ -65,13 +79,13 @@ class WeatherListViewController : UITableViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        //self.navigationController?.setNavigationBarHidden(true, animated: true)
+        self.navigationController?.setNavigationBarHidden(true, animated: true)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.tableView.reloadData()
-        //self.navigationController?.setNavigationBarHidden(false, animated: true)
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
     }
     
     override func didReceiveMemoryWarning() {
@@ -119,6 +133,7 @@ class WeatherListViewController : UITableViewController {
                             weather.pressure = cityJson["main"]["pressure"].doubleValue
                             weather.windSpeed = cityJson["wind"]["speed"].doubleValue
                             weather.windDegree = cityJson["wind"]["deg"].doubleValue
+                            weather.clouds = cityJson["clouds"]["all"].doubleValue
                             weather.sunrize =  Date(timeIntervalSince1970: TimeInterval(cityJson["sys"]["sunrise"].intValue))
                             weather.sunset =  Date(timeIntervalSince1970: TimeInterval(cityJson["sys"]["sunset"].intValue))
                             city.weather = weather

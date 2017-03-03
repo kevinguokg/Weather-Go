@@ -17,8 +17,10 @@ class CloudEffectLayer: WeatherEffectLayer {
         switch dayNight {
         case .day:
             emitterLayer.backgroundColor = kColorBackgroundCloudDay.cgColor
+            break
         case .night:
             emitterLayer.backgroundColor = kColorBackgroundCloudNight.cgColor
+            break
         }
     }
 }

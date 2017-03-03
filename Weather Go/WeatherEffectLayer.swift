@@ -11,6 +11,11 @@ import UIKit
 
 class WeatherEffectLayer {
     
+    enum LayerType {
+        case cell
+        case full
+    }
+    
     enum DepthOfField {
         case foreground
         case background

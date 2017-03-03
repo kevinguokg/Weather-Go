@@ -16,6 +16,7 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
     @IBOutlet weak var backgroundView: UIImageView!
     
     // Basic weather UIs
+    @IBOutlet weak var cityNameLabel: UILabel!
     @IBOutlet weak var currTempView: UILabel!
     @IBOutlet weak var currWeatherView: UILabel!
     @IBOutlet weak var currDegreeUnitView: UILabel!
@@ -46,6 +47,8 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
     let emitterLayer = CAEmitterLayer()
     let emitterCell = CAEmitterCell()
     
+    var animationLayer: [CALayer]? = nil
+    
     // need to understand how constructor works
 //    convenience init(city: City) {
 //        self.init()
@@ -62,14 +65,13 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
         
         if let city = self.currentCity {
             self.title = city.name
+            cityNameLabel.text = city.name
             
             if let weather = city.weather {
                 
                 self.setBackgroundImageForCity(city: city)
-                
+                let isMetric = UserDefaults.standard.bool(forKey: "isMetric")
                 if #available(iOS 10.0, *) {
-                    let isMetric = UserDefaults.standard.bool(forKey: "isMetric")
-                    
                     var curTempUnit = Measurement(value: city.weather!.currentTemp!, unit: UnitTemperature.celsius)
                     var highTempUnit = Measurement(value: weather.highTemp!, unit: UnitTemperature.celsius)
                     var lowTempUnit = Measurement(value: weather.lowTemp!, unit: UnitTemperature.celsius)
@@ -86,11 +88,30 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
                     self.lowTepLabel.text = "\(Int(lowTempUnit.value))\(lowTempUnit.unit.symbol)"
                     
                     
+                    
+                    var curSpeedUnit = Measurement(value: city.weather!.windSpeed!, unit: UnitSpeed.metersPerSecond)
+                    
+                    if !isMetric {
+                        curSpeedUnit = curSpeedUnit.converted(to: UnitSpeed.milesPerHour)
+                    }
+                    
+                    self.windLabel.text = (weather.windSpeed != nil && weather.windDegree != nil) ? "\(Int(curSpeedUnit.value)) \(curSpeedUnit.unit.symbol) \(weather.degreeToString(degree: weather.windDegree)!)" : "Not Available"
+                    
                 } else {
                     // Fallback on earlier versions
-                    self.currTempView.text = "\(Int(round(weather.currentTemp!)))"
-                    self.highTempLabel.text = "\(Int(round(weather.highTemp!)))"
-                    self.lowTepLabel.text = "\(Int(round(weather.lowTemp!)))"
+                    var temperatureUnitSymol = kTempUnitSymbolMetric
+                    var windSpeedUnitSymbol  = kWindSpeedUnitSymbolMetric
+                    
+                    if !isMetric {
+                        temperatureUnitSymol = kTempUnitSymbolEngish
+                        windSpeedUnitSymbol  = kWindSpeedUnitSymbolEnglish
+                    }
+                    
+                    self.currTempView.text = "\(Int(round(weather.currentTemp!)))\(temperatureUnitSymol)"
+                    self.highTempLabel.text = "\(Int(round(weather.highTemp!)))\(temperatureUnitSymol)"
+                    self.lowTepLabel.text = "\(Int(round(weather.lowTemp!)))\(temperatureUnitSymol)"
+                    
+                    self.windLabel.text = (weather.windSpeed != nil && weather.windDegree != nil) ? "\(weather.windSpeed!) \(windSpeedUnitSymbol) \(weather.degreeToString(degree: weather.windDegree)!)" : "Not Available"
                 }
                 
                 self.currWeatherView.text = city.weather?.weatherDesc
@@ -103,10 +124,9 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
                 
                 self.sunriseLabel.text = (weather.sunrize != nil) ? timeFormatter.string(from: weather.sunrize!) : "Not Available"
                 self.sunsetLabel.text = (weather.sunset != nil) ? timeFormatter.string(from: weather.sunset!) : "Not Available"
-                self.humidityLabel.text = (weather.humidity != nil) ? "\(weather.humidity!)%" : "Not Available"
-                self.pressureLabel.text = (weather.pressure != nil) ? "\(weather.pressure!) hPa" : "Not Available"
-                self.windLabel.text = (weather.windSpeed != nil && weather.windDegree != nil) ? "\(weather.windSpeed!),\(round(weather.windDegree!))" : "Not Available"
-                self.cloudLabel.text = (weather.clouds != nil) ? "\(weather.clouds!)%" : "Not Available"
+                self.humidityLabel.text = (weather.humidity != nil) ? "\(Int(weather.humidity!))%" : "Not Available"
+                self.pressureLabel.text = (weather.pressure != nil) ? "\(Int(weather.pressure!)) hPa" : "Not Available"
+                self.cloudLabel.text = (weather.clouds != nil) ? "\(Int(weather.clouds!))%" : "Not Available"
                 
             }
             
@@ -121,7 +141,7 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
                         print(countryCode)
                         
                         
-                        self.forecastWeatherList = Array()
+                        self.forecastWeatherList = Array<ForecastWeather>()
                         
                         guard let forecastArray = forecastJson["list"].array else {return}
                         
@@ -135,6 +155,8 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
                             self.forecastWeatherList?.append(forecastWeather)
                         }
                         
+                        self.currentCity.forecast = self.forecastWeatherList
+                        
                         self.forecastCollectionView.alpha = 0.0
                         self.forecastCollectionView.isHidden = false
                         
@@ -146,6 +168,7 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
                             self.forecastCollectionView.isHidden = false
                         })
                         
+                        //UserDefaultManager.addTheCityToUserDefault(city: self.currentCity)
                     }
                 }
             })
@@ -158,6 +181,10 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
     }
     
     func screenEdgeSwiped(_ recognizer: UIScreenEdgePanGestureRecognizer) {
@@ -188,6 +215,7 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
         prevContentOffset = scrollView.contentOffset.y
     }
 
+    // MARK: Weather effect methods
     private func setBackgroundImageForCity(city: City) {
         let date = Date()
         // determine sunrise
@@ -198,31 +226,42 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
                     switch weatherType {
                     case "Clear":
                         let weatherLayer = ClearSkyEffectLayer(frame: self.view.frame, dayNight: .day)
-                        self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer]
-                        addSumBeam()
+                        self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer, weatherLayer.createSunLightLayer()]
+                        self.view.backgroundColor =  UIColor(cgColor: weatherLayer.emitterLayer.backgroundColor!)
                         break
                         
                     case "Rain", "Drizzle":
                         let weatherLayer = RainEffectLayer(frame: self.view.frame, dayNight: .day)
                         self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer]
+                        self.view.backgroundColor =  UIColor(cgColor: weatherLayer.emitterLayer.backgroundColor!)
                         addRainyClouds()
                         break
 
+                    case "Thunderstorm":
+                        let weatherLayer = ThunderEffectLayer(frame: self.view.frame, dayNight: .day)
+                        self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer]
+                        self.view.backgroundColor =  UIColor(cgColor: weatherLayer.emitterLayer.backgroundColor!)
+                        addLightning()
+                        addRainyClouds()
+                        break
                         
                     case "Snow":
                         let weatherLayer = SnowEffectLayer(frame: self.view.frame, dayNight: .day)
                         self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer]
+                        self.view.backgroundColor =  UIColor(cgColor: weatherLayer.emitterLayer.backgroundColor!)
                         break
                         
                     case "Clouds":
                         let weatherLayer = CloudEffectLayer(frame: self.view.frame, dayNight: .day)
                         self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer]
+                        self.view.backgroundColor =  UIColor(cgColor: weatherLayer.emitterLayer.backgroundColor!)
                         addOvercastClouds()
                         break
                         
-                    case "Mist", "Haze":
+                    case "Fog", "Mist", "Haze":
                         let weatherLayer = FogEffectLayer(frame: self.view.frame, dayNight: .day)
                         self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer]
+                        self.view.backgroundColor =  UIColor(cgColor: weatherLayer.emitterLayer.backgroundColor!)
                         addFogClouds()
                         break
                         
@@ -239,30 +278,43 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
                 if let weatherType = city.weather?.weatherMain {
                     switch weatherType {
                     case "Clear":
-                        let weatherLayer = ClearSkyEffectLayer(frame: self.view.frame, dayNight: .night)
+                        let weatherLayer = ClearSkyEffectLayer(frame: self.view.frame, dayNight: .night, displayType: .full)
                         self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer]
+                        self.view.backgroundColor =  UIColor(cgColor: weatherLayer.emitterLayer.backgroundColor!)
                         break
                         
                     case "Rain", "Drizzle":
                         let weatherLayer = RainEffectLayer(frame: self.view.frame, dayNight: .night)
                         self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer]
                         addRainyClouds()
+                        self.view.backgroundColor =  UIColor(cgColor: weatherLayer.emitterLayer.backgroundColor!)
+                        break
+                        
+                    case "Thunderstorm":
+                        let weatherLayer = ThunderEffectLayer(frame: self.view.frame, dayNight: .night)
+                        self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer]
+                        self.view.backgroundColor =  UIColor(cgColor: weatherLayer.emitterLayer.backgroundColor!)
+                        addLightning()
+                        addRainyClouds()
                         break
                         
                     case "Snow":
                         let weatherLayer = SnowEffectLayer(frame: self.view.frame, dayNight: .night)
                         self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer]
+                        self.view.backgroundColor =  UIColor(cgColor: weatherLayer.emitterLayer.backgroundColor!)
                         break
                         
                     case "Clouds":
                         let weatherLayer = CloudEffectLayer(frame: self.view.frame, dayNight: .night)
                         self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer]
+                        self.view.backgroundColor =  UIColor(cgColor: weatherLayer.emitterLayer.backgroundColor!)
                         addOvercastClouds()
                         break
                         
-                    case "Mist", "Haze":
+                    case "Fog", "Mist", "Haze":
                         let weatherLayer = FogEffectLayer(frame: self.view.frame, dayNight: .night)
                         self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer]
+                        self.view.backgroundColor =  UIColor(cgColor: weatherLayer.emitterLayer.backgroundColor!)
                         addFogClouds()
                         break
                         
@@ -277,6 +329,44 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
             }
             
         }
+    }
+    
+    //function for managing all lightning animations
+    func lightningAnimation() {
+        if self.animationLayer != nil, (self.animationLayer?.count)! > 0 {
+            for layer in self.animationLayer! {
+                if layer is CAShapeLayer {
+                    let theLayer = layer as! CAShapeLayer
+                    theLayer.removeFromSuperlayer()
+                }
+            }
+        }
+        
+        let weatherLayer = ThunderEffectLayer(frame: self.view.frame, dayNight: .day)
+        
+        // bolt layer
+        let boltLayer = weatherLayer.addBoltWith(startPoint: CGPoint(x: self.view.frame.width / 2, y: 0.0), endPoint: CGPoint(x: self.view.frame.width / 3.0, y: self.view.frame.height))
+        self.animationLayer = Array()
+        
+        self.animationLayer?.append(boltLayer)
+        self.backgroundView?.layer.addSublayer(boltLayer)
+        
+        // flashing light layer
+        let lightLayer = weatherLayer.addLightning()
+        self.animationLayer?.append(lightLayer)
+        self.backgroundView?.layer.addSublayer(lightLayer)
+    }
+    
+    private func addLightning() {
+        if #available(iOS 10.0, *) {
+            _ = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { (timer) in
+                self.lightningAnimation()
+            }
+        } else {
+            // Fallback on earlier versions
+            _ = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(lightningAnimation), userInfo: nil, repeats: true)
+        }
+        
     }
     
     private func addRainyClouds() {
@@ -349,19 +439,28 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
     }
     
     private func addSumBeam() {
+        let sunLayer = CAShapeLayer()
+        sunLayer.path = UIBezierPath(ovalIn: CGRect(x: 0, y: 0, width: 100, height: 100)).cgPath
+        
+        sunLayer.fillColor = kColorSunLight.cgColor
+        sunLayer.lineWidth = 0
+        self.basicWeatherSectionView.layer.addSublayer(sunLayer)
+        
         let cloudImage = UIImageView(frame: CGRect(x: 0, y: 0, width: 300, height: 200))
         cloudImage.clipsToBounds = true
         cloudImage.contentMode = .scaleAspectFill
         
         cloudImage.alpha = 0
         cloudImage.image = UIImage(named: "sun_beam")
-        self.basicWeatherSectionView.addSubview(cloudImage)
-        self.basicWeatherSectionView.sendSubview(toBack: cloudImage)
+        //self.basicWeatherSectionView.addSubview(cloudImage)
+        //self.basicWeatherSectionView.sendSubview(toBack: cloudImage)
         
-        UIView.animate(withDuration: 20, delay: 0, options: [UIViewAnimationOptions.autoreverse, UIViewAnimationOptions.repeat, .curveEaseInOut], animations: {
-            cloudImage.alpha = 0.9
-            cloudImage.transform = CGAffineTransform(rotationAngle: CGFloat(M_PI))
-        }, completion: nil)
+//        UIView.animate(withDuration: 20, delay: 0, options: [UIViewAnimationOptions.autoreverse, UIViewAnimationOptions.repeat, .curveEaseInOut], animations: {
+//            cloudImage.alpha = 0.9
+//            cloudImage.transform = CGAffineTransform(rotationAngle: CGFloat(M_PI))
+//        }, completion: nil)
+        
+        
         
     }
     

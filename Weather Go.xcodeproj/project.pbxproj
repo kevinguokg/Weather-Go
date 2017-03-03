@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		5A3C8AB2F4B88BA1A80280ED /* Pods_Weather_Go.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F2FAB76CB1DFB1E71CD615F /* Pods_Weather_Go.framework */; };
 		9D1BE5461E44F86600F28085 /* ModalDismissAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D1BE5451E44F86600F28085 /* ModalDismissAnimator.swift */; };
+		9D3AF3FB1E6504EE00085AAC /* ThunderEffectLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D3AF3FA1E6504EE00085AAC /* ThunderEffectLayer.swift */; };
 		9D488C781E4E86EC00D97E8B /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D488C771E4E86EC00D97E8B /* Extensions.swift */; };
 		9D4E8C401E5B763C00D8ABD1 /* WeatherEffectLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D4E8C3F1E5B763C00D8ABD1 /* WeatherEffectLayer.swift */; };
 		9D4E8C431E5B7A6F00D8ABD1 /* RainEffectLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D4E8C421E5B7A6F00D8ABD1 /* RainEffectLayer.swift */; };
@@ -47,6 +48,7 @@
 		4AA6A0A484A54CC71C8EDAE3 /* Pods-Weather Go.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Weather Go.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Weather Go/Pods-Weather Go.debug.xcconfig"; sourceTree = "<group>"; };
 		6F2FAB76CB1DFB1E71CD615F /* Pods_Weather_Go.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Weather_Go.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D1BE5451E44F86600F28085 /* ModalDismissAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModalDismissAnimator.swift; sourceTree = "<group>"; };
+		9D3AF3FA1E6504EE00085AAC /* ThunderEffectLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThunderEffectLayer.swift; sourceTree = "<group>"; };
 		9D488C771E4E86EC00D97E8B /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		9D4E8C3F1E5B763C00D8ABD1 /* WeatherEffectLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeatherEffectLayer.swift; sourceTree = "<group>"; };
 		9D4E8C421E5B7A6F00D8ABD1 /* RainEffectLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RainEffectLayer.swift; sourceTree = "<group>"; };
@@ -124,6 +126,7 @@
 			children = (
 				9D4E8C3F1E5B763C00D8ABD1 /* WeatherEffectLayer.swift */,
 				9D4E8C421E5B7A6F00D8ABD1 /* RainEffectLayer.swift */,
+				9D3AF3FA1E6504EE00085AAC /* ThunderEffectLayer.swift */,
 				9D4E8C461E5B897900D8ABD1 /* ClearSkyEffectLayer.swift */,
 				9D4E8C521E5B8D5000D8ABD1 /* CloudEffectLayer.swift */,
 				9D4E8C561E5D129900D8ABD1 /* FogEffectLayer.swift */,
@@ -414,6 +417,7 @@
 				9DDD48241E30188E00D0A83D /* Weather.swift in Sources */,
 				9D4E8C431E5B7A6F00D8ABD1 /* RainEffectLayer.swift in Sources */,
 				9D488C781E4E86EC00D97E8B /* Extensions.swift in Sources */,
+				9D3AF3FB1E6504EE00085AAC /* ThunderEffectLayer.swift in Sources */,
 				9D4E8C471E5B897900D8ABD1 /* ClearSkyEffectLayer.swift in Sources */,
 				9D4E8C571E5D129900D8ABD1 /* FogEffectLayer.swift in Sources */,
 				9DF7F23F1E4D2F0600619D3E /* BackgroundScene.swift in Sources */,
