@@ -17,8 +17,8 @@ class RainEffectLayer: WeatherEffectLayer {
     let kForgroundParticleLifetime:Float = 2.0
     let kBackgroundParticleLifetime:Float = 4.0
     
-    let kForgroundParticleVelocity:CGFloat = 900.0
-    let kBackgroundParticleVelocity:CGFloat = 1200.0
+    let kForgroundParticleVelocity:CGFloat = 600.0
+    let kBackgroundParticleVelocity:CGFloat = 900.0
     
     let kForgroundParticleScale:CGFloat = 0.2
     let kBackgroundParticleScale:CGFloat = 0.15
@@ -61,14 +61,14 @@ class RainEffectLayer: WeatherEffectLayer {
         }
         
         
-        emitterCell.velocityRange = 100.0
+        emitterCell.velocityRange = 200.0
         
-        emitterCell.emissionLatitude = degreesToRadians(271)
-        emitterCell.emissionLongitude = degreesToRadians(300)
+        emitterCell.emissionLatitude = degreesToRadians(0)
+        emitterCell.emissionLongitude = degreesToRadians(185)
         emitterCell.emissionRange = degreesToRadians(0)
         
-        emitterCell.xAcceleration = -50
-        emitterCell.yAcceleration = 1000
+        emitterCell.xAcceleration = -2
+        emitterCell.yAcceleration = 10
         emitterCell.zAcceleration = 0
         
         emitterCell.alphaRange = 0.2

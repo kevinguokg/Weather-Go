@@ -62,7 +62,7 @@ class SnowEffectLayer: WeatherEffectLayer {
             break
         }
         
-        emitterCell.velocityRange = 200.0
+        emitterCell.velocityRange = 300.0
         
         emitterCell.emissionLatitude = degreesToRadians(271)
         emitterCell.emissionLongitude = degreesToRadians(300)
