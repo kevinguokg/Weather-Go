@@ -198,8 +198,7 @@ class WeatherListViewController : UITableViewController {
                         swap(&self.citiList![indexPath.row], &self.citiList![(Path.initialIndexPath?.row)!])
                         self.tableView.moveRow(at: Path.initialIndexPath!, to: indexPath)
                         Path.initialIndexPath = indexPath
-                        
-                        impactHapticFeedback(style: UIImpactFeedbackStyle.medium)
+                        selectionHapticFeedback()
                     }
                 }
                 
