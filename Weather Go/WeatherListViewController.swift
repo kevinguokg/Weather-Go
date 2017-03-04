@@ -17,6 +17,10 @@ class WeatherListViewController : UITableViewController {
     
     
     @IBAction func degreeBtnTapped(_ sender: Any) {
+        if UserDefaults.standard.bool(forKey: "isMetric") == true {
+            return
+        }
+        
         UserDefaults.standard.set(true, forKey: "isMetric")
         UserDefaults.standard.synchronize()
         self.tableView.reloadData()
@@ -24,6 +28,10 @@ class WeatherListViewController : UITableViewController {
     
     
     @IBAction func feirenheihtBtnTapped(_ sender: Any) {
+        if UserDefaults.standard.bool(forKey: "isMetric") == false {
+            return
+        }
+        
         UserDefaults.standard.set(false, forKey: "isMetric")
         UserDefaults.standard.synchronize()
         self.tableView.reloadData()
@@ -67,6 +75,7 @@ class WeatherListViewController : UITableViewController {
         if let citiArr = defaults.object(forKey: "cityList") as? Array<Any>{
             for cityData in citiArr {
                 if let theCity = NSKeyedUnarchiver.unarchiveObject(with:cityData as! Data) as? City {
+                    theCity.needsUpdate = true
                     citiList?.append(theCity)
                 }
                 //citiList?.append(NSKeyedUnarchiver.unarchiveObject(with: cityData as! Data)! as! City)
@@ -74,28 +83,37 @@ class WeatherListViewController : UITableViewController {
         }
         
         self.tableView.reloadData()
-        
-        if let lastUpdateDate = defaults.object(forKey: "lastUpdatedDate") as? Date {
-            self.refresh.updateLastUpdatedDate(date: lastUpdateDate)
+    }
+    
+    func setNeedsUpdateFlagForAllCities() {
+        if let cityList = self.citiList {
+            for city in cityList {
+                city.needsUpdate = true
+            }
         }
-        
-        self.queryAllCityWeather()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.setNavigationBarHidden(true, animated: true)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIApplicationWillResignActive, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.tableView.reloadData()
         self.navigationController?.setNavigationBarHidden(false, animated: true)
+        NotificationCenter.default.addObserver(self, selector: #selector(saveCachedWeatherList), name: NSNotification.Name.UIApplicationWillResignActive, object: nil)
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func saveCachedWeatherList() {
+        // add city to user defaults
+        UserDefaultManager.addCityToUserDefault(self.citiList!, withKey: "cityList")
     }
     
     @IBAction func unwindFromAddCityListPage(sender: UIStoryboardSegue)
@@ -111,63 +129,9 @@ class WeatherListViewController : UITableViewController {
         }
     }
     
-    func queryAllCityWeather() {
-        if let isEmpty = citiList?.isEmpty, isEmpty == false {
-            // query cached city
-            for city in citiList! {
-                WeatherAPI.queryWeatherWithCityId(city.id, units: "metric", completion: { (jsonData, error) in
-                    if let err = error {
-                        print("error.. \(err)")
-                    } else {
-                        if let json = jsonData {
-                            
-                            let cityJson = JSON(json)
-                            let city = City(id: "\(cityJson["id"].intValue)", name: cityJson["name"].stringValue, latitude: cityJson["coord"]["lat"].doubleValue, longitude: cityJson["coord"]["lon"].doubleValue, countryCode: cityJson["sys"]["country"].stringValue)
-                            
-                            if let timezone = TimeZoneLocate.timeZoneWithLocation(CLLocation(latitude: city.latitude, longitude: city.longitude), countryCode: city.countryCode) {
-                                city.timezone = timezone
-                            }
-                            
-                            let weather = Weather()
-                            weather.weatherMain = cityJson["weather"][0]["main"].stringValue
-                            weather.weatherDesc = cityJson["weather"][0]["description"].stringValue
-                            weather.currentTemp = cityJson["main"]["temp"].doubleValue
-                            weather.highTemp = cityJson["main"]["temp_max"].doubleValue
-                            weather.lowTemp = cityJson["main"]["temp_min"].doubleValue
-                            weather.humidity = cityJson["main"]["humidity"].doubleValue
-                            weather.pressure = cityJson["main"]["pressure"].doubleValue
-                            weather.windSpeed = cityJson["wind"]["speed"].doubleValue
-                            weather.windDegree = cityJson["wind"]["deg"].doubleValue
-                            weather.clouds = cityJson["clouds"]["all"].doubleValue
-                            weather.sunrize =  Date(timeIntervalSince1970: TimeInterval(cityJson["sys"]["sunrise"].intValue))
-                            weather.sunset =  Date(timeIntervalSince1970: TimeInterval(cityJson["sys"]["sunset"].intValue))
-                            city.weather = weather
-                            
-                            for (index, thisCity) in (self.citiList?.enumerated())! {
-                                if thisCity.id == city.id {
-                                    self.citiList?[index] = city
-                                }
-                            }
-                            print("City: \(city.name) has been updated.")
-                            self.tableView.reloadData()
-                            // add city to user defaults
-                            UserDefaultManager.addCityToUserDefault(self.citiList!, withKey: "cityList")
-                            
-                            
-                            self.refresh.endRefreshing()
-                            let date = Date()
-                            self.refresh.updateLastUpdatedDate(date: date)
-                            UserDefaults.standard.set(date, forKey: "lastUpdatedDate")
-                        }
-                    }
-                })
-            }
-            
-        }
-    }
-    
     func doRefresh() {
-        self.queryAllCityWeather()
+        setNeedsUpdateFlagForAllCities()
+        self.tableView.reloadData()
     }
     
     private func addCityToList(_ city: City) {
@@ -235,7 +199,7 @@ class WeatherListViewController : UITableViewController {
                         self.tableView.moveRow(at: Path.initialIndexPath!, to: indexPath)
                         Path.initialIndexPath = indexPath
                         
-                        selectionHapticFeedback()
+                        impactHapticFeedback(style: UIImpactFeedbackStyle.medium)
                     }
                 }
                 
@@ -331,6 +295,67 @@ class WeatherListViewController : UITableViewController {
         
         if let city = citiList?[indexPath.row]{
             cell?.layoutIfNeeded()
+            
+            if city.needsUpdate {
+                
+                WeatherAPI.queryWeatherWithCityId(city.id, units: "metric", completion: { (jsonData, error) in
+                    if let err = error {
+                        print("error.. \(err)")
+                    } else {
+                        if let json = jsonData {
+                            
+                            let cityJson = JSON(json)
+                            let city = City(id: "\(cityJson["id"].intValue)", name: cityJson["name"].stringValue, latitude: cityJson["coord"]["lat"].doubleValue, longitude: cityJson["coord"]["lon"].doubleValue, countryCode: cityJson["sys"]["country"].stringValue)
+                            
+                            if let timezone = TimeZoneLocate.timeZoneWithLocation(CLLocation(latitude: city.latitude, longitude: city.longitude), countryCode: city.countryCode) {
+                                city.timezone = timezone
+                            }
+                            
+                            city.needsUpdate = false
+                            
+                            let weather = Weather()
+                            weather.weatherMain = cityJson["weather"][0]["main"].stringValue
+                            weather.weatherDesc = cityJson["weather"][0]["description"].stringValue
+                            weather.currentTemp = cityJson["main"]["temp"].doubleValue
+                            weather.highTemp = cityJson["main"]["temp_max"].doubleValue
+                            weather.lowTemp = cityJson["main"]["temp_min"].doubleValue
+                            weather.humidity = cityJson["main"]["humidity"].doubleValue
+                            weather.pressure = cityJson["main"]["pressure"].doubleValue
+                            weather.windSpeed = cityJson["wind"]["speed"].doubleValue
+                            weather.windDegree = cityJson["wind"]["deg"].doubleValue
+                            weather.clouds = cityJson["clouds"]["all"].doubleValue
+                            weather.sunrize =  Date(timeIntervalSince1970: TimeInterval(cityJson["sys"]["sunrise"].intValue))
+                            weather.sunset =  Date(timeIntervalSince1970: TimeInterval(cityJson["sys"]["sunset"].intValue))
+                            city.weather = weather
+                            
+                            for (index, thisCity) in (self.citiList?.enumerated())! {
+                                if thisCity.id == city.id {
+                                    self.citiList?[index] = city
+                                }
+                            }
+                            
+                            print("City: \(city.name) has been updated.")
+                            
+                            if let cellToUpdate = self.tableView?.cellForRow(at: indexPath) as? CityWeatherCell{
+                                cellToUpdate.updateCell(city)
+                                cellToUpdate.setNeedsLayout()
+                            }
+                            
+                            
+//                            // no need 
+//                            self.tableView.reloadData()
+//                            // add city to user defaults
+//                            UserDefaultManager.addCityToUserDefault(self.citiList!, withKey: "cityList")
+                            self.refresh.endRefreshing()
+                            let date = Date()
+                            self.refresh.updateLastUpdatedDate(date: date)
+                            UserDefaults.standard.set(date, forKey: "lastUpdatedDate")
+                            UserDefaults.standard.synchronize()
+                        }
+                    }
+                })
+            }
+ 
             cell?.updateCell(city)
         }
         return cell!
@@ -394,9 +419,7 @@ class WeatherListViewController : UITableViewController {
 //            //cell.backgroundWeatherView.clipsToBounds = false
 //        }
     }
-    
 
-    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let id = segue.identifier, id == "showCityDetail" {
             let weatherDetailVc = segue.destination as! CityWeatherDetailViewController
