@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import SwiftyJSON
+import GoogleMobileAds
 
 class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
     // General UIs
@@ -39,6 +40,10 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
     
     @IBOutlet weak var forecastWeatherCollectionView: UICollectionView!
     
+    // Ad section
+    
+    @IBOutlet weak var adBannerView: GADBannerView!
+    
     var currentCity: City!
     var forecastWeatherList: Array<ForecastWeather>?
     
@@ -59,6 +64,13 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 //        self.view.layoutIfNeeded()
+        
+        adBannerView.adSize = kGADAdSizeSmartBannerPortrait
+        adBannerView.adUnitID = kAdMobBannerUnitId
+        adBannerView.delegate = self
+        adBannerView.rootViewController = self
+        adBannerView.load(GADRequest())
+        
         let panEdgeGesture = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(screenEdgeSwiped))
         panEdgeGesture.edges = .left
         self.view.addGestureRecognizer(panEdgeGesture)
@@ -151,6 +163,7 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
                             forecastWeather.currentTemp = aForecastItem["main"]["temp"].doubleValue
                             forecastWeather.weatherMain = aForecastItem["weather"][0]["main"].stringValue
                             forecastWeather.precipRain = aForecastItem["rain"]["3h"].double
+                            forecastWeather.precipSnow = aForecastItem["snow"]["3h"].double
                             
                             self.forecastWeatherList?.append(forecastWeather)
                         }
@@ -476,6 +489,16 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
     }
 }
 
+extension CityWeatherDetailViewController: GADBannerViewDelegate {
+    func adViewDidReceiveAd(_ bannerView: GADBannerView) {
+        print("Did received ad")
+    }
+    
+    func adView(_ bannerView: GADBannerView, didFailToReceiveAdWithError error: GADRequestError) {
+        print("Error in receiving ad: \(error.localizedDescription)")
+    }
+}
+
 extension CityWeatherDetailViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
@@ -504,9 +527,9 @@ extension CityWeatherDetailViewController: UICollectionViewDataSource, UICollect
         }
         
         if isDayTime(date: forecastList[indexPath.row].time!) {
-            //cell.containerView.backgroundColor = kColorForecastDay
+            cell.containerView.backgroundColor = kColorForecastDay
         } else {
-            //cell.containerView.backgroundColor = kColorForecastNight
+            cell.containerView.backgroundColor = kColorForecastNight
         }
         
         cell.timeLabel.text = timeFormatter.string(from: forecastList[indexPath.row].time!)
@@ -516,7 +539,15 @@ extension CityWeatherDetailViewController: UICollectionViewDataSource, UICollect
         cell.tempLabel.text = "\(forecastList[indexPath.row].currentTemp!)"
         
         if let rainPrecip = forecastList[indexPath.row].precipRain {
-            cell.precipLabel.text = rainPrecip > 1 ? "\(round(rainPrecip))mm" : "<1mm"
+            cell.precipImageView.image = UIImage(named: "icon_precip_rainy")
+            cell.precipLabel.text = rainPrecip > 1 ? "\(Int(round(rainPrecip)))mm" : "<1mm"
+        } else {
+            cell.precipLabel.text = "0mm"
+        }
+        
+        if let snowPrecip = forecastList[indexPath.row].precipSnow {
+            cell.precipImageView.image = UIImage(named: "icon_snow")
+            cell.precipLabel.text = snowPrecip > 1 ? "\(Int(round(snowPrecip)))mm" : "<1mm"
         } else {
             cell.precipLabel.text = "0mm"
         }

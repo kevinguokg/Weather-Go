@@ -11,4 +11,5 @@ target 'Weather Go' do
   pod 'SwiftyJSON', '~> 3.1'
   pod 'TimeZoneLocate'
   pod 'RainyRefreshControl'
+  pod 'Firebase/AdMob'
 end

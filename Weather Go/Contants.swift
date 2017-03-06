@@ -8,6 +8,11 @@
 
 import Foundation
 import UIKit
+
+// MARK: COMPONENT APP IDS
+let kAdMobId = "ca-app-pub-8658979143104994~6782349265"
+let kAdMobBannerUnitId = "ca-app-pub-8658979143104994/1793746469"
+
 // MARK: COLOR
 
 // forecas small cell
