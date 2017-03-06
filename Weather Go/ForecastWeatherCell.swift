@@ -27,6 +27,13 @@ class ForecastWeatherCell: UICollectionViewCell {
         super.awakeFromNib()
     }
     
+    override func draw(_ rect: CGRect) {
+        super.draw(rect)
+        
+        self.layer.cornerRadius = 10
+        self.clipsToBounds = true
+    }
+    
     func updateCell() {
         updateCellBackgroundImage()
     }
