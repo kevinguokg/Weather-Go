@@ -23,19 +23,26 @@ class SnowEffectLayer: WeatherEffectLayer {
     let kForgroundParticleScale:CGFloat = 0.09
     let kBackgroundParticleScale:CGFloat = 0.06
     
+    convenience init(frame: CGRect, dayNight: DayNight, displayType: LayerType) {
+        self.init(frame: frame, dayNight: dayNight)
+        layerType = displayType
+        
+        if layerType == LayerType.cell {
+            switch dayNight {
+            case .day:
+                emitterLayer.backgroundColor = kColorBackgroundRainy.cgColor
+                break
+            case .night:
+                emitterLayer.backgroundColor = kColorBackgroundRainyNight.cgColor
+                break
+            }
+        }
+        emitterLayer.emitterCells = [setUpEmitterCell(depthOfField: DepthOfField.foreground), setUpEmitterCell(depthOfField: DepthOfField.background)]
+    }
+    
+    
     override init(frame: CGRect, dayNight: DayNight) {
         super.init(frame: frame, dayNight: dayNight)
-        
-        switch dayNight {
-        case .day:
-            emitterLayer.backgroundColor = kColorBackgroundRainy.cgColor
-            break
-        case .night:
-            emitterLayer.backgroundColor = kColorBackgroundRainyNight.cgColor
-            break
-        }
-        
-        emitterLayer.emitterCells = [setUpEmitterCell(depthOfField: DepthOfField.foreground), setUpEmitterCell(depthOfField: DepthOfField.background)]
     }
     
     func setUpEmitterCell(depthOfField: DepthOfField) -> CAEmitterCell{
@@ -84,5 +91,18 @@ class SnowEffectLayer: WeatherEffectLayer {
         
         
         return emitterCell
+    }
+    
+    override func setBackGroundGradientColors() {
+        super.setBackGroundGradientColors()
+        
+        switch dayNight! {
+        case .day:
+            bgGradientLayer.colors = [kColorBackgroundRainy.cgColor, kColorBackgroundRainy2.cgColor]
+            break
+        case .night:
+            bgGradientLayer.colors = [kColorBackgroundRainyNight.cgColor, kColorBackgroundRainyNight2.cgColor]
+            break
+        }
     }
 }

@@ -20,7 +20,7 @@ class ClearSkyEffectLayer: WeatherEffectLayer {
     let kForgroundParticleVelocity:CGFloat = 0.0
     let kBackgroundParticleVelocity:CGFloat = 0.0
     
-    let kForgroundParticleScale:CGFloat = 0.04
+    let kForgroundParticleScale:CGFloat = 0.035
     let kBackgroundParticleScale:CGFloat = 0.02
     
     var displayType: LayerType = LayerType.full
@@ -31,12 +31,17 @@ class ClearSkyEffectLayer: WeatherEffectLayer {
         self.init(frame: frame, dayNight: dayNight)
         self.displayType = displayType
         
+        
         switch dayNight {
         case .day:
-            emitterLayer.backgroundColor = kColorBackgroundDay.cgColor
+            if displayType == LayerType.cell {
+                 emitterLayer.backgroundColor = kColorBackgroundDay.cgColor
+            }
             break
         case .night:
-            emitterLayer.backgroundColor = kColorBackgroundNight.cgColor
+            if displayType == LayerType.cell {
+                emitterLayer.backgroundColor = kColorBackgroundNight.cgColor
+            }
             emitterLayer.emitterCells = [setUpEmitterCell(depthOfField: DepthOfField.foreground), setUpEmitterCell(depthOfField: DepthOfField.background), setUpShootingStarCell()]
             break
         }
@@ -181,6 +186,19 @@ class ClearSkyEffectLayer: WeatherEffectLayer {
         sunLightLayer?.add(shineAnimation, forKey: "sunshineAnim")
         
         return sunLightLayer!
+    }
+    
+    override func setBackGroundGradientColors() {
+        super.setBackGroundGradientColors()
+        
+        switch dayNight! {
+        case .day:
+            bgGradientLayer.colors = [kColorBackgroundDay.cgColor, kColorBackgroundDay2.cgColor]
+            break
+        case .night:
+            bgGradientLayer.colors = [kColorBackgroundNight2.cgColor, kColorBackgroundNight.cgColor]
+            break
+        }
     }
 }
 

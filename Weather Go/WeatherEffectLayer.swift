@@ -27,6 +27,15 @@ class WeatherEffectLayer {
     }
     
     let emitterLayer: CAEmitterLayer!
+    let bgGradientLayer: CAGradientLayer!
+    
+    var dayNight: DayNight!
+    var layerType: LayerType?
+    
+    convenience init(frame: CGRect, dayNight: DayNight, displayType: LayerType) {
+        self.init(frame: frame, dayNight: dayNight)
+        layerType = displayType
+    }
     
     init(frame: CGRect, dayNight: DayNight) {
         emitterLayer = CAEmitterLayer()
@@ -35,21 +44,36 @@ class WeatherEffectLayer {
         emitterLayer.renderMode = kCAEmitterLayerAdditive
         emitterLayer.drawsAsynchronously = true
         
-        switch dayNight {
+        self.dayNight = dayNight
+        
+        
+        // keep emitter layer cell bg color for now
+        if self.layerType == LayerType.cell {
+            switch dayNight {
             case .day:
                 emitterLayer.backgroundColor = kColorBackgroundDay.cgColor
                 break
             case .night:
                 emitterLayer.backgroundColor = kColorBackgroundNight.cgColor
                 break
+            }
         }
+        
+        bgGradientLayer = CAGradientLayer()
+        bgGradientLayer.frame = frame
+//        bgGradientLayer.startPoint = CGPoint(x: 0.3, y:0.0)
+        
         setEmitterPosition()
+        setBackGroundGradientColors()
     }
     
     func setEmitterPosition() {
         emitterLayer.emitterPosition = CGPoint(x: self.emitterLayer.bounds.midX, y: self.emitterLayer.bounds.minY - 50)
         emitterLayer.emitterSize = CGSize(width: self.emitterLayer.bounds.width * 1.2, height: 5)
         emitterLayer.emitterShape = kCAEmitterLayerLine;
+    }
+    
+    func setBackGroundGradientColors() {
     }
     
     func degreesToRadians(_ degrees: Double) -> CGFloat {

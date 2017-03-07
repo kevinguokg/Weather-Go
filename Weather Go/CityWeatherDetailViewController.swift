@@ -21,6 +21,8 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
     @IBOutlet weak var currTempView: UILabel!
     @IBOutlet weak var currWeatherView: UILabel!
     @IBOutlet weak var currDegreeUnitView: UILabel!
+    @IBOutlet weak var currDegreeSignView: UILabel!
+    
     @IBOutlet weak var forecastCollectionView: UICollectionView!
     
     @IBOutlet weak var basicWeatherSectionView: UIView!
@@ -35,6 +37,8 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
     @IBOutlet weak var pressureLabel: UILabel!
     @IBOutlet weak var windLabel: UILabel!
     @IBOutlet weak var cloudLabel: UILabel!
+    @IBOutlet weak var visibilityLabel: UILabel!
+    
     
     @IBOutlet weak var detailWeatherSectionView: UIView!
     
@@ -92,7 +96,9 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
                         highTempUnit = highTempUnit.converted(to: UnitTemperature.fahrenheit)
                         lowTempUnit = lowTempUnit.converted(to: UnitTemperature.fahrenheit)
                     }
-                    self.currTempView.text = "\(Int(curTempUnit.value))"
+                    
+                    self.currTempView.text = "\(abs(Int(curTempUnit.value)))"
+                    self.currDegreeSignView.isHidden = Int(curTempUnit.value) >= 0
                     self.currDegreeUnitView.text = "\(curTempUnit.unit.symbol)"
                     
                     
@@ -119,7 +125,9 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
                         windSpeedUnitSymbol  = kWindSpeedUnitSymbolEnglish
                     }
                     
-                    self.currTempView.text = "\(Int(round(weather.currentTemp!)))\(temperatureUnitSymol)"
+                    self.currTempView.text = "\(abs(Int(round(weather.currentTemp!))))\(temperatureUnitSymol)"
+                    
+                    self.currDegreeSignView.isHidden = Int(round(weather.currentTemp!)) >= 0
                     self.highTempLabel.text = "\(Int(round(weather.highTemp!)))\(temperatureUnitSymol)"
                     self.lowTepLabel.text = "\(Int(round(weather.lowTemp!)))\(temperatureUnitSymol)"
                     
@@ -219,8 +227,8 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
         let yOffset = diffOffset
         
         // parallax on basic section
-        basicWeatherSectionView.frame = basicWeatherSectionView.frame.offsetBy(dx: 0, dy: scrollView.contentOffset.y < 120 ? yOffset * 0.5 : yOffset)
-        detailWeatherSectionView.frame = detailWeatherSectionView.frame.offsetBy(dx: 0, dy: scrollView.contentOffset.y < 130 ? 0 : yOffset)
+        //basicWeatherSectionView.frame = basicWeatherSectionView.frame.offsetBy(dx: 0, dy: scrollView.contentOffset.y < 120 ? yOffset * 0.5 : yOffset)
+        //detailWeatherSectionView.frame = detailWeatherSectionView.frame.offsetBy(dx: 0, dy: scrollView.contentOffset.y < 130 ? 0 : yOffset)
         
         // opacity of 
         self.currWeatherView.alpha = 1 - (scrollView.contentOffset.y / (basicWeatherSectionView.frame.height / 5))
@@ -238,43 +246,43 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
                 if let weatherType = city.weather?.weatherMain {
                     switch weatherType {
                     case "Clear":
-                        let weatherLayer = ClearSkyEffectLayer(frame: self.view.frame, dayNight: .day)
-                        self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer, weatherLayer.createSunLightLayer()]
-                        self.view.backgroundColor =  UIColor(cgColor: weatherLayer.emitterLayer.backgroundColor!)
+                        let weatherLayer = ClearSkyEffectLayer(frame: self.view.frame, dayNight: .day, displayType: .full)
+                        self.backgroundView?.layer.sublayers = [weatherLayer.bgGradientLayer, weatherLayer.emitterLayer, weatherLayer.createSunLightLayer()]
+                        self.view.backgroundColor =  UIColor(cgColor: weatherLayer.bgGradientLayer.colors?[0] as! CGColor)
                         break
                         
                     case "Rain", "Drizzle":
-                        let weatherLayer = RainEffectLayer(frame: self.view.frame, dayNight: .day)
-                        self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer]
-                        self.view.backgroundColor =  UIColor(cgColor: weatherLayer.emitterLayer.backgroundColor!)
+                        let weatherLayer = RainEffectLayer(frame: self.view.frame, dayNight: .day, displayType: .full)
+                        self.backgroundView?.layer.sublayers = [weatherLayer.bgGradientLayer, weatherLayer.emitterLayer]
+                        self.view.backgroundColor =  UIColor(cgColor: weatherLayer.bgGradientLayer.colors?[0] as! CGColor)
                         addRainyClouds()
                         break
 
                     case "Thunderstorm":
-                        let weatherLayer = ThunderEffectLayer(frame: self.view.frame, dayNight: .day)
-                        self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer]
-                        self.view.backgroundColor =  UIColor(cgColor: weatherLayer.emitterLayer.backgroundColor!)
+                        let weatherLayer = ThunderEffectLayer(frame: self.view.frame, dayNight: .day, displayType: .full)
+                        self.backgroundView?.layer.sublayers = [weatherLayer.bgGradientLayer, weatherLayer.emitterLayer]
+                        self.view.backgroundColor = UIColor(cgColor: weatherLayer.bgGradientLayer.colors?[0] as! CGColor)
                         addLightning()
                         addRainyClouds()
                         break
                         
                     case "Snow":
-                        let weatherLayer = SnowEffectLayer(frame: self.view.frame, dayNight: .day)
-                        self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer]
-                        self.view.backgroundColor =  UIColor(cgColor: weatherLayer.emitterLayer.backgroundColor!)
+                        let weatherLayer = SnowEffectLayer(frame: self.view.frame, dayNight: .day, displayType: .full)
+                        self.backgroundView?.layer.sublayers =  [weatherLayer.bgGradientLayer, weatherLayer.emitterLayer]
+                        self.view.backgroundColor = UIColor(cgColor: weatherLayer.bgGradientLayer.colors?[0] as! CGColor)
                         break
                         
                     case "Clouds":
-                        let weatherLayer = CloudEffectLayer(frame: self.view.frame, dayNight: .day)
-                        self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer]
-                        self.view.backgroundColor =  UIColor(cgColor: weatherLayer.emitterLayer.backgroundColor!)
+                        let weatherLayer = CloudEffectLayer(frame: self.view.frame, dayNight: .day, displayType: .full)
+                        self.backgroundView?.layer.sublayers = [weatherLayer.bgGradientLayer, weatherLayer.emitterLayer]
+                        self.view.backgroundColor = UIColor(cgColor: weatherLayer.bgGradientLayer.colors?[0] as! CGColor)
                         addOvercastClouds()
                         break
                         
                     case "Fog", "Mist", "Haze":
-                        let weatherLayer = FogEffectLayer(frame: self.view.frame, dayNight: .day)
-                        self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer]
-                        self.view.backgroundColor =  UIColor(cgColor: weatherLayer.emitterLayer.backgroundColor!)
+                        let weatherLayer = FogEffectLayer(frame: self.view.frame, dayNight: .day, displayType: .full)
+                        self.backgroundView?.layer.sublayers = [weatherLayer.bgGradientLayer, weatherLayer.emitterLayer]
+                        self.view.backgroundColor = UIColor(cgColor: weatherLayer.bgGradientLayer.colors?[0] as! CGColor)
                         addFogClouds()
                         break
                         
@@ -292,42 +300,42 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
                     switch weatherType {
                     case "Clear":
                         let weatherLayer = ClearSkyEffectLayer(frame: self.view.frame, dayNight: .night, displayType: .full)
-                        self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer]
-                        self.view.backgroundColor =  UIColor(cgColor: weatherLayer.emitterLayer.backgroundColor!)
+                        self.backgroundView?.layer.sublayers = [weatherLayer.bgGradientLayer, weatherLayer.emitterLayer]
+                        self.view.backgroundColor = UIColor(cgColor: weatherLayer.bgGradientLayer.colors?[0] as! CGColor)
                         break
                         
                     case "Rain", "Drizzle":
-                        let weatherLayer = RainEffectLayer(frame: self.view.frame, dayNight: .night)
-                        self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer]
+                        let weatherLayer = RainEffectLayer(frame: self.view.frame, dayNight: .night, displayType: .full)
+                        self.backgroundView?.layer.sublayers = [weatherLayer.bgGradientLayer, weatherLayer.emitterLayer]
                         addRainyClouds()
-                        self.view.backgroundColor =  UIColor(cgColor: weatherLayer.emitterLayer.backgroundColor!)
+                        self.view.backgroundColor = UIColor(cgColor: weatherLayer.bgGradientLayer.colors?[0] as! CGColor)
                         break
                         
                     case "Thunderstorm":
-                        let weatherLayer = ThunderEffectLayer(frame: self.view.frame, dayNight: .night)
-                        self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer]
-                        self.view.backgroundColor =  UIColor(cgColor: weatherLayer.emitterLayer.backgroundColor!)
+                        let weatherLayer = ThunderEffectLayer(frame: self.view.frame, dayNight: .night, displayType: .full)
+                        self.backgroundView?.layer.sublayers = [weatherLayer.bgGradientLayer, weatherLayer.emitterLayer]
+                        self.view.backgroundColor = UIColor(cgColor: weatherLayer.bgGradientLayer.colors?[0] as! CGColor)
                         addLightning()
                         addRainyClouds()
                         break
                         
                     case "Snow":
-                        let weatherLayer = SnowEffectLayer(frame: self.view.frame, dayNight: .night)
-                        self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer]
-                        self.view.backgroundColor =  UIColor(cgColor: weatherLayer.emitterLayer.backgroundColor!)
+                        let weatherLayer = SnowEffectLayer(frame: self.view.frame, dayNight: .night, displayType: .full)
+                        self.backgroundView?.layer.sublayers = [weatherLayer.bgGradientLayer, weatherLayer.emitterLayer]
+                        self.view.backgroundColor = UIColor(cgColor: weatherLayer.bgGradientLayer.colors?[0] as! CGColor)
                         break
                         
                     case "Clouds":
-                        let weatherLayer = CloudEffectLayer(frame: self.view.frame, dayNight: .night)
-                        self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer]
-                        self.view.backgroundColor =  UIColor(cgColor: weatherLayer.emitterLayer.backgroundColor!)
+                        let weatherLayer = CloudEffectLayer(frame: self.view.frame, dayNight: .night, displayType: .full)
+                        self.backgroundView?.layer.sublayers = [weatherLayer.bgGradientLayer, weatherLayer.emitterLayer]
+                        self.view.backgroundColor = UIColor(cgColor: weatherLayer.bgGradientLayer.colors?[0] as! CGColor)
                         addOvercastClouds()
                         break
                         
                     case "Fog", "Mist", "Haze":
-                        let weatherLayer = FogEffectLayer(frame: self.view.frame, dayNight: .night)
-                        self.backgroundView?.layer.sublayers = [weatherLayer.emitterLayer]
-                        self.view.backgroundColor =  UIColor(cgColor: weatherLayer.emitterLayer.backgroundColor!)
+                        let weatherLayer = FogEffectLayer(frame: self.view.frame, dayNight: .night, displayType: .full)
+                        self.backgroundView?.layer.sublayers = [weatherLayer.bgGradientLayer, weatherLayer.emitterLayer]
+                        self.view.backgroundColor = UIColor(cgColor: weatherLayer.bgGradientLayer.colors?[0] as! CGColor)
                         addFogClouds()
                         break
                         

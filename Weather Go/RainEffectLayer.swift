@@ -20,27 +20,34 @@ class RainEffectLayer: WeatherEffectLayer {
     let kForgroundParticleVelocity:CGFloat = 600.0
     let kBackgroundParticleVelocity:CGFloat = 900.0
     
-    let kForgroundParticleScale:CGFloat = 0.2
-    let kBackgroundParticleScale:CGFloat = 0.15
+    let kForgroundParticleScale:CGFloat = 0.1
+    let kBackgroundParticleScale:CGFloat = 0.07
     
-    override init(frame: CGRect, dayNight: DayNight) {
-        super.init(frame: frame, dayNight: dayNight)
+    convenience init(frame: CGRect, dayNight: DayNight, displayType: LayerType) {
+        self.init(frame: frame, dayNight: dayNight)
+        layerType = displayType
         
-        switch dayNight {
+        if self.layerType == LayerType.cell {
+            switch dayNight {
             case .day:
                 emitterLayer.backgroundColor = kColorBackgroundRainy.cgColor
                 break
             case .night:
                 emitterLayer.backgroundColor = kColorBackgroundRainyNight.cgColor
                 break
+            }
         }
         
         emitterLayer.emitterCells = [setUpEmitterCell(depthOfField: DepthOfField.foreground), setUpEmitterCell(depthOfField: DepthOfField.background)]
     }
     
+    override init(frame: CGRect, dayNight: DayNight) {
+        super.init(frame: frame, dayNight: dayNight)
+    }
+    
     func setUpEmitterCell(depthOfField: DepthOfField) -> CAEmitterCell{
         let emitterCell = CAEmitterCell()
-        emitterCell.contents = UIImage(named: "particle_rain2")?.cgImage
+        emitterCell.contents = UIImage(named: "particle_rain_new")?.cgImage
         
         switch depthOfField {
             case .foreground:
@@ -51,12 +58,11 @@ class RainEffectLayer: WeatherEffectLayer {
                 emitterCell.scale = kForgroundParticleScale
                 break
             case .background:
+                emitterCell.lifetime = kBackgroundParticleLifetime
+                emitterCell.birthRate = kBackgroundParticleBirthRate
                 
-                    emitterCell.lifetime = kBackgroundParticleLifetime
-                    emitterCell.birthRate = kBackgroundParticleBirthRate
-                    
-                    emitterCell.velocity = kBackgroundParticleVelocity
-                    emitterCell.scale = kBackgroundParticleScale
+                emitterCell.velocity = kBackgroundParticleVelocity
+                emitterCell.scale = kBackgroundParticleScale
                 break
         }
         
@@ -84,5 +90,18 @@ class RainEffectLayer: WeatherEffectLayer {
         emitterCell.alphaSpeed = 0
         
         return emitterCell
+    }
+    
+    override func setBackGroundGradientColors() {
+        super.setBackGroundGradientColors()
+        
+        switch dayNight! {
+        case .day:
+            bgGradientLayer.colors = [kColorBackgroundRainy.cgColor, kColorBackgroundRainy2.cgColor]
+            break
+        case .night:
+            bgGradientLayer.colors = [kColorBackgroundRainyNight.cgColor, kColorBackgroundRainyNight2.cgColor]
+            break
+        }
     }
 }

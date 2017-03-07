@@ -23,29 +23,25 @@ class FogEffectLayer: WeatherEffectLayer {
     let kForgroundParticleScale:CGFloat = 0.7
     let kBackgroundParticleScale:CGFloat = 0.15
 
+    convenience init(frame: CGRect, dayNight: DayNight, displayType: LayerType) {
+        self.init(frame: frame, dayNight: dayNight)
+        layerType = displayType
+        
+        if layerType == LayerType.cell {
+            switch dayNight {
+            case .day:
+                emitterLayer.backgroundColor = kColorBackgroundCloudDay.cgColor
+                break
+            case .night:
+                emitterLayer.backgroundColor = kColorBackgroundCloudNight.cgColor
+                break
+            }
+        }
+    }
 
     override init(frame: CGRect, dayNight: DayNight) {
         super.init(frame: frame, dayNight: dayNight)
-        
-        switch dayNight {
-        case .day:
-            emitterLayer.backgroundColor = kColorBackgroundCloudDay.cgColor
-            break
-        case .night:
-            emitterLayer.backgroundColor = kColorBackgroundCloudNight.cgColor
-            break
-        }
-        
-        //self.setEmitterPosition()
-        //emitterLayer.emitterCells = [setUpEmitterCell(depthOfField: DepthOfField.foreground)]
-
     }
-    
-//    override func setEmitterPosition() {
-//        emitterLayer.emitterPosition = CGPoint(x: self.emitterLayer.bounds.midX, y: self.emitterLayer.bounds.minY)
-//        emitterLayer.emitterSize = CGSize(width: self.emitterLayer.bounds.width, height: self.emitterLayer.bounds.height / 2)
-//        emitterLayer.emitterShape = kCAEmitterLayerRectangle;
-//    }
     
     func setUpEmitterCell(depthOfField: DepthOfField) -> CAEmitterCell {
         let emitterCell = CAEmitterCell()
@@ -92,5 +88,19 @@ class FogEffectLayer: WeatherEffectLayer {
         emitterCell.alphaRange = 0.5
         emitterCell.alphaSpeed = -1.0/kForgroundParticleLifetime
         
-        return emitterCell    }
+        return emitterCell
+    }
+    
+    override func setBackGroundGradientColors() {
+        super.setBackGroundGradientColors()
+        
+        switch dayNight! {
+        case .day:
+            bgGradientLayer.colors = [kColorBackgroundCloudDay.cgColor, kColorBackgroundCloudDay2.cgColor]
+            break
+        case .night:
+            bgGradientLayer.colors = [kColorBackgroundCloudNight.cgColor, kColorBackgroundCloudNight2.cgColor]
+            break
+        }
+    }
 }
