@@ -45,6 +45,9 @@ let kColorRainFropGrey = UIColor.init(red: 151/255, green: 154/255, blue: 160/25
 let kColorRainFropGreyFaint = UIColor.init(red: 185/255, green: 185/255, blue: 181/255, alpha: 0.1)
 
 
+// menu bar color
+let kColorMenuBarGrey = UIColor.init(red: 151/255, green: 154/255, blue: 160/255, alpha: 1.0)
+
 // MARK: UNITS
 // temperature
 let kTempUnitSymbolMetric = "°C"

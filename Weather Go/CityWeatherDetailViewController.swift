@@ -39,7 +39,6 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
     @IBOutlet weak var cloudLabel: UILabel!
     @IBOutlet weak var visibilityLabel: UILabel!
     
-    
     @IBOutlet weak var detailWeatherSectionView: UIView!
     
     @IBOutlet weak var forecastWeatherCollectionView: UICollectionView!
@@ -48,13 +47,13 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
     
     @IBOutlet weak var adBannerView: GADBannerView!
     
+    @IBOutlet weak var menuView: UIView!
+    
+    
     var currentCity: City!
     var forecastWeatherList: Array<ForecastWeather>?
     
     var prevContentOffset: CGFloat = 0.0
-    
-    let emitterLayer = CAEmitterLayer()
-    let emitterCell = CAEmitterCell()
     
     var animationLayer: [CALayer]? = nil
     
@@ -69,15 +68,20 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
         super.viewDidLoad()
 //        self.view.layoutIfNeeded()
         
+        // load Ad section
         adBannerView.adSize = kGADAdSizeSmartBannerPortrait
         adBannerView.adUnitID = kAdMobBannerUnitId
         adBannerView.delegate = self
         adBannerView.rootViewController = self
         adBannerView.load(GADRequest())
         
+        // edge pan gesture
         let panEdgeGesture = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(screenEdgeSwiped))
         panEdgeGesture.edges = .left
         self.view.addGestureRecognizer(panEdgeGesture)
+        
+        let singleTapGesture = UITapGestureRecognizer(target: self, action: #selector(menuViewTapped))
+        self.menuView.addGestureRecognizer(singleTapGesture)
         
         if let city = self.currentCity {
             self.title = city.name
@@ -208,6 +212,11 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
+    }
+    
+    // MARK: Gesture recognizers
+    func menuViewTapped(_ recognizer: UIGestureRecognizer) {
+        _ = self.navigationController?.popViewController(animated: true)
     }
     
     func screenEdgeSwiped(_ recognizer: UIScreenEdgePanGestureRecognizer) {
@@ -393,71 +402,71 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
     }
     
     private func addRainyClouds() {
-        let cloudImage = UIImageView(frame: CGRect(x: 10, y: 10, width: 300, height: 200))
+        let cloudImage = UIImageView(frame: CGRect(x: -20, y: -60, width: 450, height: 300))
         cloudImage.alpha = 0.3
         cloudImage.image = UIImage(named: "cloud_rain_2")
         self.basicWeatherSectionView.addSubview(cloudImage)
         self.basicWeatherSectionView.sendSubview(toBack: cloudImage)
         
         UIView.animate(withDuration: 45, delay: 0, options: [UIViewAnimationOptions.autoreverse, UIViewAnimationOptions.repeat, .curveEaseInOut], animations: {
-            cloudImage.center.x += 200
+            cloudImage.center.x += 130
         }, completion: nil)
         
         
-        let cloudImage2 = UIImageView(frame: CGRect(x: 150, y: 10, width: 220, height: 160))
+        let cloudImage2 = UIImageView(frame: CGRect(x: 150, y: -60, width: 330, height: 240))
         cloudImage2.alpha = 0.2
         cloudImage2.image = UIImage(named: "cloud_rain_1")
         self.basicWeatherSectionView.addSubview(cloudImage2)
         self.basicWeatherSectionView.sendSubview(toBack: cloudImage2)
         
         UIView.animate(withDuration: 50, delay: 0, options: [UIViewAnimationOptions.autoreverse, UIViewAnimationOptions.repeat, .curveLinear], animations: {
-            cloudImage2.center.x -= 200
+            cloudImage2.center.x -= 110
         }, completion: nil)
     }
     
     private func addOvercastClouds() {
-        let cloudImage = UIImageView(frame: CGRect(x: 10, y: 10, width: 300, height: 200))
+        let cloudImage = UIImageView(frame: CGRect(x: -10, y: -60, width: 450, height: 300))
         cloudImage.alpha = 0.3
         cloudImage.image = UIImage(named: "cloud_clear_1")
         self.basicWeatherSectionView.addSubview(cloudImage)
         self.basicWeatherSectionView.sendSubview(toBack: cloudImage)
         
         UIView.animate(withDuration: 45, delay: 0, options: [UIViewAnimationOptions.autoreverse, UIViewAnimationOptions.repeat, .curveEaseInOut], animations: {
-            cloudImage.center.x += 200
+            cloudImage.center.x += 130
         }, completion: nil)
         
         
-        let cloudImage2 = UIImageView(frame: CGRect(x: 150, y: 10, width: 220, height: 160))
+        let cloudImage2 = UIImageView(frame: CGRect(x: 150, y: -60, width: 330, height: 240))
         cloudImage2.alpha = 0.2
         cloudImage2.image = UIImage(named: "cloud_clear_1")
         self.basicWeatherSectionView.addSubview(cloudImage2)
         self.basicWeatherSectionView.sendSubview(toBack: cloudImage2)
         
         UIView.animate(withDuration: 50, delay: 0, options: [UIViewAnimationOptions.autoreverse, UIViewAnimationOptions.repeat, .curveLinear], animations: {
-            cloudImage2.center.x -= 200
+            cloudImage2.center.x -= 110
         }, completion: nil)
     }
     
     private func addFogClouds() {
-        let cloudImage = UIImageView(frame: CGRect(x: 10, y: 10, width: 300, height: 200))
+        let cloudImage = UIImageView(frame: CGRect(x: -150, y: -200, width: 800, height: 400))
         cloudImage.alpha = 0.8
         cloudImage.image = UIImage(named: "cloud_fog")
         self.basicWeatherSectionView.addSubview(cloudImage)
         self.basicWeatherSectionView.sendSubview(toBack: cloudImage)
         
         UIView.animate(withDuration: 45, delay: 0, options: [UIViewAnimationOptions.autoreverse, UIViewAnimationOptions.repeat, .curveEaseInOut], animations: {
-            cloudImage.center.x += 200
+            cloudImage.center.x += 120
         }, completion: nil)
         
         
-        let cloudImage2 = UIImageView(frame: CGRect(x: 200, y: 10, width: 220, height: 160))
+        let cloudImage2 = UIImageView(frame: CGRect(x: 200, y: -200, width: 600, height: 320))
         cloudImage2.alpha = 0.6
         cloudImage2.image = UIImage(named: "cloud_fog")
         self.basicWeatherSectionView.addSubview(cloudImage2)
         self.basicWeatherSectionView.sendSubview(toBack: cloudImage2)
         
         UIView.animate(withDuration: 50, delay: 0, options: [UIViewAnimationOptions.autoreverse, UIViewAnimationOptions.repeat, .curveLinear], animations: {
-            cloudImage2.center.x -= 200
+            cloudImage2.center.x -= 100
         }, completion: nil)
     }
     
