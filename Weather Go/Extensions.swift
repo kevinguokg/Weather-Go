@@ -45,3 +45,37 @@ extension UIColor {
         self.init(red: newRed, green: newGreen, blue: newBlue, alpha: alphaa)
     }
 }
+
+extension UIView {
+    func snapshotOfView(bound: CGRect) -> UIView? {
+        guard let image = self.snapshotImgOfView(bound: bound) else {
+            return nil
+        }
+        
+        let snapshotImgOfView: UIView = UIImageView(image:image)
+        snapshotImgOfView.layer.masksToBounds = false
+        snapshotImgOfView.layer.cornerRadius = 0.0
+        
+        return snapshotImgOfView
+    }
+    
+    func snapshotImgOfView(bound: CGRect) -> UIImage? {
+        UIGraphicsBeginImageContextWithOptions(bounds.size, false, 3.0)
+        self.layer.render(in: UIGraphicsGetCurrentContext()!)
+        let image = UIGraphicsGetImageFromCurrentImageContext()! as UIImage
+        UIGraphicsEndImageContext()
+        //UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+        
+        
+        UIGraphicsBeginImageContextWithOptions(bound.size, false, 3.0)
+        image.draw(at: CGPoint(x: -bound.origin.x, y: -bound.origin.y))
+        
+        let choppedImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        //UIImageWriteToSavedPhotosAlbum(choppedImage!, nil, nil, nil)
+        
+        return choppedImage
+    }
+    
+
+}

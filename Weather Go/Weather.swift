@@ -23,7 +23,7 @@ class Weather: NSObject, NSCoding {
     var sunset: Date?
     var precipRain: Double?
     var precipSnow: Double?
-    
+    var visibility: Int?
     
     override init() {
         
@@ -44,6 +44,7 @@ class Weather: NSObject, NSCoding {
         self.sunset = aDecoder.decodeObject(forKey: "sunset") as? Date
         self.precipRain = aDecoder.decodeObject(forKey: "precipRain") as? Double
         self.precipSnow = aDecoder.decodeObject(forKey: "precipSnow") as? Double
+        self.visibility = aDecoder.decodeObject(forKey: "visibility") as? Int
     }
     
     func encode(with aCoder: NSCoder) {
@@ -61,6 +62,7 @@ class Weather: NSObject, NSCoding {
         aCoder.encode(sunset, forKey: "sunset")
         aCoder.encode(precipRain, forKey: "precipRain")
         aCoder.encode(precipRain, forKey: "precipSnow")
+        aCoder.encode(visibility, forKey: "visibility")
         
     }
 

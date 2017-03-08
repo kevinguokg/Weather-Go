@@ -148,6 +148,8 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
                 self.pressureLabel.text = (weather.pressure != nil) ? "\(Int(weather.pressure!)) hPa" : "Not Available"
                 self.cloudLabel.text = (weather.clouds != nil) ? "\(Int(weather.clouds!))%" : "Not Available"
                 
+                let visibility = Int(weather.visibility! / 1000)
+                self.visibilityLabel.text = weather.visibility != nil ? (visibility < 1 ? "<1 km" : "\(visibility) km") : "Not Available"
             }
             
             

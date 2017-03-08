@@ -43,6 +43,10 @@ class AddCityViewController : UIViewController, UISearchBarDelegate, UITableView
         // Dispose of any resources that can be recreated.
     }
     
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return UIStatusBarStyle.lightContent
+    }
+    
     func getQuickLocationUpdate() {
         // Request location authorization
         self.locationManager.requestWhenInUseAuthorization()
@@ -128,6 +132,7 @@ class AddCityViewController : UIViewController, UISearchBarDelegate, UITableView
         weather.sunrize =  Date(timeIntervalSince1970: TimeInterval(cityJson["sys"]["sunrise"].intValue))
         weather.sunset =  Date(timeIntervalSince1970: TimeInterval(cityJson["sys"]["sunset"].intValue))
         weather.precipRain = cityJson["rain"]["3h"].double
+        weather.visibility = cityJson["visibility"].intValue
         city.weather = weather
         
         #if DEBUG
@@ -163,11 +168,12 @@ class AddCityViewController : UIViewController, UISearchBarDelegate, UITableView
         switch indexPath.section {
         case 0:
             cell.textLabel?.text = "Add Current Location"
-            cell.textLabel?.textColor = UIColor.blue
+            cell.textLabel?.textColor = kColorBackgroundNight
             break
             
         case 1:
-            cell.textLabel?.text = (cityList?[indexPath.row])?.name
+            cell.textLabel?.textColor = kColorBackgroundNight
+            cell.textLabel?.text = ((cityList?[indexPath.row])?.name)! + ", \((cityList?[indexPath.row])!.countryCode)"
             cell.detailTextLabel?.text = (cityList?[indexPath.row])?.weather?.weatherDesc ?? ""
             break
         default:

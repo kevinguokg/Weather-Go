@@ -40,6 +40,7 @@
 		9DF7F2361E4D1E9200619D3E /* ForecastWeather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF7F2351E4D1E9200619D3E /* ForecastWeather.swift */; };
 		9DF7F2391E4D2C6E00619D3E /* Rain.sks in Resources */ = {isa = PBXBuildFile; fileRef = 9DF7F2381E4D2C6E00619D3E /* Rain.sks */; };
 		9DF7F23F1E4D2F0600619D3E /* BackgroundScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF7F23E1E4D2F0600619D3E /* BackgroundScene.swift */; };
+		9DFD66A41E6E35430079CFD8 /* NavigationTransitionAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DFD66A31E6E35430079CFD8 /* NavigationTransitionAnimator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -80,6 +81,7 @@
 		9DF7F2351E4D1E9200619D3E /* ForecastWeather.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForecastWeather.swift; sourceTree = "<group>"; };
 		9DF7F2381E4D2C6E00619D3E /* Rain.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Rain.sks; sourceTree = "<group>"; };
 		9DF7F23E1E4D2F0600619D3E /* BackgroundScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackgroundScene.swift; sourceTree = "<group>"; };
+		9DFD66A31E6E35430079CFD8 /* NavigationTransitionAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationTransitionAnimator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +109,7 @@
 			children = (
 				9D1BE5451E44F86600F28085 /* ModalDismissAnimator.swift */,
 				9DCFB6D01E451DB100EE06B5 /* Interactor.swift */,
+				9DFD66A31E6E35430079CFD8 /* NavigationTransitionAnimator.swift */,
 			);
 			name = Animators;
 			sourceTree = "<group>";
@@ -408,6 +411,7 @@
 				9DA08B2B1E4AAA1F001D1868 /* ForecastWeatherCell.swift in Sources */,
 				9D8B99531E383A2F00BDE4CC /* CityWeatherCell.swift in Sources */,
 				9DCFB6D11E451DB100EE06B5 /* Interactor.swift in Sources */,
+				9DFD66A41E6E35430079CFD8 /* NavigationTransitionAnimator.swift in Sources */,
 				9DDD480A1E2EEF4100D0A83D /* ViewController.swift in Sources */,
 				9D8B994F1E38346500BDE4CC /* UserDefaultManager.swift in Sources */,
 				9DDD48241E30188E00D0A83D /* Weather.swift in Sources */,

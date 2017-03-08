@@ -55,6 +55,7 @@ class WeatherListViewController : UITableViewController {
     }
     
     let panGestureInteractor: Interactor = Interactor()
+    let navTransitionAnimator:NavigationTransitionAnimator = NavigationTransitionAnimator()
     
     let refresh = RainyRefreshControl()
     
@@ -62,6 +63,8 @@ class WeatherListViewController : UITableViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         self.tableView.backgroundColor = kColorBackgroundNight
+        
+        self.navigationController?.delegate = self
         
         timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTime) , userInfo: nil, repeats: true)
         let longPress = UILongPressGestureRecognizer(target: self, action: #selector(longPressGestureRecognized))
@@ -323,6 +326,7 @@ class WeatherListViewController : UITableViewController {
                             weather.windSpeed = cityJson["wind"]["speed"].doubleValue
                             weather.windDegree = cityJson["wind"]["deg"].doubleValue
                             weather.clouds = cityJson["clouds"]["all"].doubleValue
+                            weather.visibility = cityJson["visibility"].intValue
                             weather.sunrize =  Date(timeIntervalSince1970: TimeInterval(cityJson["sys"]["sunrise"].intValue))
                             weather.sunset =  Date(timeIntervalSince1970: TimeInterval(cityJson["sys"]["sunset"].intValue))
                             city.weather = weather
@@ -450,6 +454,15 @@ extension WeatherListViewController: UIViewControllerTransitioningDelegate {
     
     func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
         return self.panGestureInteractor.hasStarted ? self.panGestureInteractor : nil
+    }
+}
+
+extension WeatherListViewController: UINavigationControllerDelegate {
+    func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationControllerOperation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        
+        navTransitionAnimator.reverse = operation == .pop
+        
+        return navTransitionAnimator
     }
 }
 
