@@ -78,9 +78,10 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
         // edge pan gesture
         let panEdgeGesture = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(screenEdgeSwiped))
         panEdgeGesture.edges = .left
-        self.view.addGestureRecognizer(panEdgeGesture)
+        //self.view.addGestureRecognizer(panEdgeGesture)
         
-        let singleTapGesture = UITapGestureRecognizer(target: self, action: #selector(menuViewTapped))
+        self.menuView.isUserInteractionEnabled = true
+        let singleTapGesture = UITapGestureRecognizer(target: self, action: #selector(self.menuViewTapped(_:)))
         self.menuView.addGestureRecognizer(singleTapGesture)
         
         if let city = self.currentCity {
@@ -215,7 +216,7 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
     }
     
     // MARK: Gesture recognizers
-    func menuViewTapped(_ recognizer: UIGestureRecognizer) {
+    func menuViewTapped(_ recognizer: UITapGestureRecognizer) {
         _ = self.navigationController?.popViewController(animated: true)
     }
     
@@ -567,8 +568,6 @@ extension CityWeatherDetailViewController: UICollectionViewDataSource, UICollect
         if let snowPrecip = forecastList[indexPath.row].precipSnow {
             cell.precipImageView.image = UIImage(named: "icon_snow")
             cell.precipLabel.text = snowPrecip > 1 ? "\(Int(round(snowPrecip)))mm" : "<1mm"
-        } else {
-            cell.precipLabel.text = "0mm"
         }
         
         if #available(iOS 10.0, *) {

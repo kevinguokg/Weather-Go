@@ -15,9 +15,11 @@ let kAdMobBannerUnitId = "ca-app-pub-8658979143104994/1793746469"
 
 // MARK: COLOR
 
-// forecas small cell
+// forecast small cell
 let kColorForecastDay = UIColor.init(red: 213/255.0, green: 213/255.0, blue: 237/255.0, alpha: 0.25)
 let kColorForecastNight = UIColor.init(red: 147/255.0, green: 147/255.0, blue: 165/255.0, alpha: 0.25)
+let kColorForecastPrecipRainy = UIColor.init(red: 26/255, green: 140/255, blue: 255/255, alpha: 0.4)
+let kColorForecastPrecipSnowy = UIColor.init(red: 115/255, green: 115/255, blue: 115/255, alpha: 0.4)
 
 // rainy
 let kColorBackgroundRainy = UIColor.init(red: 117/255, green: 117/255, blue: 163/255, alpha: 0.8)
@@ -46,7 +48,7 @@ let kColorRainFropGreyFaint = UIColor.init(red: 185/255, green: 185/255, blue: 1
 
 
 // menu bar color
-let kColorMenuBarGrey = UIColor.init(red: 151/255, green: 154/255, blue: 160/255, alpha: 1.0)
+let kColorMenuBarGrey = UIColor.init(red: 151/255, green: 154/255, blue: 160/255, alpha: 0.8)
 
 // MARK: UNITS
 // temperature

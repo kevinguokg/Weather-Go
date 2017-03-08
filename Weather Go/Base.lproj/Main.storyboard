@@ -49,14 +49,14 @@
                                                     <rect key="frame" x="15" y="12" width="80.5" height="20.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" weight="thin" pointSize="17"/>
-                                                    <nil key="textColor"/>
+                                                    <color key="textColor" red="0.076982609930000001" green="0.098585449160000005" blue="0.20645767449999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="QH6-L3-KLw">
                                                     <rect key="frame" x="317" y="12" width="43" height="20.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" weight="thin" pointSize="17"/>
-                                                    <nil key="textColor"/>
+                                                    <color key="textColor" red="0.076982609930000001" green="0.098585449160000005" blue="0.20645767449999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
@@ -195,14 +195,6 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XPj-gD-4VZ" userLabel="Content View">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="751"/>
                                         <subviews>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VsI-1P-xEo" customClass="MenuView" customModule="Weather_Go" customModuleProvider="target">
-                                                <rect key="frame" x="20" y="20" width="20" height="20"/>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" constant="20" id="6CY-kV-orA"/>
-                                                    <constraint firstAttribute="height" constant="20" id="BVt-lJ-Hng"/>
-                                                </constraints>
-                                            </view>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="fl7-K0-PT7">
                                                 <rect key="frame" x="0.0" y="0.0" width="375" height="751"/>
                                                 <subviews>
@@ -227,8 +219,8 @@
                                                                 <rect key="frame" x="64" y="16.5" width="247.5" height="247.5"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="New York" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="48r-OT-6R3" userLabel="City Name Label">
-                                                                        <rect key="frame" x="36.5" y="48" width="174.5" height="54"/>
-                                                                        <fontDescription key="fontDescription" type="system" weight="thin" pointSize="45"/>
+                                                                        <rect key="frame" x="33" y="48" width="182" height="54"/>
+                                                                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="45"/>
                                                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                                         <nil key="highlightedColor"/>
                                                                     </label>
@@ -239,8 +231,8 @@
                                                                         <nil key="highlightedColor"/>
                                                                     </label>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Cloudy " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a8L-Fv-TWM" userLabel="Current Weather Label">
-                                                                        <rect key="frame" x="83.5" y="197.5" width="79.5" height="30"/>
-                                                                        <fontDescription key="fontDescription" type="system" weight="thin" pointSize="25"/>
+                                                                        <rect key="frame" x="82" y="197.5" width="83" height="30"/>
+                                                                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="25"/>
                                                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                                         <nil key="highlightedColor"/>
                                                                     </label>
@@ -295,7 +287,7 @@
                                                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="O7K-Yv-ZB5">
                                                                                 <rect key="frame" x="0.0" y="0.0" width="295" height="61.5"/>
                                                                                 <subviews>
-                                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="High Temperature" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xpl-Hx-JYe">
+                                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="High" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xpl-Hx-JYe">
                                                                                         <rect key="frame" x="0.0" y="0.0" width="240.5" height="61.5"/>
                                                                                         <fontDescription key="fontDescription" type="system" weight="thin" pointSize="15"/>
                                                                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -312,7 +304,7 @@
                                                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="tZt-y8-goK">
                                                                                 <rect key="frame" x="0.0" y="23.5" width="295" height="61.5"/>
                                                                                 <subviews>
-                                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Lowest Temperature" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0bm-9B-Rt8">
+                                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Low" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0bm-9B-Rt8">
                                                                                         <rect key="frame" x="0.0" y="0.0" width="249.5" height="61.5"/>
                                                                                         <fontDescription key="fontDescription" type="system" weight="thin" pointSize="15"/>
                                                                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -582,6 +574,14 @@
                                                     <constraint firstAttribute="trailing" secondItem="Oqs-3R-KQa" secondAttribute="trailing" id="gjo-6Y-YL3"/>
                                                 </constraints>
                                             </stackView>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VsI-1P-xEo" customClass="MenuView" customModule="Weather_Go" customModuleProvider="target">
+                                                <rect key="frame" x="19.5" y="20" width="25" height="25"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="25" id="6CY-kV-orA"/>
+                                                    <constraint firstAttribute="height" constant="25" id="BVt-lJ-Hng"/>
+                                                </constraints>
+                                            </view>
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
@@ -639,7 +639,7 @@
                         <outlet property="highTempLabel" destination="uzr-vA-k9m" id="GNL-0k-Aw5"/>
                         <outlet property="humidityLabel" destination="cuN-bl-RHa" id="F6x-zJ-Nk9"/>
                         <outlet property="lowTepLabel" destination="Zyp-sx-ipf" id="zw8-D6-w4m"/>
-                        <outlet property="menuView" destination="e4b-rt-d3d" id="G0j-Ip-MxM"/>
+                        <outlet property="menuView" destination="VsI-1P-xEo" id="OYe-Gl-hNx"/>
                         <outlet property="pressureLabel" destination="hI6-I1-6Pe" id="LBc-AR-IKF"/>
                         <outlet property="scrollView" destination="xMT-XX-yd4" id="2vQ-sh-0kf"/>
                         <outlet property="sunriseLabel" destination="fKy-pM-rdX" id="Rdo-QS-ZYo"/>

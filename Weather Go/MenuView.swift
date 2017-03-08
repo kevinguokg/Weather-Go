@@ -16,7 +16,7 @@ class MenuView: UIView {
         
         var path = UIBezierPath(roundedRect: CGRect(x: 0 , y: self.bounds.height/4, width: self.bounds.width, height: self.bounds.height/6), cornerRadius: 1)
         
-        path.lineWidth = 0.5
+        path.lineWidth = 0.0
         kColorMenuBarGrey.setFill()
         UIColor.black.setStroke()
         path.fill()

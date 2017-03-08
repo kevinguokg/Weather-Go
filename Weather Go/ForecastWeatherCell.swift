@@ -23,6 +23,14 @@ class ForecastWeatherCell: UICollectionViewCell {
     var city: City? = nil
     var forecastWeather: ForecastWeather? = nil
     
+    var precipLayer = CAShapeLayer()
+    
+    let minPrecipHeight: CGFloat = 3.0
+    let singleMMPrecipHeight: CGFloat = 1.5
+    var maxPrecipHeight: CGFloat {
+        return self.bounds.height / 3.0
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
     }
@@ -32,10 +40,59 @@ class ForecastWeatherCell: UICollectionViewCell {
         
         self.layer.cornerRadius = 10
         self.clipsToBounds = true
+        
+    
     }
     
     func updateCell() {
         updateCellBackgroundImage()
+        updateWeatherLayer()
+    }
+    
+    private func updateWeatherLayer() {
+        guard let city = self.city, let forecastWeather = forecastWeather, let currForecastDate = forecastWeather.time else {
+            return
+        }
+        
+        
+        
+        if let weatherType = forecastWeather.weatherMain {
+            switch weatherType {
+            case "Rain", "Drizzle":
+                let precipRain = Int(round(forecastWeather.precipRain!))
+                let layerHeight = max(singleMMPrecipHeight * CGFloat(precipRain), minPrecipHeight)
+                precipLayer.path = UIBezierPath(rect: CGRect(x: 0, y: self.bounds.height - min(layerHeight, maxPrecipHeight), width: self.bounds.width, height: min(layerHeight, maxPrecipHeight))).cgPath
+                    
+                precipLayer.fillColor = kColorForecastPrecipRainy.cgColor
+                break
+                
+            case "Snow":
+                let precipSnow = Int(round(forecastWeather.precipSnow!))
+                let layerHeight = max(singleMMPrecipHeight * CGFloat(precipSnow), minPrecipHeight)
+                precipLayer.path = UIBezierPath(rect: CGRect(x: 0, y: self.bounds.height - min(layerHeight, maxPrecipHeight), width: self.bounds.width, height: min(layerHeight, maxPrecipHeight))).cgPath
+                
+                precipLayer.fillColor = kColorForecastPrecipSnowy.cgColor
+                break
+
+            default:
+                precipLayer.fillColor = UIColor.clear.cgColor
+                break
+            }
+         
+            precipLayer.shouldRasterize = true
+            
+            let opacityAnim = CABasicAnimation(keyPath: "opacity")
+            opacityAnim.fromValue = 0
+            opacityAnim.toValue = 1
+            opacityAnim.repeatCount = 0
+            opacityAnim.duration = 0.8
+            opacityAnim.fillMode = kCAFillModeForwards
+            opacityAnim.isRemovedOnCompletion = false
+            precipLayer.add(opacityAnim, forKey: "raisingAnim")
+            
+            self.layer.addSublayer(precipLayer)
+            
+        }
     }
     
     private func updateCellBackgroundImage() {
