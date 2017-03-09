@@ -13,6 +13,11 @@ import UIKit
 let kAdMobId = "ca-app-pub-8658979143104994~6782349265"
 let kAdMobBannerUnitId = "ca-app-pub-8658979143104994/1793746469"
 
+// MARK: USER_DEFAULTS KEYS
+let kAppLaunchCount = "kAppLaunchCount"
+let kAppInstallDate = "kAppInstallDate"
+let kAppRatingHasShwon = "kAppRatingHasShwon"
+
 // MARK: COLOR
 
 // forecast small cell
