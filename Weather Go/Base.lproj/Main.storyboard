@@ -177,7 +177,7 @@
         <!--Weather Detail -->
         <scene sceneID="epN-KC-NYv">
             <objects>
-                <viewController title="City Weather Detail" id="J4W-mM-Epn" userLabel="Weather Detail " customClass="CityWeatherDetailViewController" customModule="Weather_Go" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="CityWeatherDetailViewController" title="City Weather Detail" id="J4W-mM-Epn" userLabel="Weather Detail " customClass="CityWeatherDetailViewController" customModule="Weather_Go" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Yqd-PM-HsD"/>
                         <viewControllerLayoutGuide type="bottom" id="C4h-PS-mv6"/>

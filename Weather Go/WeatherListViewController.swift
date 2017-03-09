@@ -13,8 +13,7 @@ import CoreLocation
 import TimeZoneLocate
 import RainyRefreshControl
 
-class WeatherListViewController : UITableViewController {
-    
+class WeatherListViewController : UITableViewController, UIViewControllerPreviewingDelegate {
     
     @IBAction func degreeBtnTapped(_ sender: Any) {
         if UserDefaults.standard.bool(forKey: "isMetric") == true {
@@ -87,6 +86,11 @@ class WeatherListViewController : UITableViewController {
         }
         
         self.tableView.reloadData()
+        
+        // only register force touch if it is available for the device
+        if traitCollection.forceTouchCapability == .available {
+            registerForPreviewing(with: self, sourceView: self.tableView)
+        }
     }
     
     func setNeedsUpdateFlagForAllCities() {
@@ -277,6 +281,41 @@ class WeatherListViewController : UITableViewController {
         UIGraphicsEndImageContext()
         
         return image
+    }
+    
+    // MARK: UIViewController Preview Delegate (Peek) & related methods
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
+        if let indexPath = self.tableView.indexPathForRow(at: location) {
+            
+            // previews the cell
+            previewingContext.sourceRect = self.tableView.rectForRow(at: indexPath)
+            guard let detailWeatherVc = UIStoryboard.init(name: "Main", bundle: Bundle.main).instantiateViewController(withIdentifier: "CityWeatherDetailViewController") as? CityWeatherDetailViewController else {
+                return nil
+            }
+            
+            // set frame of cell
+            let rect = tableView.rectForRow(at: indexPath)
+            let frameToOpenFrom = tableView.convert(rect, to: self.view)
+            self.openingFrame = frameToOpenFrom
+            
+            // set selected city
+            self.selectedCity = self.citiList?[indexPath.row]
+            detailWeatherVc.currentCity = self.citiList?[indexPath.row]
+
+            return detailWeatherVc
+        }
+        
+        return nil
+    }
+    
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
+        
+        
+        performSegue(withIdentifier: "showCityDetail", sender: nil)
+    }
+    
+    private func viewControllerForIndexPath(indexPath: IndexPath) {
+        
     }
     
     
