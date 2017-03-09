@@ -54,6 +54,8 @@ class WeatherListViewController : UITableViewController {
         static var cityList: Array<City>? = nil
     }
     
+    var openingFrame: CGRect?
+    
     let panGestureInteractor: Interactor = Interactor()
     let navTransitionAnimator:NavigationTransitionAnimator = NavigationTransitionAnimator()
     
@@ -61,9 +63,8 @@ class WeatherListViewController : UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        self.tableView.backgroundColor = kColorBackgroundNight
         
+        self.tableView.backgroundColor = kColorBackgroundNight
         self.navigationController?.delegate = self
         
         timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTime) , userInfo: nil, repeats: true)
@@ -389,6 +390,13 @@ class WeatherListViewController : UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.selectedCity = self.citiList?[indexPath.row]
+        
+        // set frame of cell
+        let rect = tableView.rectForRow(at: indexPath)
+        let frameToOpenFrom = tableView.convert(rect, to: self.view)
+        self.openingFrame = frameToOpenFrom
+        
+        
         performSegue(withIdentifier: "showCityDetail", sender: nil)
     }
     
@@ -459,7 +467,7 @@ extension WeatherListViewController: UIViewControllerTransitioningDelegate {
 
 extension WeatherListViewController: UINavigationControllerDelegate {
     func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationControllerOperation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        
+        navTransitionAnimator.openingFrame = openingFrame!
         navTransitionAnimator.reverse = operation == .pop
         
         return navTransitionAnimator
