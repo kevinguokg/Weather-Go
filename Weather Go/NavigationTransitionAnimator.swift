@@ -21,60 +21,81 @@ class NavigationTransitionAnimator: NSObject, UIViewControllerAnimatedTransition
         return 0.3
     }
 
-    func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-        let containerView = transitionContext.containerView
-        
-        let fromVc = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.from)!
-        let toVc = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.to)!
-
-        let fromView = fromVc.view
-        let toView = toVc.view
-        
-        let fromViewFrame = fromVc.view.frame
-        
-        if !reverse {
-            // gets and adds top portion
-            topView = fromView?.resizableSnapshotView(from: fromViewFrame, afterScreenUpdates: true, withCapInsets: UIEdgeInsets(top: openingFrame!.origin.y, left: 0, bottom: 0, right: 0))
-            topView.frame = CGRect(x: 0, y: 0, width: fromViewFrame.width, height: openingFrame!.origin.y)
-            containerView.addSubview(topView)
-            
-            // gets and adds buttom portion
-            bottomView = fromView?.resizableSnapshotView(from: fromViewFrame, afterScreenUpdates: true, withCapInsets: UIEdgeInsets(top: 0, left: 0, bottom: fromViewFrame.height - openingFrame!.origin.y - openingFrame!.height, right: 0))
-            bottomView.frame = CGRect(x: 0, y: openingFrame!.origin.y + openingFrame!.height, width: fromViewFrame.width, height: fromViewFrame.height - openingFrame!.origin.y - openingFrame!.height)
-            containerView.addSubview(bottomView)
-            
-            
-            // snapshot of to view, in reduced frame
-            let snapShotView = toView?.resizableSnapshotView(from: fromViewFrame, afterScreenUpdates: true, withCapInsets: UIEdgeInsets.zero)
-            snapShotView?.frame = openingFrame!
-            containerView.addSubview(snapShotView!)
-            
-            // set toVc alpha zero
-            toVc.view.alpha = 0
-            containerView.addSubview(toVc.view)
-            
-            
-            UIView.animate(withDuration: transitionDuration(using: transitionContext) * 4, animations: {
-                // top view moves up
-                self.topView.frame = CGRect(x: 0, y: -self.topView.frame.height, width: self.topView.frame.width, height: self.topView.frame.height)
-                
-                // bottom view moves down
-                self.bottomView.frame = CGRect(x: 0, y: fromViewFrame.height, width: self.bottomView.frame.width, height: self.bottomView.frame.height)
-                
-                snapShotView?.frame = fromViewFrame
-                
-                
-            }, completion: { (finished) in
-                snapShotView?.removeFromSuperview()
-                toVc.view.alpha = 1.0
-                transitionContext.completeTransition(finished)
-            })
-            
-        } else {
-        
-        }
-        
-    }
+//    func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+//        let containerView = transitionContext.containerView
+//        
+//        let fromVc = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.from)!
+//        let toVc = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.to)!
+//
+//        let fromView = fromVc.view
+//        let toView = toVc.view
+//        
+//        let fromViewFrame = fromVc.view.frame
+//        
+//        let navBarHeight = fromVc.navigationController?.navigationBar.frame.size.height
+//        let statusBarHeight = UIApplication.shared.statusBarFrame.height
+//        
+//        if !reverse {
+//            // gets and adds top portion
+//            topView = fromView?.resizableSnapshotView(from: fromViewFrame, afterScreenUpdates: true, withCapInsets: UIEdgeInsets(top: openingFrame!.origin.y, left: 0, bottom: 0, right: 0))
+//            topView.frame = CGRect(x: 0, y: navBarHeight! + statusBarHeight, width: fromViewFrame.width, height: openingFrame!.origin.y)
+//            containerView.addSubview(topView)
+//            
+//            // gets and adds buttom portion
+//            bottomView = fromView?.resizableSnapshotView(from: fromViewFrame, afterScreenUpdates: true, withCapInsets: UIEdgeInsets(top: 0, left: 0, bottom: fromViewFrame.height - openingFrame!.origin.y - openingFrame!.height, right: 0))
+//            bottomView.frame = CGRect(x: 0, y: navBarHeight! + statusBarHeight + openingFrame!.origin.y + openingFrame!.height, width: fromViewFrame.width, height: fromViewFrame.height - openingFrame!.origin.y - openingFrame!.height)
+//            containerView.addSubview(bottomView)
+//            
+//            
+//            // snapshot of to view, in reduced frame
+//            let snapShotView = toView?.resizableSnapshotView(from: fromViewFrame, afterScreenUpdates: true, withCapInsets: UIEdgeInsets.zero)
+//            snapShotView?.frame = openingFrame!
+//            containerView.addSubview(snapShotView!)
+//            
+//            // set toVc alpha zero
+//            toVc.view.alpha = 0
+//            containerView.addSubview(toVc.view)
+//            
+//            
+//            UIView.animate(withDuration: transitionDuration(using: transitionContext), animations: {
+//                // top view moves up
+//                self.topView.frame = CGRect(x: 0, y: -self.topView.frame.height, width: self.topView.frame.width, height: self.topView.frame.height)
+//                
+//                // bottom view moves down
+//                self.bottomView.frame = CGRect(x: 0, y: fromViewFrame.height, width: self.bottomView.frame.width, height: self.bottomView.frame.height)
+//                
+//                snapShotView?.frame = fromViewFrame
+//                
+//                
+//            }, completion: { (finished) in
+//                snapShotView?.removeFromSuperview()
+//                toVc.view.alpha = 1.0
+//                transitionContext.completeTransition(finished)
+//            })
+//            
+//        } else {
+//            let snapShotView = fromVc.view.resizableSnapshotView(from: fromView!.bounds, afterScreenUpdates: true, withCapInsets: UIEdgeInsets.zero)
+//            containerView.addSubview(snapShotView!)
+//            
+//            fromVc.view.alpha = 0.0
+//            toVc.view.alpha = 1.0
+//            
+//            UIView.animate(withDuration: transitionDuration(using: transitionContext), animations: { 
+//                self.topView.frame = CGRect(x: 0, y: navBarHeight! + statusBarHeight, width: self.topView.frame.width, height: self.topView.frame.height)
+//                self.bottomView.frame = CGRect(x: 0, y: fromVc.view.frame.height - self.bottomView.frame.height + (navBarHeight! + statusBarHeight), width: self.bottomView.frame.width, height: self.bottomView.frame.height)
+//                
+//                snapShotView!.frame = self.openingFrame!
+//            }, completion: { (finished) in
+//                snapShotView?.removeFromSuperview()
+//                self.topView.removeFromSuperview()
+//                self.bottomView.removeFromSuperview()
+//                toVc.view.alpha = 1.0
+//                transitionContext.completeTransition(finished)
+//            })
+//            
+//        }
+//        
+//    }
     
 //    func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
 //        let containerView = transitionContext.containerView
@@ -191,36 +212,37 @@ class NavigationTransitionAnimator: NSObject, UIViewControllerAnimatedTransition
 //    
 //    
 //      fade
-//    func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-//        let containerView = transitionContext.containerView
-//        let fromVc = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.from)
-//        let toVc = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.to)
-//        
-//        let fromView = fromVc?.view
-//        let toView = toVc?.view
-//        
-//        if let fromView = fromView, let toView = toView {
-//            toView.alpha = 0
-//            
-//            containerView.addSubview(toView)
-//            containerView.addSubview(fromView)
-//            
-//            UIView.animate(withDuration: self.transitionDuration(using: transitionContext), animations: { 
-//                fromView.alpha = 0
-//                toView.alpha = 1
-//                
-//            }, completion: { (success) in
-//                
-//                if (transitionContext.transitionWasCancelled) {
-//                    toView.removeFromSuperview()
-//                } else {
-//                    fromView.removeFromSuperview()
-//                }
-//                
-//                
-//                transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
-//            })
-//        }
-//        
-//    }
+    func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+        let containerView = transitionContext.containerView
+        let fromVc = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.from)
+        let toVc = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.to)
+        
+        let fromView = fromVc?.view
+        let toView = toVc?.view
+        
+        if let fromView = fromView, let toView = toView {
+            toView.alpha = 0
+            
+            containerView.addSubview(toView)
+            containerView.addSubview(fromView)
+            
+            
+            UIView.animate(withDuration: self.transitionDuration(using: transitionContext), delay: 0.0, options: UIViewAnimationOptions.curveEaseOut, animations: {
+                fromView.alpha = 0
+                toView.alpha = 1
+                
+            }, completion: { (success) in
+                
+                if (transitionContext.transitionWasCancelled) {
+                    toView.removeFromSuperview()
+                } else {
+                    fromView.removeFromSuperview()
+                }
+                
+                
+                transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+            })
+        }
+        
+    }
 }
