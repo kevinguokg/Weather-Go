@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		5A3C8AB2F4B88BA1A80280ED /* Pods_Weather_Go.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F2FAB76CB1DFB1E71CD615F /* Pods_Weather_Go.framework */; };
 		9D1BE5461E44F86600F28085 /* ModalDismissAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D1BE5451E44F86600F28085 /* ModalDismissAnimator.swift */; };
+		9D2A250B1E72311C004F744E /* ShortCutManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D2A250A1E72311C004F744E /* ShortCutManager.swift */; };
 		9D314C941E71E4FF00D3EAF9 /* AppRater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D314C931E71E4FF00D3EAF9 /* AppRater.swift */; };
 		9D3AF3FB1E6504EE00085AAC /* ThunderEffectLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D3AF3FA1E6504EE00085AAC /* ThunderEffectLayer.swift */; };
 		9D488C781E4E86EC00D97E8B /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D488C771E4E86EC00D97E8B /* Extensions.swift */; };
@@ -50,6 +51,7 @@
 		4AA6A0A484A54CC71C8EDAE3 /* Pods-Weather Go.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Weather Go.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Weather Go/Pods-Weather Go.debug.xcconfig"; sourceTree = "<group>"; };
 		6F2FAB76CB1DFB1E71CD615F /* Pods_Weather_Go.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Weather_Go.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D1BE5451E44F86600F28085 /* ModalDismissAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModalDismissAnimator.swift; sourceTree = "<group>"; };
+		9D2A250A1E72311C004F744E /* ShortCutManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShortCutManager.swift; sourceTree = "<group>"; };
 		9D314C931E71E4FF00D3EAF9 /* AppRater.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppRater.swift; sourceTree = "<group>"; };
 		9D3AF3FA1E6504EE00085AAC /* ThunderEffectLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThunderEffectLayer.swift; sourceTree = "<group>"; };
 		9D488C771E4E86EC00D97E8B /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
@@ -146,6 +148,7 @@
 				9D488C761E4E86D600D97E8B /* Extensions */,
 				9D8B994E1E38346500BDE4CC /* UserDefaultManager.swift */,
 				9D314C931E71E4FF00D3EAF9 /* AppRater.swift */,
+				9D2A250A1E72311C004F744E /* ShortCutManager.swift */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -426,6 +429,7 @@
 				9D488C781E4E86EC00D97E8B /* Extensions.swift in Sources */,
 				9D3AF3FB1E6504EE00085AAC /* ThunderEffectLayer.swift in Sources */,
 				9DFD66A61E6F97650079CFD8 /* MenuView.swift in Sources */,
+				9D2A250B1E72311C004F744E /* ShortCutManager.swift in Sources */,
 				9D4E8C471E5B897900D8ABD1 /* ClearSkyEffectLayer.swift in Sources */,
 				9D4E8C571E5D129900D8ABD1 /* FogEffectLayer.swift in Sources */,
 				9DF7F23F1E4D2F0600619D3E /* BackgroundScene.swift in Sources */,

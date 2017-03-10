@@ -15,13 +15,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         let appRater = AppRater.sharedInstance
         appRater.appId = Bundle.main.bundleIdentifier!
         
         GADMobileAds.configure(withApplicationID: kAdMobId)
+        
+        _ = ShortCutManager.sharedInstance
         
         return true
     }
@@ -49,5 +50,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
 
+    func application(_ application: UIApplication, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
+        // Called when app responds to quick actions
+        switch shortcutItem.type {
+        case ShortCutItemType.add.rawValue:
+            print("Goint to add a city")
+            NotificationCenter.default.post(name: Notification.Name.quickActionOpenAddCityVc , object: nil, userInfo: nil)
+        default:
+            print("default behavior of shortcutItem action")
+        }
+    }
 }
 

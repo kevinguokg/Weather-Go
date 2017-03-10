@@ -104,14 +104,16 @@ class WeatherListViewController : UITableViewController, UIViewControllerPreview
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.setNavigationBarHidden(true, animated: true)
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIApplicationWillResignActive, object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notification.Name.UIApplicationWillResignActive, object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notification.Name.quickActionOpenAddCityVc, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.tableView.reloadData()
         self.navigationController?.setNavigationBarHidden(false, animated: true)
-        NotificationCenter.default.addObserver(self, selector: #selector(saveCachedWeatherList), name: NSNotification.Name.UIApplicationWillResignActive, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(saveCachedWeatherList), name: Notification.Name.UIApplicationWillResignActive, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(openAddCityVc), name: Notification.Name.quickActionOpenAddCityVc, object: nil)
     }
     
     override func didReceiveMemoryWarning() {
@@ -470,6 +472,13 @@ class WeatherListViewController : UITableViewController, UIViewControllerPreview
 //        }
     }
 
+    
+    // MARK: Page transition hooks
+    
+    func openAddCityVc() {
+        self.performSegue(withIdentifier: "addCityViewController", sender: nil)
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let id = segue.identifier, id == "showCityDetail" {
             let weatherDetailVc = segue.destination as! CityWeatherDetailViewController

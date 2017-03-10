@@ -782,7 +782,7 @@
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="COy-d5-nxL">
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <connections>
-                                <segue destination="BYZ-38-t0r" kind="presentation" id="uId-OB-Sta"/>
+                                <segue destination="BYZ-38-t0r" kind="presentation" identifier="addCityViewController" id="uId-OB-Sta"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>

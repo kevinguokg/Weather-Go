@@ -9,6 +9,10 @@
 import Foundation
 import UIKit
 
+extension Notification.Name {
+    static let quickActionOpenAddCityVc = Notification.Name("quickActionOpenAddCityVc")
+}
+
 extension UIImage {
     
     func maskWithColor(color: UIColor) -> UIImage? {
