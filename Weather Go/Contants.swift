@@ -20,6 +20,11 @@ let kAppRatingHasShwon = "kAppRatingHasShwon"
 
 // MARK: COLOR
 
+// alert view color
+let kColorAlertBad = UIColor.init(red: 255/255.0, green: 77/255.0, blue: 77/255.0, alpha: 1)
+let kColorAlertGood = UIColor.init(red: 0/255.0, green: 204/255.0, blue: 51/255.0, alpha: 1)
+
+
 // forecast small cell
 let kColorForecastDay = UIColor.init(red: 213/255.0, green: 213/255.0, blue: 237/255.0, alpha: 0.25)
 let kColorForecastNight = UIColor.init(red: 147/255.0, green: 147/255.0, blue: 165/255.0, alpha: 0.25)

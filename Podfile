@@ -13,4 +13,5 @@ target 'Weather Go' do
   pod 'RainyRefreshControl'
   pod 'Firebase/AdMob'
   pod 'ReachabilitySwift', '~> 3'
+  pod 'JDropDownAlert'
 end
