@@ -91,6 +91,13 @@ class WeatherListViewController : UITableViewController, UIViewControllerPreview
         if traitCollection.forceTouchCapability == .available {
             registerForPreviewing(with: self, sourceView: self.tableView)
         }
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(openAddCityVc), name: Notification.Name.quickActionOpenAddCityVc, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(saveCachedWeatherList), name: Notification.Name.UIApplicationWillResignActive, object: nil)
+        
+        if let delegate =  UIApplication.shared.delegate as? AppDelegate{
+            delegate.triggerShortcutItem()
+        }
     }
     
     func setNeedsUpdateFlagForAllCities() {
@@ -104,21 +111,27 @@ class WeatherListViewController : UITableViewController, UIViewControllerPreview
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.setNavigationBarHidden(true, animated: true)
-        NotificationCenter.default.removeObserver(self, name: Notification.Name.UIApplicationWillResignActive, object: nil)
-        NotificationCenter.default.removeObserver(self, name: Notification.Name.quickActionOpenAddCityVc, object: nil)
+        
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.tableView.reloadData()
         self.navigationController?.setNavigationBarHidden(false, animated: true)
-        NotificationCenter.default.addObserver(self, selector: #selector(saveCachedWeatherList), name: Notification.Name.UIApplicationWillResignActive, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(openAddCityVc), name: Notification.Name.quickActionOpenAddCityVc, object: nil)
+        
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+        NotificationCenter.default.removeObserver(self, name: Notification.Name.quickActionOpenAddCityVc, object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notification.Name.UIApplicationWillResignActive, object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: Notification.Name.quickActionOpenAddCityVc, object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notification.Name.UIApplicationWillResignActive, object: nil)
     }
     
     func saveCachedWeatherList() {
@@ -178,7 +191,6 @@ class WeatherListViewController : UITableViewController, UIViewControllerPreview
                     Cell.snapShot?.center = center
                     Cell.snapShot?.alpha = 0.0
                     self.tableView.addSubview(Cell.snapShot!)
-                    
                     
                     UIView.animate(withDuration: 0.25, animations: { 
                         center.y = locationInView.y
@@ -263,15 +275,18 @@ class WeatherListViewController : UITableViewController, UIViewControllerPreview
         }
     }
     
-    private func snapshotOfCell(_ view: UIView) -> UIView {
-        let image = self.snapshotImgOfCell(view)
+    private func snapshotOfCell(_ view: UIView) -> UIView? {
+//        let image = self.snapshotImgOfCell(view)
+//        let cellSnapshot: UIView = UIImageView(image: image)
         
-        let cellSnapshot: UIView = UIImageView(image: image)
-        cellSnapshot.layer.masksToBounds = false
-        cellSnapshot.layer.cornerRadius = 0.0
-        cellSnapshot.layer.shadowOffset = CGSize(width: -5.0, height: 5.0)
-        cellSnapshot.layer.shadowRadius = 5.0
-        cellSnapshot.layer.shadowOpacity = 0.4
+        let cellSnapshot: UIView? = view.resizableSnapshotView(from: view.bounds, afterScreenUpdates: true, withCapInsets: UIEdgeInsets.zero)
+        if let cellSnapshot = cellSnapshot {
+            cellSnapshot.layer.masksToBounds = false
+            cellSnapshot.layer.cornerRadius = 0.0
+            cellSnapshot.layer.shadowOffset = CGSize(width: -5.0, height: 5.0)
+            cellSnapshot.layer.shadowRadius = 5.0
+            cellSnapshot.layer.shadowOpacity = 0.4
+        }
         
         return cellSnapshot
     }

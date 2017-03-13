@@ -7,13 +7,17 @@
 //
 
 import UIKit
-
 import GoogleMobileAds
+import ReachabilitySwift
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    private var shortcutItem: UIApplicationShortcutItem?
+    
+    //declare this property where it won't go out of scope relative to your listener
+    let reachability = Reachability()!
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
@@ -24,7 +28,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         _ = ShortCutManager.sharedInstance
         
-        return true
+        setUpReachability()
+        
+        var launchedFromShortCut = false
+        
+        if let shortcutItem = launchOptions?[UIApplicationLaunchOptionsKey.shortcutItem] as? UIApplicationShortcutItem {
+            launchedFromShortCut = true
+            self.shortcutItem = shortcutItem
+        }
+        
+        return !launchedFromShortCut
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
@@ -52,12 +65,58 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
         // Called when app responds to quick actions
-        switch shortcutItem.type {
-        case ShortCutItemType.add.rawValue:
-            print("Goint to add a city")
-            NotificationCenter.default.post(name: Notification.Name.quickActionOpenAddCityVc , object: nil, userInfo: nil)
-        default:
-            print("default behavior of shortcutItem action")
+        completionHandler(handleShortcut(shortcutItem: shortcutItem))
+    }
+    
+    private func handleShortcut(shortcutItem: UIApplicationShortcutItem) -> Bool{
+        guard let shortcutItemType = ShortCutItemType(rawValue: shortcutItem.type) else {
+            return false
+        }
+        
+        switch shortcutItemType {
+            case ShortCutItemType.add:
+                print("Going to add a city")
+                NotificationCenter.default.post(name: Notification.Name.quickActionOpenAddCityVc , object: nil, userInfo: nil)
+                break
+            }
+        
+        return true
+    }
+    
+    func triggerShortcutItem() {
+        if let shortcut = self.shortcutItem {
+            _ = handleShortcut(shortcutItem: shortcut)
+        }
+        
+        // reset
+        self.shortcutItem = nil
+    }
+    
+    private func setUpReachability() {
+        reachability.whenReachable = { reachability in
+            // this is called on a background thread, but UI updates must
+            // be on the main thread, like this:
+            DispatchQueue.main.async(execute: {
+                if reachability.isReachableViaWiFi {
+                    print("Reachable via WiFi")
+                } else {
+                    print("Reachable via Cellular")
+                }
+            })
+        }
+        
+        reachability.whenUnreachable = { reachability in
+            // this is called on a background thread, but UI updates must
+            // be on the main thread, like this:
+            DispatchQueue.main.async(execute: {
+                print("Not reachable")
+            })
+        }
+        
+        do {
+            try reachability.startNotifier()
+        } catch {
+            print("Unable to start notifier")
         }
     }
 }
