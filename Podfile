@@ -12,4 +12,5 @@ target 'Weather Go' do
   pod 'TimeZoneLocate'
   pod 'RainyRefreshControl'
   pod 'Firebase/AdMob'
+  pod 'ReachabilitySwift', '~> 3'
 end
