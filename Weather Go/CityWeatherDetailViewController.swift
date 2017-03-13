@@ -57,6 +57,9 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
     
     var animationLayer: [CALayer]? = nil
     
+    var cloudImage: UIImageView! = nil
+    var cloudImage2: UIImageView! = nil
+    
     // need to understand how constructor works
 //    convenience init(city: City) {
 //        self.init()
@@ -204,6 +207,22 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
         
         self.forecastCollectionView.register(UINib(nibName: "ForecastWeatherCell", bundle: nil), forCellWithReuseIdentifier: "forecastWeatherCell")
         
+        NotificationCenter.default.addObserver(self, selector: #selector(pageEntersForeground), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(pageLeavesForeground), name: NSNotification.Name.UIApplicationWillResignActive, object: nil)
+        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIApplicationWillResignActive, object: nil)
     }
     
     override func didReceiveMemoryWarning() {
@@ -213,6 +232,16 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
+    }
+    
+    func pageEntersForeground(notif: Notification) {
+//        if cloudImage == nil && cloudImage2 == nil {
+//            setBackgroundImageForCity(city: self.currentCity)
+//        }
+    }
+    
+    func pageLeavesForeground(notif: Notification) {
+//        removeClouds()
     }
     
     // MARK: Gesture recognizers
@@ -266,8 +295,14 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
                     case "Rain", "Drizzle":
                         let weatherLayer = RainEffectLayer(frame: self.view.frame, dayNight: .day, displayType: .full)
                         self.backgroundView?.layer.sublayers = [weatherLayer.bgGradientLayer, weatherLayer.emitterLayer]
+                        if let cloudLayer = weatherLayer.setCloudLayers() {
+                            for layer in cloudLayer {
+                                self.backgroundView?.layer.addSublayer(layer)
+                            }
+                        }
+                        
                         self.view.backgroundColor =  UIColor(cgColor: weatherLayer.bgGradientLayer.colors?[0] as! CGColor)
-                        addRainyClouds()
+//                        addRainyClouds()
                         break
 
                     case "Thunderstorm":
@@ -275,7 +310,14 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
                         self.backgroundView?.layer.sublayers = [weatherLayer.bgGradientLayer, weatherLayer.emitterLayer]
                         self.view.backgroundColor = UIColor(cgColor: weatherLayer.bgGradientLayer.colors?[0] as! CGColor)
                         addLightning()
-                        addRainyClouds()
+                        
+                        if let cloudLayer = weatherLayer.setCloudLayers() {
+                            for layer in cloudLayer {
+                                self.backgroundView?.layer.addSublayer(layer)
+                            }
+                        }
+                        
+//                        addRainyClouds()
                         break
                         
                     case "Snow":
@@ -319,7 +361,13 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
                     case "Rain", "Drizzle":
                         let weatherLayer = RainEffectLayer(frame: self.view.frame, dayNight: .night, displayType: .full)
                         self.backgroundView?.layer.sublayers = [weatherLayer.bgGradientLayer, weatherLayer.emitterLayer]
-                        addRainyClouds()
+                        
+                        if let cloudLayer = weatherLayer.setCloudLayers() {
+                            for layer in cloudLayer {
+                                self.backgroundView?.layer.addSublayer(layer)
+                            }
+                        }
+//                        addRainyClouds()
                         self.view.backgroundColor = UIColor(cgColor: weatherLayer.bgGradientLayer.colors?[0] as! CGColor)
                         break
                         
@@ -328,7 +376,13 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
                         self.backgroundView?.layer.sublayers = [weatherLayer.bgGradientLayer, weatherLayer.emitterLayer]
                         self.view.backgroundColor = UIColor(cgColor: weatherLayer.bgGradientLayer.colors?[0] as! CGColor)
                         addLightning()
-                        addRainyClouds()
+                        
+                        if let cloudLayer = weatherLayer.setCloudLayers() {
+                            for layer in cloudLayer {
+                                self.backgroundView?.layer.addSublayer(layer)
+                            }
+                        }
+//                        addRainyClouds()
                         break
                         
                     case "Snow":
@@ -403,72 +457,89 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
     }
     
     private func addRainyClouds() {
-        let cloudImage = UIImageView(frame: CGRect(x: -20, y: -60, width: 450, height: 300))
+        removeClouds()
+        
+        cloudImage = UIImageView(frame: CGRect(x: -20, y: -60, width: 450, height: 300))
         cloudImage.alpha = 0.3
         cloudImage.image = UIImage(named: "cloud_rain_2")
         self.basicWeatherSectionView.addSubview(cloudImage)
         self.basicWeatherSectionView.sendSubview(toBack: cloudImage)
         
         UIView.animate(withDuration: 45, delay: 0, options: [UIViewAnimationOptions.autoreverse, UIViewAnimationOptions.repeat, .curveEaseInOut], animations: {
-            cloudImage.center.x += 130
+            self.cloudImage.center.x += 130
         }, completion: nil)
         
         
-        let cloudImage2 = UIImageView(frame: CGRect(x: 150, y: -60, width: 330, height: 240))
+        cloudImage2 = UIImageView(frame: CGRect(x: 150, y: -60, width: 330, height: 240))
         cloudImage2.alpha = 0.2
         cloudImage2.image = UIImage(named: "cloud_rain_1")
         self.basicWeatherSectionView.addSubview(cloudImage2)
         self.basicWeatherSectionView.sendSubview(toBack: cloudImage2)
         
         UIView.animate(withDuration: 50, delay: 0, options: [UIViewAnimationOptions.autoreverse, UIViewAnimationOptions.repeat, .curveLinear], animations: {
-            cloudImage2.center.x -= 110
+            self.cloudImage2.center.x -= 110
         }, completion: nil)
     }
     
     private func addOvercastClouds() {
-        let cloudImage = UIImageView(frame: CGRect(x: -10, y: -60, width: 450, height: 300))
+        removeClouds()
+        
+        cloudImage = UIImageView(frame: CGRect(x: -10, y: -60, width: 450, height: 300))
         cloudImage.alpha = 0.3
         cloudImage.image = UIImage(named: "cloud_clear_1")
         self.basicWeatherSectionView.addSubview(cloudImage)
         self.basicWeatherSectionView.sendSubview(toBack: cloudImage)
         
         UIView.animate(withDuration: 45, delay: 0, options: [UIViewAnimationOptions.autoreverse, UIViewAnimationOptions.repeat, .curveEaseInOut], animations: {
-            cloudImage.center.x += 130
+            self.cloudImage.center.x += 130
         }, completion: nil)
         
         
-        let cloudImage2 = UIImageView(frame: CGRect(x: 150, y: -60, width: 330, height: 240))
+        cloudImage2 = UIImageView(frame: CGRect(x: 150, y: -60, width: 330, height: 240))
         cloudImage2.alpha = 0.2
         cloudImage2.image = UIImage(named: "cloud_clear_1")
         self.basicWeatherSectionView.addSubview(cloudImage2)
         self.basicWeatherSectionView.sendSubview(toBack: cloudImage2)
         
         UIView.animate(withDuration: 50, delay: 0, options: [UIViewAnimationOptions.autoreverse, UIViewAnimationOptions.repeat, .curveLinear], animations: {
-            cloudImage2.center.x -= 110
+            self.cloudImage2.center.x -= 110
         }, completion: nil)
     }
     
     private func addFogClouds() {
-        let cloudImage = UIImageView(frame: CGRect(x: -150, y: -200, width: 800, height: 400))
+        removeClouds()
+        
+        cloudImage = UIImageView(frame: CGRect(x: -150, y: -200, width: 800, height: 400))
         cloudImage.alpha = 0.8
         cloudImage.image = UIImage(named: "cloud_fog")
         self.basicWeatherSectionView.addSubview(cloudImage)
         self.basicWeatherSectionView.sendSubview(toBack: cloudImage)
         
         UIView.animate(withDuration: 45, delay: 0, options: [UIViewAnimationOptions.autoreverse, UIViewAnimationOptions.repeat, .curveEaseInOut], animations: {
-            cloudImage.center.x += 120
+            self.cloudImage.center.x += 120
         }, completion: nil)
         
         
-        let cloudImage2 = UIImageView(frame: CGRect(x: 200, y: -200, width: 600, height: 320))
+        cloudImage2 = UIImageView(frame: CGRect(x: 200, y: -200, width: 600, height: 320))
         cloudImage2.alpha = 0.6
         cloudImage2.image = UIImage(named: "cloud_fog")
         self.basicWeatherSectionView.addSubview(cloudImage2)
         self.basicWeatherSectionView.sendSubview(toBack: cloudImage2)
         
         UIView.animate(withDuration: 50, delay: 0, options: [UIViewAnimationOptions.autoreverse, UIViewAnimationOptions.repeat, .curveLinear], animations: {
-            cloudImage2.center.x -= 100
+            self.cloudImage2.center.x -= 100
         }, completion: nil)
+    }
+    
+    private func removeClouds() {
+        if cloudImage != nil {
+            cloudImage.removeFromSuperview()
+            cloudImage = nil
+        }
+        if cloudImage2 != nil {
+            cloudImage2.removeFromSuperview()
+            cloudImage2 = nil
+        }
     }
     
     private func addSumBeam() {
@@ -565,7 +636,7 @@ extension CityWeatherDetailViewController: UICollectionViewDataSource, UICollect
             cell.precipLabel.text = "0mm"
         }
         
-        if let snowPrecip = forecastList[indexPath.row].precipSnow {
+        if let snowPrecip = forecastList[indexPath.row].precipSnow, let weatherMain = cell.forecastWeather?.weatherMain, weatherMain == "Snow" {
             cell.precipImageView.image = UIImage(named: "icon_snow")
             cell.precipLabel.text = snowPrecip > 1 ? "\(Int(round(snowPrecip)))mm" : "<1mm"
         }

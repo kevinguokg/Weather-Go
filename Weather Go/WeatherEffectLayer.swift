@@ -29,6 +29,12 @@ class WeatherEffectLayer {
     let emitterLayer: CAEmitterLayer!
     let bgGradientLayer: CAGradientLayer!
     
+    var cloudLayer1: CALayer?
+    var cloudLayer2: CALayer?
+    var cloudLayer3: CALayer?
+    var cloudLayer4: CALayer?
+    var cloudLayer5: CALayer?
+    
     var dayNight: DayNight!
     var layerType: LayerType?
     
@@ -74,6 +80,10 @@ class WeatherEffectLayer {
     }
     
     func setBackGroundGradientColors() {
+    }
+    
+    func setCloudLayers() -> [CALayer]? {
+        return nil
     }
     
     func degreesToRadians(_ degrees: Double) -> CGFloat {

@@ -104,4 +104,67 @@ class RainEffectLayer: WeatherEffectLayer {
             break
         }
     }
+    
+    override func setCloudLayers() -> [CALayer]? {
+        cloudLayer1 = CALayer()
+        cloudLayer1?.contents = UIImage(named: "cloud_rain_2")?.cgImage
+//        cloudLayer1?.backgroundColor = UIColor.red.cgColor
+        cloudLayer1?.opacity = 0.3
+        cloudLayer1?.frame = CGRect(x: 20, y: -80, width: 450, height: 330)
+        
+        let animation1 = CABasicAnimation(keyPath: "position.x")
+        animation1.duration = 45
+        animation1.byValue = 130
+        animation1.repeatCount = 100
+        animation1.autoreverses = true
+        animation1.fillMode = kCAFillModeForwards
+        animation1.isRemovedOnCompletion = false
+        cloudLayer1?.add(animation1, forKey: "animation1")
+
+        
+        cloudLayer2 = CALayer()
+        cloudLayer2?.contents = UIImage(named: "cloud_rain_2")?.cgImage
+//        cloudLayer2?.backgroundColor = UIColor.orange.cgColor
+        cloudLayer2?.opacity = 0.3
+        cloudLayer2?.frame = CGRect(x: 180, y: -20, width: 350, height: 250)
+        
+        let animation2 = CABasicAnimation(keyPath: "position.x")
+        animation2.duration = 50
+        animation2.byValue = 90
+        animation2.repeatCount = 100
+        animation2.autoreverses = true
+        animation2.fillMode = kCAFillModeForwards
+        animation2.isRemovedOnCompletion = false
+        cloudLayer2?.add(animation2, forKey: "animation2")
+        
+        
+        cloudLayer3 = CALayer()
+        cloudLayer3?.contents = UIImage(named: "cloud_rain_1")?.cgImage
+//        cloudLayer3?.backgroundColor = UIColor.yellow.cgColor
+        cloudLayer3?.opacity = 0.3
+        cloudLayer3?.frame = CGRect(x: -100, y: -80, width: self.emitterLayer.frame.width, height: self.emitterLayer.frame.height / 2)
+        
+        let animation3 = CABasicAnimation(keyPath: "position.x")
+        animation3.duration = 90
+        animation3.byValue = 200
+        animation3.repeatCount = 100
+        animation3.autoreverses = true
+        animation3.fillMode = kCAFillModeForwards
+        animation3.isRemovedOnCompletion = false
+        cloudLayer3?.add(animation3, forKey: "animation3")
+        
+        cloudLayer4 = CALayer()
+        cloudLayer4?.contents = UIImage(named: "cloud_rain_2")?.cgImage
+//        cloudLayer4?.backgroundColor = UIColor.green.cgColor
+        cloudLayer4?.opacity = 0.3
+        cloudLayer4?.frame = CGRect(x: 150, y: -40, width: 330, height: 240)
+        
+        cloudLayer5 = CALayer()
+        cloudLayer5?.contents = UIImage(named: "cloud_rain_1")?.cgImage
+//        cloudLayer5?.backgroundColor = UIColor.cyan.cgColor
+        cloudLayer5?.opacity = 0.3
+        cloudLayer5?.frame = CGRect(x: -120, y: -30, width: 450, height: 300)
+        
+        return [cloudLayer3!, cloudLayer1!, cloudLayer2! ]
+    }
 }
