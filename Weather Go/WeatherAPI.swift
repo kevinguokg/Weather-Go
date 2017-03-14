@@ -25,40 +25,52 @@ class WeatherAPI {
     static let weatherByCoordEndPoint = "api.openweathermap.org/data/2.5/weather?lat="
     static let forecastByCityIdEndPoint = "api.openweathermap.org/data/2.5/forecast?id="
     
+    static let retryCount = 10
+    
     static func queryWeatherWithCityName(_ name: String, units: String = "metric", countryCode: String, completion: @escaping (Any?, Error?) -> Void) {
         let url = protocolName + weatherByCityEndPoint + name + (countryCode == "" ? "" :",\(countryCode)") + "&units=\(units)" + "&appid=\(appKey)"
         let escapedUrl = url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
         
-        requestBy(escapedUrl, defaultUrl: url, completion: completion)
+        requestBy(escapedUrl, defaultUrl: url, retry: retryCount, completion: completion)
     }
     
     static func queryWeatherWithCityId(_ cityId: String, units: String = "metric", completion: @escaping (Any?, Error?) -> Void) {
         let url = protocolName + weatherByCityIdEndPoint + cityId + "&units=\(units)" + "&appid=\(appKey)"
         let escapedUrl = url.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
         
-        requestBy(escapedUrl, defaultUrl: url, completion: completion)
+        requestBy(escapedUrl, defaultUrl: url, retry: retryCount, completion: completion)
     }
     
     
     static func queryWeatherWithLocation(_ location: CLLocation, units: String = "metric", completion: @escaping (Any?, Error?) -> Void ) {
         let url = protocolName + weatherByCoordEndPoint + "\(location.coordinate.latitude)" + "&lon=\(location.coordinate.longitude)" + "&units=\(units)" + "&appid=\(appKey)"
-        requestBy(url, defaultUrl: url, completion: completion)
+        requestBy(url, defaultUrl: url, retry: retryCount, completion: completion)
     }
     
     static func queryForecastWithCityId(_ cityId: String, units: String = "metric", completion: @escaping (Any?, Error?) -> Void){
         let url = protocolName + forecastByCityIdEndPoint + cityId + "&units=\(units)" + "&appid=\(appKey)"
         let escapedUrl = url.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
         
-        requestBy(escapedUrl, defaultUrl: url, completion: completion)
+        requestBy(escapedUrl, defaultUrl: url, retry: retryCount, completion: completion)
     }
     
-    private static func requestBy(_ escapedUrl: String?, defaultUrl: String, completion: @escaping (Any?, Error?) -> Void) {
+    private static func requestBy(_ escapedUrl: String?, defaultUrl: String, retry: Int, completion: @escaping (Any?, Error?) -> Void) {
+        var retryNum = retry
         Alamofire.request(escapedUrl ?? defaultUrl)
             .validate(statusCode: 200..<300)
             .validate(contentType: ["application/json"])
             .responseJSON { (response) in
             if let err = response.error {
                 completion(nil, err)
+                if retryNum > 0 {
+                    retryNum -= 1
+                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5, execute: { 
+                        requestBy(escapedUrl, defaultUrl: defaultUrl, retry: retryNum, completion: completion)
+                    })
+                    
+                } else {
+                    // retry too many times
+                }
             } else {
                 print(response.request!)  // original URL request
                 print(response.response!) // HTTP URL response
