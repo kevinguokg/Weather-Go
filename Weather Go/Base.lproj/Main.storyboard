@@ -674,36 +674,6 @@
             </objects>
             <point key="canvasLocation" x="1444" y="492.95352323838085"/>
         </scene>
-        <!--View Controller-->
-        <scene sceneID="BQ4-W7-sMZ">
-            <objects>
-                <viewController id="txD-jK-Wrg" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="f99-sm-LhU"/>
-                        <viewControllerLayoutGuide type="bottom" id="zu2-FE-edM"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="S4F-T0-wgw">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gUX-RM-Jo5">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                                <color key="backgroundColor" red="0.78368330090000005" green="0.3109308234" blue="0.26685092329999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            </view>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstAttribute="trailing" secondItem="gUX-RM-Jo5" secondAttribute="trailing" id="5QH-Uc-uKY"/>
-                            <constraint firstItem="gUX-RM-Jo5" firstAttribute="top" secondItem="S4F-T0-wgw" secondAttribute="top" id="KvX-o2-g4r"/>
-                            <constraint firstAttribute="bottom" secondItem="gUX-RM-Jo5" secondAttribute="bottom" id="Php-wh-2jz"/>
-                            <constraint firstItem="gUX-RM-Jo5" firstAttribute="leading" secondItem="S4F-T0-wgw" secondAttribute="leading" id="c49-mw-Eyp"/>
-                        </constraints>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="of7-wb-cuE" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2100" y="1044"/>
-        </scene>
         <!--Cities-->
         <scene sceneID="RsQ-3j-w1N">
             <objects>
