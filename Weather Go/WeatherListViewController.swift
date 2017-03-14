@@ -94,6 +94,8 @@ class WeatherListViewController : UITableViewController, UIViewControllerPreview
         
         NotificationCenter.default.addObserver(self, selector: #selector(openAddCityVc), name: Notification.Name.quickActionOpenAddCityVc, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(saveCachedWeatherList), name: Notification.Name.UIApplicationWillResignActive, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(minimizeView(_:)), name: Notification.Name.minimizeViewController, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(maximizeView(_:)), name: Notification.Name.maximizeViewController, object: nil)
         
         if let delegate =  UIApplication.shared.delegate as? AppDelegate{
             delegate.triggerShortcutItem()
@@ -109,29 +111,25 @@ class WeatherListViewController : UITableViewController, UIViewControllerPreview
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        self.navigationController?.setNavigationBarHidden(true, animated: true)
-        
-        
+        super.viewWillDisappear(animated)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.tableView.reloadData()
         self.navigationController?.setNavigationBarHidden(false, animated: true)
-        
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
-        NotificationCenter.default.removeObserver(self, name: Notification.Name.quickActionOpenAddCityVc, object: nil)
-        NotificationCenter.default.removeObserver(self, name: Notification.Name.UIApplicationWillResignActive, object: nil)
     }
     
     deinit {
         NotificationCenter.default.removeObserver(self, name: Notification.Name.quickActionOpenAddCityVc, object: nil)
         NotificationCenter.default.removeObserver(self, name: Notification.Name.UIApplicationWillResignActive, object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notification.Name.minimizeViewController, object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notification.Name.maximizeViewController, object: nil)
     }
     
     func saveCachedWeatherList() {
@@ -486,7 +484,19 @@ class WeatherListViewController : UITableViewController, UIViewControllerPreview
 //            //cell.backgroundWeatherView.clipsToBounds = false
 //        }
     }
-
+    
+    // MARK: Page Modal Animations
+    func maximizeView(_ sender: AnyObject) {
+        UIView.animate(withDuration: 0.4, delay: 0.0, options: UIViewAnimationOptions.curveEaseOut, animations: { 
+            self.view.transform = CGAffineTransform(scaleX: 1, y: 1)
+        }, completion: nil)
+    }
+    
+    func minimizeView(_ sender: AnyObject) {
+        UIView.animate(withDuration: 0.4, delay: 0.0, options: UIViewAnimationOptions.curveEaseOut, animations: {
+            self.view.transform = CGAffineTransform(scaleX: 0.935, y: 0.935)
+        }, completion: nil)
+    }
     
     // MARK: Page transition hooks
     
@@ -508,6 +518,7 @@ class WeatherListViewController : UITableViewController, UIViewControllerPreview
             let settingsVc = segue.destination as! ViewController
             settingsVc.transitioningDelegate = self
             settingsVc.interactor = panGestureInteractor
+        } else if let id = segue.identifier, id == "addCityViewConroller" {
         }
     }
     

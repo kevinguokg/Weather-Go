@@ -14,8 +14,19 @@ import TimeZoneLocate
 
 class AddCityViewController : UIViewController, UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate, CLLocationManagerDelegate {
     
+    
+    @IBOutlet weak var modalView: UIView!
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var tableView: UITableView!
+    
+    @IBAction func closeBtnTapped(_ sender: Any) {
+        // sends action to list vc, will discuss the use of this method later
+        NotificationCenter.default.post(name: NSNotification.Name.maximizeViewController, object: nil)
+        
+        self.searchBar.resignFirstResponder()
+        animateView(isEntrance: false)
+        
+    }
     
     //let searchController = UISearchController(searchResultsController: nil)
     var cityList: Array<City>?
@@ -36,6 +47,24 @@ class AddCityViewController : UIViewController, UISearchBarDelegate, UITableView
         locationManager.delegate = self
         
         searchBar.becomeFirstResponder()
+        
+        // add shadow to modal view
+        self.modalView.layer.shadowPath = UIBezierPath(rect: self.modalView.bounds).cgPath
+        self.modalView.layer.shadowColor = UIColor.black.cgColor
+        self.modalView.layer.shadowRadius = 5.0
+        self.modalView.layer.shadowOpacity = 0.8
+        self.modalView.layer.shadowOffset = CGSize(width: 3.0, height: 3.0)
+        self.modalView.layer.masksToBounds = false
+        
+        // pre translate modal view
+        self.modalView.transform = CGAffineTransform(translationX: -300, y: 0)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        animateView(isEntrance: true)
+        NotificationCenter.default.post(name: NSNotification.Name.minimizeViewController, object: nil)
     }
     
     override func didReceiveMemoryWarning() {
@@ -45,6 +74,23 @@ class AddCityViewController : UIViewController, UISearchBarDelegate, UITableView
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return UIStatusBarStyle.lightContent
+    }
+    
+    func animateView(isEntrance:Bool) {
+        UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: (isEntrance ? 0.7 : 1.0), initialSpringVelocity: 1.0, options: UIViewAnimationOptions.curveEaseOut, animations: {
+            if isEntrance {
+                self.modalView.transform = CGAffineTransform.identity
+            } else {
+               self.modalView.transform = CGAffineTransform(translationX: -350, y: 0)
+            }
+            
+        }) { (success) in
+            if isEntrance {
+                
+            } else {
+                self.dismiss(animated: false, completion: nil)
+            }
+        }
     }
     
     func getQuickLocationUpdate() {
@@ -106,7 +152,7 @@ class AddCityViewController : UIViewController, UISearchBarDelegate, UITableView
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         self.searchBar.resignFirstResponder()
-        self.dismiss(animated: true, completion: nil)
+        closeBtnTapped(searchBar)
     }
     
     private func parseCityJson(_ json: Any) -> City? {
@@ -149,6 +195,12 @@ class AddCityViewController : UIViewController, UISearchBarDelegate, UITableView
         }
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let id = segue.identifier, id == "CitySelectedSegue" {
+            
+        }
+    }
+    
     // MARK: UITableView Delegates
     func numberOfSections(in tableView: UITableView) -> Int {
         return 2
@@ -168,11 +220,10 @@ class AddCityViewController : UIViewController, UISearchBarDelegate, UITableView
         switch indexPath.section {
         case 0:
             cell.textLabel?.text = "Add Current Location"
-            cell.textLabel?.textColor = kColorBackgroundNight
+            cell.textLabel?.textColor = UIColor.white
             break
             
         case 1:
-            cell.textLabel?.textColor = kColorBackgroundNight
             cell.textLabel?.text = ((cityList?[indexPath.row])?.name)! + ", \((cityList?[indexPath.row])!.countryCode)"
             cell.detailTextLabel?.text = (cityList?[indexPath.row])?.weather?.weatherDesc ?? ""
             break
@@ -193,6 +244,7 @@ class AddCityViewController : UIViewController, UISearchBarDelegate, UITableView
             if let city = self.cityList?[indexPath.row] {
                 self.selectedCity = city
                 self.searchBar.resignFirstResponder()
+                NotificationCenter.default.post(name: NSNotification.Name.maximizeViewController, object: nil)
                 self.performSegue(withIdentifier: "CitySelectedSegue", sender: self)
             }
             break

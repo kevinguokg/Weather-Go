@@ -11,6 +11,8 @@ import UIKit
 
 extension Notification.Name {
     static let quickActionOpenAddCityVc = Notification.Name("quickActionOpenAddCityVc")
+    static let minimizeViewController = Notification.Name("minimizeViewController")
+    static let maximizeViewController = Notification.Name("maximizeViewController")
 }
 
 extension UIImage {
