@@ -151,6 +151,7 @@ class WeatherListViewController : UITableViewController, UIViewControllerPreview
     }
     
     func doRefresh() {
+        impactHapticFeedback(style: .medium)
         setNeedsUpdateFlagForAllCities()
         self.tableView.reloadData()
     }
