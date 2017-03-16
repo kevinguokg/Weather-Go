@@ -42,6 +42,12 @@ class AddCityViewController : UIViewController, UISearchBarDelegate, UITableView
         self.tableView.dataSource = self
         self.tableView.delegate = self
         
+        if let image = UIImage(named: "fog_day") {
+            let imageView = UIImageView(image: image)
+            imageView.contentMode = .scaleAspectFill
+            self.tableView.backgroundView = imageView
+        }
+        
         cityList = Array()
         
         locationManager.delegate = self
@@ -64,6 +70,11 @@ class AddCityViewController : UIViewController, UISearchBarDelegate, UITableView
         super.viewDidAppear(animated)
 
         animateView(isEntrance: true)
+        
+        UIView.animate(withDuration: 15, delay: 0, options: [UIViewAnimationOptions.autoreverse, UIViewAnimationOptions.repeat, .curveLinear], animations: {
+            self.tableView.backgroundView?.transform = CGAffineTransform(scaleX: 0.935, y: 0.935)
+        }, completion: nil)
+        
         NotificationCenter.default.post(name: NSNotification.Name.minimizeViewController, object: nil)
     }
     
@@ -220,7 +231,7 @@ class AddCityViewController : UIViewController, UISearchBarDelegate, UITableView
         switch indexPath.section {
         case 0:
             cell.textLabel?.text = "Add Current Location"
-            cell.textLabel?.textColor = UIColor.white
+            cell.textLabel?.textColor = UIColor.darkGray
             break
             
         case 1:

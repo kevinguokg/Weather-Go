@@ -11,8 +11,10 @@ import UIKit
 
 class ModalDismissAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     
+    var isPresenting = true
+    
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return 0.4
+        return 0.3
     }
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
@@ -25,17 +27,41 @@ class ModalDismissAnimator: NSObject, UIViewControllerAnimatedTransitioning {
         
         let containerView = transitionContext.containerView
         
-        containerView.addSubview(fromVc.view)
-        let viewBounds = containerView.bounds
-        let bottomLeftPoint = CGPoint(x: 0, y: viewBounds.height)
-        let belowRectFrame = CGRect(origin: bottomLeftPoint, size: viewBounds.size)
-        
-        let duration = transitionDuration(using: transitionContext)
-        UIView.animate(withDuration: duration, animations: { 
-            fromVc.view.frame = belowRectFrame
+        if isPresenting {
+            let viewBounds = containerView.bounds
+            let originPoint = CGPoint(x: -viewBounds.width, y: 0)
+            let fromRectFrame = CGRect(origin: originPoint, size: viewBounds.size)
+            toVc.view.frame = fromRectFrame
+            containerView.addSubview(toVc.view)
             
-        }) { (completed) in
-            transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+            let toRectFrame = CGRect(origin: CGPoint(x: 0, y: 0), size: viewBounds.size)
+            
+            let duration = transitionDuration(using: transitionContext)
+            
+            UIView.animate(withDuration: duration, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.5, options: UIViewAnimationOptions.curveEaseOut, animations: {
+                fromVc.view.transform = CGAffineTransform(scaleX: 0.935, y: 0.935)
+                toVc.view.frame = toRectFrame
+            }, completion: { (completed) in
+                transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+            })
+            
+            
+        } else {
+            containerView.addSubview(fromVc.view)
+            let viewBounds = containerView.bounds
+            let originPoint = CGPoint(x: -viewBounds.width, y: 0)
+            let toRectFrame = CGRect(origin: originPoint, size: viewBounds.size)
+            
+            let duration = transitionDuration(using: transitionContext)
+            
+            UIView.animate(withDuration: duration, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.5, options: UIViewAnimationOptions.curveEaseOut, animations: {
+                toVc.view.transform = CGAffineTransform(scaleX: 1, y: 1)
+                fromVc.view.frame = toRectFrame
+            }, completion: { (completed) in
+                transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+            })
         }
+        
+        
     }
 }

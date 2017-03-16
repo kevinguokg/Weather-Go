@@ -21,19 +21,44 @@ class SettingsViewController: UITableViewController {
 //        self.view.addGestureRecognizer(ges)
         
         self.isMetric = UserDefaults.standard.bool(forKey: "isMetric")
+        
+        if let image = UIImage(named: "snowy_night") {
+            let imageView = UIImageView(image: image)
+            imageView.contentMode = .scaleAspectFill
+            self.tableView.backgroundView = imageView
+        }
+        
+        // add shadow to view
+        
+        self.view.layer.shadowPath = UIBezierPath(rect: self.view.bounds).cgPath
+        self.view.layer.shadowOpacity = 0.8
+        self.view.layer.shadowColor = UIColor.black.cgColor
+        self.view.layer.shadowRadius = 5.0
+        self.view.layer.shadowOffset = CGSize(width: 3.0, height: 3.0)
+        self.view.layer.masksToBounds = false
     }
+    
     @IBAction func handlePanGesture(_ sender: UIPanGestureRecognizer) {
         let percentThreshold:CGFloat = 0.3
         
         // convert y-position to downward pull progress (percentage)
         let translation = sender.translation(in: view)
         
-        let verticalMovement = translation.y / view.bounds.height
-        //print("verticalMovement= \(verticalMovement)")
-        let downwardMovement = fmaxf(Float(verticalMovement), 0.0)
-        let downwardMovementPercent = fminf(downwardMovement, 1.0)
-        let progress = CGFloat(downwardMovementPercent)
-        //print("progress= \(progress)")
+        // this is measuring vertical sliding movement
+//        let verticalMovement = translation.y / view.bounds.height
+//        //print("verticalMovement= \(verticalMovement)")
+//        let downwardMovement = fmaxf(Float(verticalMovement), 0.0)
+//        let downwardMovementPercent = fminf(downwardMovement, 1.0)
+//        let progress = CGFloat(downwardMovementPercent)
+//        //print("progress= \(progress)")
+        
+        // this is measuring horizontal sliding movement
+        let horizontalMovement = translation.x / view.bounds.width
+//        print("verticalMovement= \(horizontalMovement)")
+        let leftMovement = fminf(Float(horizontalMovement), 0.0)
+        let leftMovementPercent = abs(fmaxf(leftMovement, -1.0))
+        let progress = CGFloat(leftMovementPercent)
+//        print("progress= \(progress)")
         
         guard let interactor = interactor else { return }
         

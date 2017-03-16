@@ -58,12 +58,21 @@ class WeatherListViewController : UITableViewController, UIViewControllerPreview
     let panGestureInteractor: Interactor = Interactor()
     let navTransitionAnimator:NavigationTransitionAnimator = NavigationTransitionAnimator()
     
+    let modalDismissAnimator: ModalDismissAnimator = ModalDismissAnimator()
+    
     let refresh = RainyRefreshControl()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.tableView.backgroundColor = kColorBackgroundNight
+//        self.tableView.backgroundColor = kColorBackgroundNight
+        
+        if let image = UIImage(named: "sunny_night") {
+            let imageView = UIImageView(image: image)
+            imageView.contentMode = .scaleAspectFill
+            self.tableView.backgroundView = imageView
+        }
+        
         self.navigationController?.delegate = self
         
         timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTime) , userInfo: nil, repeats: true)
@@ -532,7 +541,13 @@ class WeatherListViewController : UITableViewController, UIViewControllerPreview
 // MARK: UIViewControllerTransitioningDelegate methods
 extension WeatherListViewController: UIViewControllerTransitioningDelegate {
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return ModalDismissAnimator()
+        modalDismissAnimator.isPresenting = false
+        return modalDismissAnimator
+    }
+    
+    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        modalDismissAnimator.isPresenting = true
+        return modalDismissAnimator
     }
     
     func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
