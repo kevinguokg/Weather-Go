@@ -14,6 +14,8 @@ class SettingsViewController: UITableViewController {
     var interactor:Interactor? = nil
     var isMetric:Bool = false
     
+    var blurView: UIVisualEffectView?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -23,9 +25,24 @@ class SettingsViewController: UITableViewController {
         self.isMetric = UserDefaults.standard.bool(forKey: "isMetric")
         
         if let image = UIImage(named: "snowy_night") {
+            // create a background view
+            let backgroundView = UIView()
+            backgroundView.frame = self.tableView.bounds
+            
+            // adds image view to background view
             let imageView = UIImageView(image: image)
             imageView.contentMode = .scaleAspectFill
-            self.tableView.backgroundView = imageView
+            imageView.frame = self.tableView.bounds
+            backgroundView.addSubview(imageView)
+            
+            // adds blurView to backgrond view for blur effect
+            blurView = UIVisualEffectView(effect: UIBlurEffect(style: UIBlurEffectStyle.dark))
+            blurView?.frame = self.tableView.bounds
+            backgroundView.addSubview(blurView!)
+            
+            // set tableView's backgroundView
+            self.tableView.backgroundView = backgroundView
+
         }
         
         // add shadow to view

@@ -62,15 +62,29 @@ class WeatherListViewController : UITableViewController, UIViewControllerPreview
     
     let refresh = RainyRefreshControl()
     
+    var blurView: UIVisualEffectView?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        self.tableView.backgroundColor = kColorBackgroundNight
-        
         if let image = UIImage(named: "sunny_night") {
+            // create a background view
+            let backgroundView = UIView()
+            backgroundView.frame = self.tableView.bounds
+            
+            // adds image view to background view
             let imageView = UIImageView(image: image)
             imageView.contentMode = .scaleAspectFill
-            self.tableView.backgroundView = imageView
+            imageView.frame = self.tableView.bounds
+            backgroundView.addSubview(imageView)
+            
+            // adds blurView to backgrond view for blur effect
+            blurView = UIVisualEffectView(effect: UIBlurEffect(style: UIBlurEffectStyle.dark))
+            blurView?.frame = self.tableView.bounds
+            backgroundView.addSubview(blurView!)
+            
+            // set tableView's backgroundView
+            self.tableView.backgroundView = backgroundView
         }
         
         self.navigationController?.delegate = self
@@ -287,13 +301,16 @@ class WeatherListViewController : UITableViewController, UIViewControllerPreview
 //        let image = self.snapshotImgOfCell(view)
 //        let cellSnapshot: UIView = UIImageView(image: image)
         
-        let cellSnapshot: UIView? = view.resizableSnapshotView(from: view.bounds, afterScreenUpdates: true, withCapInsets: UIEdgeInsets.zero)
+        var cellSnapshot: UIView? = view.resizableSnapshotView(from: view.bounds, afterScreenUpdates: true, withCapInsets: UIEdgeInsets.zero)
         if let cellSnapshot = cellSnapshot {
             cellSnapshot.layer.masksToBounds = false
             cellSnapshot.layer.cornerRadius = 0.0
             cellSnapshot.layer.shadowOffset = CGSize(width: -5.0, height: 5.0)
             cellSnapshot.layer.shadowRadius = 5.0
             cellSnapshot.layer.shadowOpacity = 0.4
+        } else {
+            let image = self.snapshotImgOfCell(view)
+            cellSnapshot = UIImageView(image: image)
         }
         
         return cellSnapshot
@@ -497,13 +514,14 @@ class WeatherListViewController : UITableViewController, UIViewControllerPreview
     
     // MARK: Page Modal Animations
     func maximizeView(_ sender: AnyObject) {
-        UIView.animate(withDuration: 0.4, delay: 0.0, options: UIViewAnimationOptions.curveEaseOut, animations: { 
+        UIView.animate(withDuration: 0.4, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 1.0, options: UIViewAnimationOptions.curveLinear, animations: {
             self.view.transform = CGAffineTransform(scaleX: 1, y: 1)
         }, completion: nil)
+        
     }
     
     func minimizeView(_ sender: AnyObject) {
-        UIView.animate(withDuration: 0.4, delay: 0.0, options: UIViewAnimationOptions.curveEaseOut, animations: {
+        UIView.animate(withDuration: 0.4, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 1.0, options: UIViewAnimationOptions.curveLinear, animations: {
             self.view.transform = CGAffineTransform(scaleX: 0.935, y: 0.935)
         }, completion: nil)
     }

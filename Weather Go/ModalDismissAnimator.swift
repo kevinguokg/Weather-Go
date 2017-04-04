@@ -38,7 +38,7 @@ class ModalDismissAnimator: NSObject, UIViewControllerAnimatedTransitioning {
             
             let duration = transitionDuration(using: transitionContext)
             
-            UIView.animate(withDuration: duration, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.5, options: UIViewAnimationOptions.curveEaseOut, animations: {
+            UIView.animate(withDuration: duration, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.5, options: UIViewAnimationOptions.curveLinear, animations: {
                 fromVc.view.transform = CGAffineTransform(scaleX: 0.935, y: 0.935)
                 toVc.view.frame = toRectFrame
             }, completion: { (completed) in
@@ -54,7 +54,7 @@ class ModalDismissAnimator: NSObject, UIViewControllerAnimatedTransitioning {
             
             let duration = transitionDuration(using: transitionContext)
             
-            UIView.animate(withDuration: duration, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.5, options: UIViewAnimationOptions.curveEaseOut, animations: {
+            UIView.animate(withDuration: duration, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.5, options: UIViewAnimationOptions.curveLinear, animations: {
                 toVc.view.transform = CGAffineTransform(scaleX: 1, y: 1)
                 fromVc.view.frame = toRectFrame
             }, completion: { (completed) in

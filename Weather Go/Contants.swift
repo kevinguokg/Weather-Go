@@ -48,7 +48,7 @@ let kColorSunLightOutside = UIColor.init(red: 255/255, green: 204/255, blue: 0/2
 
 // cloudy
 let kColorBackgroundCloudDay = UIColor.init(red: 164/255, green: 164/255, blue: 198/255, alpha: 0.8)
-let kColorBackgroundCloudDay2 = UIColor.init(red: 224/255, green: 224/255, blue: 235/255, alpha: 0.8)
+let kColorBackgroundCloudDay2 = UIColor.init(red: 131/255, green: 131/255, blue: 175/255, alpha: 0.8)
 let kColorBackgroundCloudNight = UIColor.init(red: 47/255, green: 69/255, blue: 91/255, alpha: 0.8)
 let kColorBackgroundCloudNight2 = UIColor.init(red: 120/255, green: 155/255, blue: 186/255, alpha: 0.8)
 

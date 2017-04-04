@@ -15,6 +15,8 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
     // General UIs
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var backgroundView: UIImageView!
+    @IBOutlet weak var contentView: UIView!
+    
     
     // Basic weather UIs
     @IBOutlet weak var cityNameLabel: UILabel!
@@ -276,6 +278,9 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
         // opacity of 
         self.currWeatherView.alpha = 1 - (scrollView.contentOffset.y / (basicWeatherSectionView.frame.height / 5))
         
+        // controling speed of animation layer
+//        self.backgroundView.layer.speed = max((Float(1.0) - Float(scrollView.contentOffset.y / (basicWeatherSectionView.frame.height / 5))), Float(0.5))
+        
         prevContentOffset = scrollView.contentOffset.y
     }
 
@@ -290,7 +295,8 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
                     switch weatherType {
                     case "Clear":
                         let weatherLayer = ClearSkyEffectLayer(frame: self.view.frame, dayNight: .day, displayType: .full)
-                        self.backgroundView?.layer.sublayers = [weatherLayer.bgGradientLayer, weatherLayer.emitterLayer, weatherLayer.createSunLightLayer()]
+                        let sakuraLayer = SakuraEffectLayer(frame: self.view.frame, dayNight: .day, displayType: .full)
+                        self.backgroundView?.layer.sublayers = [weatherLayer.bgGradientLayer, weatherLayer.emitterLayer, weatherLayer.createSunLightLayer(), sakuraLayer.emitterLayer]
                         self.view.backgroundColor =  UIColor(cgColor: weatherLayer.bgGradientLayer.colors?[0] as! CGColor)
                         break
                         
@@ -330,7 +336,8 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
                         
                     case "Clouds":
                         let weatherLayer = CloudEffectLayer(frame: self.view.frame, dayNight: .day, displayType: .full)
-                        self.backgroundView?.layer.sublayers = [weatherLayer.bgGradientLayer, weatherLayer.emitterLayer]
+                        let sakuraLayer = SakuraEffectLayer(frame: self.view.frame, dayNight: .day, displayType: .full)
+                        self.backgroundView?.layer.sublayers = [weatherLayer.bgGradientLayer, weatherLayer.emitterLayer, sakuraLayer.emitterLayer]
                         self.view.backgroundColor = UIColor(cgColor: weatherLayer.bgGradientLayer.colors?[0] as! CGColor)
                         addOvercastClouds()
                         break
@@ -356,7 +363,8 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
                     switch weatherType {
                     case "Clear":
                         let weatherLayer = ClearSkyEffectLayer(frame: self.view.frame, dayNight: .night, displayType: .full)
-                        self.backgroundView?.layer.sublayers = [weatherLayer.bgGradientLayer, weatherLayer.emitterLayer]
+                        let sakuraLayer = SakuraEffectLayer(frame: self.view.frame, dayNight: .night, displayType: .full)
+                        self.backgroundView?.layer.sublayers = [weatherLayer.bgGradientLayer, weatherLayer.emitterLayer, sakuraLayer.emitterLayer]
                         self.view.backgroundColor = UIColor(cgColor: weatherLayer.bgGradientLayer.colors?[0] as! CGColor)
                         break
                         
@@ -395,7 +403,8 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
                         
                     case "Clouds":
                         let weatherLayer = CloudEffectLayer(frame: self.view.frame, dayNight: .night, displayType: .full)
-                        self.backgroundView?.layer.sublayers = [weatherLayer.bgGradientLayer, weatherLayer.emitterLayer]
+                        let sakuraLayer = SakuraEffectLayer(frame: self.view.frame, dayNight: .night, displayType: .full)
+                        self.backgroundView?.layer.sublayers = [weatherLayer.bgGradientLayer, weatherLayer.emitterLayer, sakuraLayer.emitterLayer]
                         self.view.backgroundColor = UIColor(cgColor: weatherLayer.bgGradientLayer.colors?[0] as! CGColor)
                         addOvercastClouds()
                         break

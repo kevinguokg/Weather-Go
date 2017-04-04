@@ -34,6 +34,8 @@ class AddCityViewController : UIViewController, UISearchBarDelegate, UITableView
     
     lazy var locationManager: CLLocationManager = CLLocationManager()
     
+    var blurView: UIVisualEffectView?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -43,9 +45,24 @@ class AddCityViewController : UIViewController, UISearchBarDelegate, UITableView
         self.tableView.delegate = self
         
         if let image = UIImage(named: "fog_day") {
+            
+            // create a background view
+            let backgroundView = UIView()
+            backgroundView.frame = self.tableView.bounds
+            
+            // adds image view to background view
             let imageView = UIImageView(image: image)
             imageView.contentMode = .scaleAspectFill
-            self.tableView.backgroundView = imageView
+            imageView.frame = self.tableView.bounds
+            backgroundView.addSubview(imageView)
+            
+            // adds blurView to backgrond view for blur effect
+            blurView = UIVisualEffectView(effect: UIBlurEffect(style: UIBlurEffectStyle.light))
+            blurView?.frame = self.tableView.bounds
+            backgroundView.addSubview(blurView!)
+            
+            // set tableView's backgroundView
+            self.tableView.backgroundView = backgroundView
         }
         
         cityList = Array()
@@ -71,9 +88,9 @@ class AddCityViewController : UIViewController, UISearchBarDelegate, UITableView
 
         animateView(isEntrance: true)
         
-        UIView.animate(withDuration: 15, delay: 0, options: [UIViewAnimationOptions.autoreverse, UIViewAnimationOptions.repeat, .curveLinear], animations: {
-            self.tableView.backgroundView?.transform = CGAffineTransform(scaleX: 0.935, y: 0.935)
-        }, completion: nil)
+        //UIView.animate(withDuration: 12, delay: 0, options: [UIViewAnimationOptions.autoreverse, UIViewAnimationOptions.repeat, .curveLinear], animations: {
+        //    self.tableView.backgroundView?.transform = CGAffineTransform(scaleX: 0.90, y: 0.90)
+        //}, completion: nil)
         
         NotificationCenter.default.post(name: NSNotification.Name.minimizeViewController, object: nil)
     }
@@ -88,7 +105,7 @@ class AddCityViewController : UIViewController, UISearchBarDelegate, UITableView
     }
     
     func animateView(isEntrance:Bool) {
-        UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: (isEntrance ? 0.7 : 1.0), initialSpringVelocity: 1.0, options: UIViewAnimationOptions.curveEaseOut, animations: {
+        UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 1.0, initialSpringVelocity: 1.0, options: UIViewAnimationOptions.curveLinear, animations: {
             if isEntrance {
                 self.modalView.transform = CGAffineTransform.identity
             } else {
