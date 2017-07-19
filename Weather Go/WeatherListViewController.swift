@@ -190,7 +190,8 @@ class WeatherListViewController : UITableViewController, UIViewControllerPreview
             cell.updateCellTime()
         }
         
-        self.refresh.updateLastUpdatedTime(date: Date())
+        // temprary turn off lastUpdatedDate
+        //self.refresh.updateLastUpdatedTime(date: Date())
     }
     
     func longPressGestureRecognized(gestureRecognizer: UIGestureRecognizer) {
@@ -387,9 +388,7 @@ class WeatherListViewController : UITableViewController, UIViewControllerPreview
                             let cityJson = JSON(json)
                             let city = City(id: "\(cityJson["id"].intValue)", name: cityJson["name"].stringValue, latitude: cityJson["coord"]["lat"].doubleValue, longitude: cityJson["coord"]["lon"].doubleValue, countryCode: cityJson["sys"]["country"].stringValue)
                             
-                            if let timezone = TimeZoneLocate.timeZoneWithLocation(CLLocation(latitude: city.latitude, longitude: city.longitude), countryCode: city.countryCode) {
-                                city.timezone = timezone
-                            }
+                            city.timezone = TimeZoneLocate.timeZoneWithLocation(CLLocation(latitude: city.latitude, longitude: city.longitude))
                             
                             city.needsUpdate = false
                             
@@ -423,10 +422,12 @@ class WeatherListViewController : UITableViewController, UIViewControllerPreview
                             }
                             
                             self.refresh.endRefreshing()
-                            let date = Date()
-                            self.refresh.updateLastUpdatedDate(date: date)
-                            UserDefaults.standard.set(date, forKey: "lastUpdatedDate")
-                            UserDefaults.standard.synchronize()
+                            
+//                            // temprary turn off lastUpdatedDate
+//                            let date = Date()
+//                            self.refresh.updateLastUpdatedDate(date(: date)
+//                            UserDefaults.standard.set(date, forKey: "lastUpdatedDate")
+//                            UserDefaults.standard.synchronize()
                         }
                     }
                 })
