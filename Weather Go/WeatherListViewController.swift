@@ -104,7 +104,6 @@ class WeatherListViewController : UITableViewController, UIViewControllerPreview
                     theCity.needsUpdate = true
                     citiList?.append(theCity)
                 }
-                //citiList?.append(NSKeyedUnarchiver.unarchiveObject(with: cityData as! Data)! as! City)
             }
         }
         
@@ -298,9 +297,6 @@ class WeatherListViewController : UITableViewController, UIViewControllerPreview
     }
     
     private func snapshotOfCell(_ view: UIView) -> UIView? {
-//        let image = self.snapshotImgOfCell(view)
-//        let cellSnapshot: UIView = UIImageView(image: image)
-        
         var cellSnapshot: UIView? = view.resizableSnapshotView(from: view.bounds, afterScreenUpdates: true, withCapInsets: UIEdgeInsets.zero)
         if let cellSnapshot = cellSnapshot {
             cellSnapshot.layer.masksToBounds = false
@@ -426,11 +422,6 @@ class WeatherListViewController : UITableViewController, UIViewControllerPreview
                                 cellToUpdate.setNeedsLayout()
                             }
                             
-                            
-//                            // no need 
-//                            self.tableView.reloadData()
-//                            // add city to user defaults
-//                            UserDefaultManager.addCityToUserDefault(self.citiList!, withKey: "cityList")
                             self.refresh.endRefreshing()
                             let date = Date()
                             self.refresh.updateLastUpdatedDate(date: date)
@@ -456,17 +447,6 @@ class WeatherListViewController : UITableViewController, UIViewControllerPreview
         if let theCell = cell as? CityWeatherCell {
             theCell.stopAnimatingEffects()
         }
-    }
-    
-    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//        if let visibleCells = self.tableView.visibleCells as? [CityWeatherCell] {
-//            for cell in visibleCells {
-//                //cell.backgroundWeatherView.clipsToBounds = false
-//                //let yOffset = ((self.tableView.contentOffset.y - cell.frame.origin.y) / cell.imageHeight) * cell.offsetSpeed
-//                let yOffset = ((self.tableView.contentOffset.y) / cell.imageHeight) * cell.offsetSpeed
-//                cell.offset(offset: CGPoint(x: 0.0, y: yOffset))
-//            }
-//        }
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -498,18 +478,7 @@ class WeatherListViewController : UITableViewController, UIViewControllerPreview
     
     override func tableView(_ tableView: UITableView, willBeginEditingRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath) as! CityWeatherCell
-        
-        //let snapShotImageCell = self.snapshotImgOfCell(cell)
-        //cell.backgroundWeatherView.image = snapShotImageCell
-        
         cell.backgroundWeatherView.clipsToBounds = true
-    }
-    
-    override func tableView(_ tableView: UITableView, didEndEditingRowAt indexPath: IndexPath?) {
-//        if let indexPath = indexPath {
-//            let cell = tableView.cellForRow(at: indexPath) as! CityWeatherCell
-//            //cell.backgroundWeatherView.clipsToBounds = false
-//        }
     }
     
     // MARK: Page Modal Animations

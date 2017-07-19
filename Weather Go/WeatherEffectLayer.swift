@@ -67,7 +67,6 @@ class WeatherEffectLayer {
         
         bgGradientLayer = CAGradientLayer()
         bgGradientLayer.frame = frame
-//        bgGradientLayer.startPoint = CGPoint(x: 0.3, y:0.0)
         
         setEmitterPosition()
         setBackGroundGradientColors()

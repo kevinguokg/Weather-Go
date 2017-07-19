@@ -62,16 +62,8 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
     var cloudImage: UIImageView! = nil
     var cloudImage2: UIImageView! = nil
     
-    // need to understand how constructor works
-//    convenience init(city: City) {
-//        self.init()
-//        self.currentCity = city
-//    }
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-//        self.view.layoutIfNeeded()
         
         // load Ad section
         adBannerView.adSize = kGADAdSizeSmartBannerPortrait
@@ -79,11 +71,6 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
         adBannerView.delegate = self
         adBannerView.rootViewController = self
         adBannerView.load(GADRequest())
-        
-        // edge pan gesture
-        let panEdgeGesture = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(screenEdgeSwiped))
-        panEdgeGesture.edges = .left
-        //self.view.addGestureRecognizer(panEdgeGesture)
         
         self.menuView.isUserInteractionEnabled = true
         let singleTapGesture = UITapGestureRecognizer(target: self, action: #selector(self.menuViewTapped(_:)))
@@ -200,17 +187,12 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
                         }, completion: { (finished) in
                             self.forecastCollectionView.isHidden = false
                         })
-                        
-                        //UserDefaultManager.addTheCityToUserDefault(city: self.currentCity)
                     }
                 }
             })
         }
         
         self.forecastCollectionView.register(UINib(nibName: "ForecastWeatherCell", bundle: nil), forCellWithReuseIdentifier: "forecastWeatherCell")
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(pageEntersForeground), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(pageLeavesForeground), name: NSNotification.Name.UIApplicationWillResignActive, object: nil)
         
     }
     
@@ -224,40 +206,13 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
         self.navigationController?.setNavigationBarHidden(false, animated: true)
     }
     
-    deinit {
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIApplicationWillResignActive, object: nil)
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
-    }
-    
-    func pageEntersForeground(notif: Notification) {
-//        if cloudImage == nil && cloudImage2 == nil {
-//            setBackgroundImageForCity(city: self.currentCity)
-//        }
-    }
-    
-    func pageLeavesForeground(notif: Notification) {
-//        removeClouds()
     }
     
     // MARK: Gesture recognizers
     func menuViewTapped(_ recognizer: UITapGestureRecognizer) {
         _ = self.navigationController?.popViewController(animated: true)
-    }
-    
-    func screenEdgeSwiped(_ recognizer: UIScreenEdgePanGestureRecognizer) {
-        if recognizer.state == .recognized {
-             print("Screen edge swiped!")
-            _ = self.navigationController?.popViewController(animated: true)
-        }
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -271,16 +226,8 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
         let diffOffset = scrollView.contentOffset.y - prevContentOffset
         let yOffset = diffOffset
         
-        // parallax on basic section
-        //basicWeatherSectionView.frame = basicWeatherSectionView.frame.offsetBy(dx: 0, dy: scrollView.contentOffset.y < 120 ? yOffset * 0.5 : yOffset)
-        //detailWeatherSectionView.frame = detailWeatherSectionView.frame.offsetBy(dx: 0, dy: scrollView.contentOffset.y < 130 ? 0 : yOffset)
-        
-        // opacity of 
+        // opacity
         self.currWeatherView.alpha = 1 - (scrollView.contentOffset.y / (basicWeatherSectionView.frame.height / 5))
-        
-        // controling speed of animation layer
-//        self.backgroundView.layer.speed = max((Float(1.0) - Float(scrollView.contentOffset.y / (basicWeatherSectionView.frame.height / 5))), Float(0.5))
-        
         prevContentOffset = scrollView.contentOffset.y
     }
 
@@ -310,7 +257,7 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
                         }
                         
                         self.view.backgroundColor =  UIColor(cgColor: weatherLayer.bgGradientLayer.colors?[0] as! CGColor)
-//                        addRainyClouds()
+                        //addRainyClouds()
                         break
 
                     case "Thunderstorm":
@@ -325,7 +272,7 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
                             }
                         }
                         
-//                        addRainyClouds()
+                        //addRainyClouds()
                         break
                         
                     case "Snow":
@@ -377,7 +324,7 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
                                 self.backgroundView?.layer.addSublayer(layer)
                             }
                         }
-//                        addRainyClouds()
+                        //addRainyClouds()
                         self.view.backgroundColor = UIColor(cgColor: weatherLayer.bgGradientLayer.colors?[0] as! CGColor)
                         break
                         
@@ -392,7 +339,7 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
                                 self.backgroundView?.layer.addSublayer(layer)
                             }
                         }
-//                        addRainyClouds()
+                        //addRainyClouds()
                         break
                         
                     case "Snow":
@@ -551,32 +498,6 @@ class CityWeatherDetailViewController: UIViewController, UIScrollViewDelegate {
             cloudImage2.removeFromSuperview()
             cloudImage2 = nil
         }
-    }
-    
-    private func addSumBeam() {
-        let sunLayer = CAShapeLayer()
-        sunLayer.path = UIBezierPath(ovalIn: CGRect(x: 0, y: 0, width: 100, height: 100)).cgPath
-        
-        sunLayer.fillColor = kColorSunLight.cgColor
-        sunLayer.lineWidth = 0
-        self.basicWeatherSectionView.layer.addSublayer(sunLayer)
-        
-        let cloudImage = UIImageView(frame: CGRect(x: 0, y: 0, width: 300, height: 200))
-        cloudImage.clipsToBounds = true
-        cloudImage.contentMode = .scaleAspectFill
-        
-        cloudImage.alpha = 0
-        cloudImage.image = UIImage(named: "sun_beam")
-        //self.basicWeatherSectionView.addSubview(cloudImage)
-        //self.basicWeatherSectionView.sendSubview(toBack: cloudImage)
-        
-//        UIView.animate(withDuration: 20, delay: 0, options: [UIViewAnimationOptions.autoreverse, UIViewAnimationOptions.repeat, .curveEaseInOut], animations: {
-//            cloudImage.alpha = 0.9
-//            cloudImage.transform = CGAffineTransform(rotationAngle: CGFloat(M_PI))
-//        }, completion: nil)
-        
-        
-        
     }
     
     func isDayTime(date: Date) -> Bool {

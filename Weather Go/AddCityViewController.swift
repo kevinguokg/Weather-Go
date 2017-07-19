@@ -28,7 +28,6 @@ class AddCityViewController : UIViewController, UISearchBarDelegate, UITableView
         
     }
     
-    //let searchController = UISearchController(searchResultsController: nil)
     var cityList: Array<City>?
     var selectedCity: City?
     
@@ -38,7 +37,6 @@ class AddCityViewController : UIViewController, UISearchBarDelegate, UITableView
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
         
         self.searchBar.delegate = self
         self.tableView.dataSource = self
@@ -66,9 +64,7 @@ class AddCityViewController : UIViewController, UISearchBarDelegate, UITableView
         }
         
         cityList = Array()
-        
         locationManager.delegate = self
-        
         searchBar.becomeFirstResponder()
         
         // add shadow to modal view
@@ -87,10 +83,6 @@ class AddCityViewController : UIViewController, UISearchBarDelegate, UITableView
         super.viewDidAppear(animated)
 
         animateView(isEntrance: true)
-        
-        //UIView.animate(withDuration: 12, delay: 0, options: [UIViewAnimationOptions.autoreverse, UIViewAnimationOptions.repeat, .curveLinear], animations: {
-        //    self.tableView.backgroundView?.transform = CGAffineTransform(scaleX: 0.90, y: 0.90)
-        //}, completion: nil)
         
         NotificationCenter.default.post(name: NSNotification.Name.minimizeViewController, object: nil)
     }

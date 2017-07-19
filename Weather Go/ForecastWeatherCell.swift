@@ -90,16 +90,6 @@ class ForecastWeatherCell: UICollectionViewCell {
             opacityAnim.isRemovedOnCompletion = false
             precipLayer.add(opacityAnim, forKey: "opacityAnim")
             
-//            let raisingAnim = CABasicAnimation(keyPath: "bounds")
-//            raisingAnim.fromValue = NSValue(cgRect: CGRect(origin: CGPoint(x:0, y: 0), size: CGSize(width: precipLayer.bounds.width, height: precipLayer.bounds.height)))
-//            raisingAnim.toValue = NSValue(cgRect: precipLayer.bounds)
-//            raisingAnim.repeatCount = 0
-//            raisingAnim.duration = 0.8
-//            raisingAnim.fillMode = kCAFillModeForwards
-//            raisingAnim.isRemovedOnCompletion = false
-//            precipLayer.add(raisingAnim, forKey: "raisingAnim")
-            
-            
             self.layer.addSublayer(precipLayer)
             
         }

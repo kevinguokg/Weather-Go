@@ -12,7 +12,6 @@ class UserDefaultManager {
     static func addCityToUserDefault(_ array: Array<Any>, withKey key: String){
         // add city to user defaults
         let defaults = UserDefaults.standard
-//        let archivedArray: NSMutableArray = NSMutableArray()
         var archivedArray = Array<Any>()
         for city in array {
             let data = NSKeyedArchiver.archivedData(withRootObject: city)

@@ -70,7 +70,6 @@ extension UIView {
         self.layer.render(in: UIGraphicsGetCurrentContext()!)
         let image = UIGraphicsGetImageFromCurrentImageContext()! as UIImage
         UIGraphicsEndImageContext()
-        //UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
         
         
         UIGraphicsBeginImageContextWithOptions(bound.size, false, 3.0)
@@ -78,7 +77,6 @@ extension UIView {
         
         let choppedImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-        //UIImageWriteToSavedPhotosAlbum(choppedImage!, nil, nil, nil)
         
         return choppedImage
     }

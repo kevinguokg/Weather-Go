@@ -19,9 +19,6 @@ class SettingsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        let ges = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
-//        self.view.addGestureRecognizer(ges)
-        
         self.isMetric = UserDefaults.standard.bool(forKey: "isMetric")
         
         if let image = UIImage(named: "snowy_night") {
@@ -55,54 +52,11 @@ class SettingsViewController: UITableViewController {
         self.view.layer.masksToBounds = false
     }
     
-    @IBAction func handlePanGesture(_ sender: UIPanGestureRecognizer) {
-        let percentThreshold:CGFloat = 0.3
-        
-        // convert y-position to downward pull progress (percentage)
-        let translation = sender.translation(in: view)
-        
-        // this is measuring vertical sliding movement
-//        let verticalMovement = translation.y / view.bounds.height
-//        //print("verticalMovement= \(verticalMovement)")
-//        let downwardMovement = fmaxf(Float(verticalMovement), 0.0)
-//        let downwardMovementPercent = fminf(downwardMovement, 1.0)
-//        let progress = CGFloat(downwardMovementPercent)
-//        //print("progress= \(progress)")
-        
-        // this is measuring horizontal sliding movement
-        let horizontalMovement = translation.x / view.bounds.width
-//        print("verticalMovement= \(horizontalMovement)")
-        let leftMovement = fminf(Float(horizontalMovement), 0.0)
-        let leftMovementPercent = abs(fmaxf(leftMovement, -1.0))
-        let progress = CGFloat(leftMovementPercent)
-//        print("progress= \(progress)")
-        
-        guard let interactor = interactor else { return }
-        
-        switch sender.state {
-            case .began:
-                interactor.hasStarted = true
-                dismiss(animated: true, completion: nil)
-            case .changed:
-                interactor.shouldFinish = progress > percentThreshold
-                interactor.update(progress)
-            case .cancelled:
-                interactor.hasStarted = false
-                interactor.cancel()
-            case .ended:
-                interactor.hasStarted = false
-                interactor.shouldFinish ? interactor.finish() : interactor.cancel()
-            default:
-                break
-        }
-    }
-    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         UserDefaults.standard.set(indexPath.row == 1, forKey: "isMetric")
         UserDefaults.standard.synchronize()
         self.isMetric = UserDefaults.standard.bool(forKey: "isMetric")
         self.tableView.reloadData()
-        //self.dismiss(animated: true, completion: nil)
         self.performSegue(withIdentifier: "unwindFromSettingViewConroller", sender: nil)
     }
     

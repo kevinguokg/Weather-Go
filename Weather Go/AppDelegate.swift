@@ -103,9 +103,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 } else {
                     print("Reachable via Cellular")
                 }
-                
-//                let alert = JDropDownAlert(position: AlertPosition.top, direction: AnimationDirection.normal)
-//                alert.alertWith("Awesome!", message: "You are connected to the Internet.", topLabelColor: UIColor.white, messageLabelColor: UIColor.white, backgroundColor: kColorAlertGood, delay: 3)
             })
         }
         

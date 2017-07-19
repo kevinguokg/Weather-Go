@@ -145,11 +145,6 @@ class ClearSkyEffectLayer: WeatherEffectLayer {
     func createSunLightLayer() -> CAShapeLayer {
         let sunShadowLayer = CAShapeLayer()
         
-//        sunShadowLayer?.fillColor = kColorSunLight.cgColor
-//        sunShadowLayer?.lineWidth = 0.5
-//        sunShadowLayer.shadow
-        
-        
         self.sunLightLayer = CAShapeLayer()
         switch displayType {
         case .cell:
@@ -169,7 +164,6 @@ class ClearSkyEffectLayer: WeatherEffectLayer {
         sunLightLayer?.lineWidth = 0
         sunLightLayer?.shadowRadius = 5
         sunLightLayer?.shadowOpacity = 1
-        //sunLightLayer?.shadowOffset = CGSize(width: 3, height: 3)
         sunLightLayer?.shadowColor = kColorSunLightOutside.cgColor
         
         
@@ -178,7 +172,6 @@ class ClearSkyEffectLayer: WeatherEffectLayer {
         shineAnimation.toValue = 0.8
         shineAnimation.duration = 10
         shineAnimation.autoreverses = true
-//        shineAnimation.isCumulative = true
         shineAnimation.repeatCount = 100
         shineAnimation.fillMode = kCAFillModeForwards
         shineAnimation.isRemovedOnCompletion = false

@@ -43,24 +43,14 @@ class CityWeatherCell: UITableViewCell {
     let offsetSpeed: CGFloat = 10.0
     
     func offset(offset: CGPoint) {
-//        self.backgroundView?.frame = (self.backgroundView?.bounds)!.offsetBy(dx: offset.x, dy: offset.y)
-        
         if self.currentOffset == nil {
             UIView.animate(withDuration: 0.1) {
                 self.backgroundWeatherView?.frame = (self.backgroundWeatherView?.bounds)!.offsetBy(dx: offset.x, dy: offset.y)
-
-                //self.imgBackTopConstraint.constant -= offset.y
-                //self.imgBackBottomConstraint.constant += offset.y
-                
             }
             
         } else {
             self.backgroundWeatherView?.frame = (self.backgroundWeatherView?.bounds)!.offsetBy(dx: offset.x, dy: offset.y)
-            
-            //self.imgBackTopConstraint.constant -= offset.y
-            //self.imgBackBottomConstraint.constant += offset.y
         }
-        
         
         currentOffset = offset
     }
@@ -198,12 +188,8 @@ class CityWeatherCell: UITableViewCell {
                         break
                     }
                 }
-                
-                
             }
-
         }
-        
     }
     
     private func addLightning() {
@@ -274,7 +260,7 @@ class CityWeatherCell: UITableViewCell {
                 if let weatherType = city.weather?.weatherMain {
                     switch weatherType {
                     case "Clear":
-//                        addSumBeam()
+                        //addSumBeam()
                         break
                         
                     case "Rain", "Drizzle":
@@ -332,10 +318,7 @@ class CityWeatherCell: UITableViewCell {
                         break
                     }
                 }
-                
-                
             }
-            
         }
     }
     
@@ -420,5 +403,4 @@ class CityWeatherCell: UITableViewCell {
         }, completion: nil)
         
     }
-    
 }
