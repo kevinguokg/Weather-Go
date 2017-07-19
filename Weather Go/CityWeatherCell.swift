@@ -100,13 +100,11 @@ class CityWeatherCell: UITableViewCell {
                 if let weatherType = city.weather?.weatherMain {
                     switch weatherType {
                     case "Clear":
-                        //self.updateCellBackgoundImage(named: "sunny_day")
                         let weatherLayer = ClearSkyEffectLayer(frame: self.backgroundWeatherView.frame, dayNight: .day, displayType: .cell)
                         self.backgroundWeatherView?.layer.sublayers = [weatherLayer.emitterLayer, weatherLayer.createSunLightLayer()]
                         break
                       
                     case "Rain", "Drizzle":
-                        //self.updateCellBackgoundImage(named: "rainy_day")
                         let weatherLayer = RainEffectLayer(frame: self.backgroundWeatherView.frame, dayNight: .day, displayType: .cell)
                         self.backgroundWeatherView?.layer.sublayers = [weatherLayer.emitterLayer]
                         break
@@ -115,25 +113,20 @@ class CityWeatherCell: UITableViewCell {
                         let weatherLayer = ThunderEffectLayer(frame: self.backgroundWeatherView.frame, dayNight: .day, displayType: .cell)
                         self.backgroundWeatherView?.layer.sublayers = [weatherLayer.emitterLayer]
                         
-                        // TODO animations thunder day
                         addLightning()
                         break
                     
                     case "Snow":
-                        //self.updateCellBackgoundImage(named: "snowy_day")
                         let weatherLayer = SnowEffectLayer(frame: self.backgroundWeatherView.frame, dayNight: .day, displayType: .cell)
                         self.backgroundWeatherView?.layer.sublayers = [weatherLayer.emitterLayer]
                         break
                         
                     case "Clouds":
-                        //self.updateCellBackgoundImage(named: "cloudy_day")
-                        
                         let weatherLayer = CloudEffectLayer(frame: self.backgroundWeatherView.frame, dayNight: .day, displayType: .cell)
                         self.backgroundWeatherView?.layer.sublayers = [weatherLayer.emitterLayer]
                         break
                         
                     case "Fog", "Mist", "Haze":
-                        //self.updateCellBackgoundImage(named: "fog_day")
                         let weatherLayer = FogEffectLayer(frame: self.backgroundWeatherView.frame, dayNight: .day, displayType: .cell)
                         self.backgroundWeatherView?.layer.sublayers = [weatherLayer.emitterLayer]
                         break
